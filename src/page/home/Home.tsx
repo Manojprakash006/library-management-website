@@ -11,18 +11,19 @@ const HomeAboutPage: React.FC = () => {
   return (
     <>
       <div style={{ fontFamily: FONT.f1 }}>
-        <div
-          className="w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#f5f3ff] to-[#fff1f8] px-4 text-center"
-          style={{ background: COLORS.home.color.bg }}     >
+
+        {/* Hero Section */}
+        <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#f5f3ff] to-[#fff1f8] px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 text-center">
+          
           {/* Welcome badge */}
-          <div className="bg-white shadow px-4 py-2 rounded-full text-sm mb-6 flex items-center gap-2">
-            <img src={icon1} alt="icon" className="h-4 w-4" />
+          <div className="bg-white shadow px-4 py-2 rounded-full text-xs sm:text-sm mb-6 sm:mb-8 flex items-center gap-2">
+            <img src={icon1} alt="icon" className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>Welcome to City Central Library</span>
           </div>
 
           {/* Heading */}
-          <div style={{ fontSize: COLORS.home.fontweight.fw1 }}>
-            <h1 className="text-4xl md:text-6xl text-gray-900">
+          <div className="space-y-2 sm:space-y-3 max-w-5xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight text-gray-900">
               Explore Thousands of{" "}
               <span
                 style={{
@@ -37,7 +38,7 @@ const HomeAboutPage: React.FC = () => {
             </h1>
 
             <h2
-              className="text-4xl md:text-6xl font-bold mt-2"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
               style={{
                 background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`,
                 WebkitBackgroundClip: "text",
@@ -50,7 +51,7 @@ const HomeAboutPage: React.FC = () => {
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 mt-6 max-w-xl">
+          <p className="text-gray-600 mt-6 sm:mt-8 max-w-2xl px-4 text-sm sm:text-base md:text-lg">
             Your gateway to knowledge with over{" "}
             <span className="text-blue-600 font-semibold">10,000 books</span>,
             digital resources, and world-class facilities. Join our community
@@ -58,28 +59,28 @@ const HomeAboutPage: React.FC = () => {
           </p>
 
           {/* Buttons */}
-          <div className="flex gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-10 w-full sm:w-auto px-4">
             <button
-              className="px-6 py-3 rounded-lg text-white hover:opacity-90 flex items-center gap-2"
+              className="w-full sm:w-auto px-6 py-2.5 sm:py-2 rounded-lg text-white hover:opacity-90 flex items-center justify-center gap-2 text-sm sm:text-base"
               style={{
                 background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%, ${COLORS.home.color.h3} 100%)`,
               }}
             >
-              <img src={icon2} alt="icon" className="h-4 w-4" />
+              <img src={icon2} alt="icon" className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>Explore Collection →</span>
             </button>
 
-            <button className="px-6 py-3 rounded-lg border border-purple-400 text-purple-600 hover:bg-purple-50 flex items-center gap-2">
-              <img src={icon3} alt="icon" className="h-4 w-4" />
+            <button className="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-lg border border-purple-400 text-purple-600 hover:bg-purple-50 flex items-center justify-center gap-2 text-sm sm:text-base">
+              <img src={icon3} alt="icon" className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>Become a Member</span>
             </button>
           </div>
 
           {/* Stats */}
-          <div className="flex gap-6 mt-12 flex-wrap justify-center">
-            <div className="bg-white shadow rounded-xl px-8 py-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-12 sm:mt-12 w-full max-w-4xl px-4">
+            <div className="bg-white shadow rounded-xl p-6 sm:p-8 text-center">
               <h3
-                className="text-2xl font-bold"
+                className="text-2xl sm:text-3xl font-bold"
                 style={{
                   background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`,
                   WebkitBackgroundClip: "text",
@@ -89,12 +90,12 @@ const HomeAboutPage: React.FC = () => {
               >
                 10,000+
               </h3>
-              <p className="text-gray-500">Books</p>
+              <p className="text-gray-500 text-sm sm:text-base mt-1">Books</p>
             </div>
 
-            <div className="bg-white shadow rounded-xl px-8 py-4 text-center">
+            <div className="bg-white shadow rounded-xl p-6 sm:p-8 text-center">
               <h3
-                className="text-2xl font-bold"
+                className="text-2xl sm:text-3xl font-bold"
                 style={{
                   background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`,
                   WebkitBackgroundClip: "text",
@@ -104,12 +105,12 @@ const HomeAboutPage: React.FC = () => {
               >
                 5,000+
               </h3>
-              <p className="text-gray-500">Members</p>
+              <p className="text-gray-500 text-sm sm:text-base mt-1">Members</p>
             </div>
 
-            <div className="bg-white shadow rounded-xl px-8 py-4 text-center">
+            <div className="bg-white shadow rounded-xl p-6 sm:p-8 text-center sm:col-span-2 lg:col-span-1">
               <h3
-                className="text-2xl font-bold"
+                className="text-2xl sm:text-3xl font-bold"
                 style={{
                   background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`,
                   WebkitBackgroundClip: "text",
@@ -119,742 +120,649 @@ const HomeAboutPage: React.FC = () => {
               >
                 28+
               </h3>
-              <p className="text-gray-500">Years</p>
+              <p className="text-gray-500 text-sm sm:text-base mt-1">Years</p>
             </div>
           </div>
         </div>
-        <div className="w-full   p-5 bg-white px-15 py-15">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+        {/* About Us Section */}
+        <div className="w-full bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
-            {/* Left */}
-            <div className="">
-              <span className="bg-purple-100 text-purple-600 px-4 py-1 rounded-full text-sm">
-                About Us
-              </span>
+              {/* Left */}
+              <div className="flex flex-col justify-center">
+                <span className="bg-purple-100 text-purple-600 px-4 py-1 rounded-full text-xs sm:text-sm w-fit">
+                  About Us
+                </span>
 
-              <h1 className="text-3xl font-bold mt-4 text-gray-900">
-                Serving the Community
-              </h1>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 text-gray-900">
+                  Serving the Community
+                </h1>
 
-              <h2 className="mt-6 px-6 py-2  text-white rounded-lg" style={{ background: `linear-gradient(90deg, ${COLORS.home.color.h1} 5%, ${COLORS.home.color.h2} 50%)`, }} >
-                Since 2026
-              </h2>
+                <h2
+                  className="mt-6 px-6 py-2 text-white rounded-lg w-fit text-sm sm:text-base"
+                  style={{
+                    background: `linear-gradient(90deg, ${COLORS.home.color.h1} 5%, ${COLORS.home.color.h2} 50%)`,
+                  }}
+                >
+                  Since 2026
+                </h2>
 
-              <p className="text-gray-600 mt-4 max-w-md">
-                City Central Library has been a cornerstone of knowledge and
-                learning for over 28 years. We're dedicated to providing free
-                access to information, resources, and educational opportunities
-                for everyone.
-              </p>
-
-              {/* Mission */}
-              <div className="flex items-start gap-3 mt-6">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                  <img src="src\assets\aboutus\Container (1).png" alt="" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Our Mission</h3>
-                  <p className="text-gray-600 text-sm">
-                    To promote literacy and lifelong learning through accessible
-                    resources and community engagement.
-                  </p>
-                </div>
-              </div>
-
-              {/* Vision */}
-              <div className="flex items-start gap-3 mt-4">
-                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                  <img src="src\assets\aboutus\Container (2).png" alt="" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">Our Vision</h3>
-                  <p className="text-gray-600 text-sm">
-                    To be the leading community library, fostering innovation and
-                    knowledge in the digital age.
-                  </p>
-                </div>
-              </div>
-
-              <button className="mt-6 px-6 py-2  text-white rounded-lg" style={{ background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`, }}>
-                Learn More About Us →
-              </button>
-            </div>
-
-            {/* Right */}
-            <div className="flex flex-col gap-6">
-
-              <div className="border border-gray-200 rounded-xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-10 h-10 bg-purple-600 text-white rounded-lg flex items-center justify-center">
-                    <img src="src\assets\aboutus\Container (3).png" alt="" />                </div>
-                  <h3 className="font-semibold">Opening Hours</h3>
-                </div>
-
-                <p className="text-sm text-gray-600">
-                  Monday - Friday
-                  <span className="float-right font-semibold">9:00 AM - 8:00 PM</span>
+                <p className="text-gray-600 mt-4 text-sm sm:text-base leading-relaxed">
+                  City Central Library has been a cornerstone of knowledge and
+                  learning for over 28 years. We're dedicated to providing free
+                  access to information, resources, and educational opportunities
+                  for everyone.
                 </p>
 
-                <p className="text-sm text-gray-600 mt-1">
-                  Saturday - Sunday
-                  <span className="float-right font-semibold">10:00 AM - 6:00 PM</span>
-                </p>
-
-                <p className="text-sm text-gray-600 mt-1">
-                  Public Holidays
-                  <span className="float-right text-red-600">Closed</span>
-                </p>
-              </div>
-
-              <div className="border border-gray-200  rounded-xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-10 h-10 bg-pink-500 text-white rounded-lg flex items-center justify-center">
-                    <img src="src\assets\aboutus\Container (4).png" alt="" />
+                {/* Mission */}
+                <div className="flex items-start gap-4 mt-6">
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <img src="src/assets/aboutus/Container (1).png" alt="" className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold">Location</h3>
+                  <div>
+                    <h3 className="font-semibold text-base sm:text-lg">Our Mission</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      To promote literacy and lifelong learning through accessible
+                      resources and community engagement.
+                    </p>
+                  </div>
                 </div>
 
-                <p className="text-gray-600 text-sm">
-                  123 Library Street City Center, State - 600001 India
-                </p>
+                {/* Vision */}
+                <div className="flex items-start gap-4 mt-4">
+                  <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <img src="src/assets/aboutus/Container (2).png" alt="" className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-base sm:text-lg">Our Vision</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      To be the leading community library, fostering innovation and
+                      knowledge in the digital age.
+                    </p>
+                  </div>
+                </div>
 
-                <button className="mt-4 px-4 py-2 border rounded-lg text-sm">
-                  Get Directions
+                <button
+                  className="mt-6 sm:mt-8 px-6 py-2.5 text-white rounded-lg w-fit text-sm sm:text-base"
+                  style={{
+                    background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 50%)`,
+                  }}
+                >
+                  Learn More About Us →
                 </button>
               </div>
 
+              {/* Right */}
+              <div className="flex flex-col gap-6 mt-8 lg:mt-0">
+                <div className="border border-gray-200 rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-purple-600 text-white rounded-lg flex items-center justify-center flex-shrink-0">
+                      <img src="src/assets/aboutus/Container (3).png" alt="" className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-base sm:text-lg">Opening Hours</h3>
+                  </div>
+
+                  <div className="space-y-3 text-sm sm:text-base text-gray-600">
+                    <div className="flex justify-between">
+                      <span>Monday - Friday</span>
+                      <span className="font-semibold">9:00 AM - 8:00 PM</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Saturday - Sunday</span>
+                      <span className="font-semibold">10:00 AM - 6:00 PM</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Public Holidays</span>
+                      <span className="text-red-600">Closed</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-pink-500 text-white rounded-lg flex items-center justify-center flex-shrink-0">
+                      <img src="src/assets/aboutus/Container (4).png" alt="" className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-base sm:text-lg">Location</h3>
+                  </div>
+
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    123 Library Street City Center, State - 600001 India
+                  </p>
+
+                  <button className="mt-4 px-4 py-2 border rounded-lg text-sm w-fit hover:bg-gray-50 transition">
+                    Get Directions
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className="w-full bg-blue-50 py-20 px-4 text-center">
 
-          {/* Badge */}
-          <span className="text-purple-600 px-4 py-1 border border-blue-100 rounded-full text-sm inline-block">
-            Quick Search
-          </span>
-
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-bold mt-4">
-            Find Your{" "}
-            <span className="text-purple-600">Perfect Book</span>
-          </h2>
-
-          {/* Description */}
-          <p className="text-gray-500 mt-2">
-            Search through our extensive collection by book name, author,
-            category, or ISBN
-          </p>
-
-          {/* Search Box */}
-          <div className="bg-white border border-gray-300 rounded-xl mt-8 max-w-3xl mx-auto p-6">
-
-            {/* Input */}
-            <div className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-lg px-4 py-3">
-              <img src={searchicon} alt="" className="h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Search by book name, author, category, or ISBN..."
-                className="w-full bg-transparent text-sm outline-none"
-              />
-            </div>
-
-            {/* Filters */}
-            <div className="flex gap-2 mt-4 flex-wrap items-center text-sm">
-              <span className="px-3 py-1 text-purple-800">Quick Filter :</span>
-
-              <span className="px-3 py-1 border border-gray-300 rounded-full">
-                Available
-              </span>
-              <span className="px-3 py-1 border border-gray-300 rounded-full">
-                New Arrivals
-              </span>
-              <span className="px-3 py-1 border border-gray-300 rounded-full">
-                Popular
-              </span>
-              <span className="px-3 py-1 border border-gray-300 rounded-full">
-                Best Sellers
-              </span>
-            </div>
-
-            {/* Button */}
-            <button
-              className="w-full mt-6 py-3 rounded-lg text-white flex items-center justify-center gap-2"
-              style={{
-                background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 100%)`,
-              }}
-            >
-              <img src={searchicon} alt="" className="h-5 w-5  rounded-full" />
-              <span>Search Collections</span>
-            </button>
-
-          </div>
-        </div>
-
-        <div className="w-full bg-white py-20 px-4 text-center">
-
-          {/* Header */}
-          <div className="max-w-6xl mx-auto mb-10">
-            <span className="text-purple-600 px-4 py-1 rounded-full bg-purple-100 text-sm inline-block">
-              Featured Collections
+        {/* Search Section */}
+        <div className="w-full bg-blue-50 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 text-center">
+          <div className="max-w-4xl mx-auto">
+            {/* Badge */}
+            <span className="text-purple-600 px-4 py-1 border border-blue-200 rounded-full text-xs sm:text-sm inline-block">
+              Quick Search
             </span>
 
-            <h2 className="text-3xl md:text-4xl font-bold mt-4">
-              Discover Our <span className="text-purple-600">Collections</span>
+            {/* Heading */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 leading-tight">
+              Find Your{" "}
+              <span className="text-purple-600">Perfect Book</span>
             </h2>
 
-            <p className="text-gray-500 mt-2">
-              Carefully curated collections to suit every reader
+            {/* Description */}
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto text-sm sm:text-base px-4">
+              Search through our extensive collection by book name, author,
+              category, or ISBN
             </p>
-          </div>
 
-          {/* Cards */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {/* Card 1 */}
-            <div className="border border-gray-300 rounded-xl">
-              <div className="h-2 bg-orange-500 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage.png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">New Arrivals</h3>
-                    <p className="text-gray-500 text-sm">Latest additions to our collection</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      250+ books
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="border border-gray-300 rounded-xl">
-              <div className="h-2 bg-gradient-to-r from-green-400 to-green-500 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage (3).png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">Best Sellers</h3>
-                    <p className="text-gray-500 text-sm">Most borrowed books this month</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      180+ books
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="border border-gray-300 rounded-xl">
-              <div className="h-2 bg-gradient-to-r from-blue-400 to-blue-500 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage (1).png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">Reference Books</h3>
-                    <p className="text-gray-500 text-sm">Academic and research materials</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      1,000+ books
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="border border-gray-300 rounded-xl">
-              <div className="h-2 bg-gradient-to-r from-pink-400 to-pink-500 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage (5).png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">Children's Books</h3>
-                    <p className="text-gray-500 text-sm">Engaging stories for young readers</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      1,200+ books
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 5 */}
-            <div className="border border-gray-300 rounded-xl">
-              <div className="h-2 bg-gradient-to-r from-purple-400 to-purple-500 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage (2).png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">Academic Books</h3>
-                    <p className="text-gray-500 text-sm">Educational resources</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      2,500+ books
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 6 */}
-            <div className="border border-gray-200 rounded-xl">
-              <div className="h-2 bg-purple-400 rounded-t-xl"></div>
-
-              <div className="bg-white shadow-lg rounded-xl p-6">
-                <div className="flex gap-4 mt-4">
-                  <img src="src/assets/collection/EnhancedLandingPage (6).png" alt="" className="h-12 w-12" />
-
-                  <div>
-                    <h3 className="font-semibold text-lg">E-Books</h3>
-                    <p className="text-gray-500 text-sm">Digital library resources</p>
-                    <span className="inline-block mt-2 px-3 py-1 text-xs border border-gray-200 rounded-full">
-                      500+ titles
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div className="w-full  py-20 px-6" style={{ background: "linear-gradient(90deg, " + COLORS.ourservices.primary + " 0%, " + COLORS.ourservices.secondry + " 50%, " + COLORS.ourservices.third + " 100%)" }}>
-
-          {/* Header */}
-          <div className="max-w-6xl mx-auto mb-12">
-            <span className="bg-white shadow px-4 py-1 rounded-full text-sm text-purple-600 inline-block">
-              Our Services
-            </span>
-
-            <h2 className="text-3xl md:text-4xl font-bold mt-4 text-gray-900">
-              Everything You <span className="text-purple-600">Need</span>
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Comprehensive services designed for your success
-            </p>
-          </div>
-
-          {/* Cards */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {/* Card 1 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12">
-                <img src="src\assets\ourservices\Container (1).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">Book Borrowing</h3>
-                <p className="text-gray-500 text-sm">Borrow physical books for home reading</p>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12">
-                <img src="src\assets\ourservices\Container (4).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">Reading Room</h3>
-                <p className="text-gray-500 text-sm">Quiet spaces for focused reading</p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12">
-                <img src="src\assets\ourservices\Container (2).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">Digital Library</h3>
-                <p className="text-gray-500 text-sm">Access e-books and online resources</p>
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12 ">
-                <img src="src\assets\ourservices\Container (5).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">E-Books</h3>
-                <p className="text-gray-500 text-sm">Download digital books to your device</p>
-              </div>
-            </div>
-
-            {/* Card 5 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12 ">
-                <img src="src\assets\ourservices\Container (3).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">Study Rooms</h3>
-                <p className="text-gray-500 text-sm">Private rooms for group study</p>
-              </div>
-            </div>
-
-            {/* Card 6 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex items-center gap-4">
-              <div className="w-12 h-12 ">
-                <img src="src\assets\ourservices\Container (6).png" alt="" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">Online Reservations</h3>
-                <p className="text-gray-500 text-sm">Request books online, collect easily</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div className="w-full bg-white py-20 px-4" >
-
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-
-            {/* Left Section */}
-            <div>
-
-              <span className="bg-green-100 text-green-600 px-4 py-1 rounded-full text-sm inline-block">
-                Membership
-              </span>
-
-              <h2 className="text-3xl md:text-4xl font-bold mt-4 text-gray-900">
-                Join Our <span className="text-purple-600">Community</span>
-              </h2>
-
-              <p className="text-gray-500 mt-4 max-w-lg">
-                Become a member today and unlock access to thousands of books,
-                exclusive events, and premium facilities. Membership is completely free!
-              </p>
-
-              <div className="mt-6 space-y-3">
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-
-                  </span>
-                  <p className="text-gray-600">Access to 10,000+ books across all categories</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-
-                  </span>
-                  <p className="text-gray-600">Online book reservations and renewals</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-
-                  </span>
-                  <p className="text-gray-600">Free Wi-Fi and computer lab access</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-
-                  </span>
-                  <p className="text-gray-600">Exclusive member events and workshops</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-
-                  </span>
-                  <p className="text-gray-600">E-book and digital resource access</p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="w-5 h-5 ">
-                    <img src="src\assets\communtity\Container (2).png" alt="" />
-                  </span>
-                  <p className="text-gray-600">Priority booking for study rooms</p>
-                </div>
-
+            {/* Search Box */}
+            <div className="bg-white border border-gray-200 rounded-xl mt-8 mx-4 sm:mx-6 p-4 sm:p-6 shadow-sm">
+              {/* Input */}
+              <div className="flex items-center gap-3 bg-gray-100 border border-gray-200 rounded-lg px-4 py-2.5 sm:py-3">
+                <img src={searchicon} alt="" className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search by book name, author, category, or ISBN..."
+                  className="w-full bg-transparent text-sm sm:text-base outline-none"
+                />
               </div>
 
-              <button className="mt-8 px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 flex items-center gap-2">
-                <img src={icon3} alt="icon" className="h-4 w-4    " />
+              {/* Filters */}
+              <div className="flex flex-wrap gap-2 mt-4 items-center justify-center text-xs sm:text-sm">
+                <span className="px-3 py-1 text-purple-800 whitespace-nowrap">
+                  Quick Filter :
+                </span>
+                <span className="px-3 py-1 border border-gray-300 rounded-full whitespace-nowrap hover:bg-gray-50 cursor-pointer transition">
+                  Available
+                </span>
+                <span className="px-3 py-1 border border-gray-300 rounded-full whitespace-nowrap hover:bg-gray-50 cursor-pointer transition">
+                  New Arrivals
+                </span>
+                <span className="px-3 py-1 border border-gray-300 rounded-full whitespace-nowrap hover:bg-gray-50 cursor-pointer transition">
+                  Popular
+                </span>
+                <span className="px-3 py-1 border border-gray-300 rounded-full whitespace-nowrap hover:bg-gray-50 cursor-pointer transition">
+                  Best Sellers
+                </span>
+              </div>
 
-                Register Now - Free
+              {/* Button */}
+              <button
+                className="w-full mt-6 py-2.5 sm:py-3 rounded-lg text-white flex items-center justify-center gap-2 text-sm sm:text-base hover:opacity-90 transition"
+                style={{
+                  background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 100%)`,
+                }}
+              >
+                <img src={searchicon} alt="" className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span>Search Collections</span>
               </button>
-
             </div>
-
-            {/* Right Card */}
-            <div className="flex justify-center">
-
-              <div className="shadow-xl border border-gray-200 rounded-2xl p-8 w-full max-w-sm">
-
-                <div className="flex items-center gap-4 mb-4" >
-                  <div className="w-14 h-14 ">
-                    <img src="src\assets\communtity\Container (1).png" alt="" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">Free Membership</h3>
-                    <p className="text-gray-500 text-sm">No hidden fees, completely free</p>
-                  </div>
-                </div>
-
-                <hr className="my-4" />
-
-                <div className="space-y-3 text-sm">
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Registration Fee</span>
-                    <span className="text-green-600 font-semibold">FREE</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Annual Membership</span>
-                    <span className="text-green-600 font-semibold">FREE</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Book Borrowing</span>
-                    <span className="text-green-600 font-semibold">FREE</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Wi-Fi Access</span>
-                    <span className="text-green-600 font-semibold">FREE</span>
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
           </div>
-
         </div>
 
-        <div className="w-full py-5 px-6" style={{ background: `linear-gradient(90deg, ${COLORS.ourservices.primary} 0%, ${COLORS.ourservices.secondry} 50%, ${COLORS.ourservices.third} 100%)`, }}>
-          <div className=" m-4">
-            <div>
+        {/* Collections Section */}
+        <div className="w-full bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 text-center">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-8 sm:mb-10 lg:mb-12">
+              <span className="text-purple-600 px-4 py-1 rounded-full bg-purple-100 text-xs sm:text-sm inline-block">
+                Featured Collections
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4">
+                Discover Our <span className="text-purple-600">Collections</span>
+              </h2>
+              <p className="text-gray-500 mt-2 text-sm sm:text-base">
+                Carefully curated collections to suit every reader
+              </p>
+            </div>
 
-              <span className="bg-white text-purple-600 px-4 py-1 rounded-full shadow text-sm inline-block">
+            {/* Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Card 1 */}
+              <div className="border border-gray-300 rounded-xl overflow-hidden">
+                <div className="h-2 bg-orange-500"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage.png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">New Arrivals</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Latest additions to our collection</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        250+ books
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="border border-gray-300 rounded-xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-green-400 to-green-500"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage (3).png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">Best Sellers</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Most borrowed books this month</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        180+ books
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="border border-gray-300 rounded-xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-blue-400 to-blue-500"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage (1).png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">Reference Books</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Academic and research materials</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        1,000+ books
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 4 */}
+              <div className="border border-gray-300 rounded-xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-pink-400 to-pink-500"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage (5).png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">Children's Books</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Engaging stories for young readers</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        1,200+ books
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 5 */}
+              <div className="border border-gray-300 rounded-xl overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-purple-400 to-purple-500"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage (2).png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">Academic Books</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Educational resources</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        2,500+ books
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 6 */}
+              <div className="border border-gray-200 rounded-xl overflow-hidden">
+                <div className="h-2 bg-purple-400"></div>
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="flex gap-3 sm:gap-4">
+                    <img src="src/assets/collection/EnhancedLandingPage (6).png" alt="" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+                    <div className="text-left">
+                      <h3 className="font-semibold text-base sm:text-lg">E-Books</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">Digital library resources</p>
+                      <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
+                        500+ titles
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Services Section */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20" 
+          style={{ background: "linear-gradient(90deg, " + COLORS.ourservices.primary + " 0%, " + COLORS.ourservices.secondry + " 50%, " + COLORS.ourservices.third + " 100%)" }}>
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+              <span className="bg-white shadow px-4 py-1 rounded-full text-xs sm:text-sm text-purple-600 inline-block">
+                Our Services
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 text-gray-900">
+                Everything You <span className="text-purple-600">Need</span>
+              </h2>
+              <p className="text-gray-500 mt-2 text-sm sm:text-base">
+                Comprehensive services designed for your success
+              </p>
+            </div>
+
+            {/* Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Card 1 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (1).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Book Borrowing</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Borrow physical books for home reading</p>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (4).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Reading Room</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Quiet spaces for focused reading</p>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (2).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Digital Library</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Access e-books and online resources</p>
+                </div>
+              </div>
+
+              {/* Card 4 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (5).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">E-Books</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Download digital books to your device</p>
+                </div>
+              </div>
+
+              {/* Card 5 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (3).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Study Rooms</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Private rooms for group study</p>
+                </div>
+              </div>
+
+              {/* Card 6 */}
+              <div className="bg-white shadow-lg rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 hover:shadow-xl transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/ourservices/Container (6).png" alt="" className="w-full h-full object-contain" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Online Reservations</h3>
+                  <p className="text-gray-500 text-xs sm:text-sm">Request books online, collect easily</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Community Section */}
+        <div className="w-full bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Left Section */}
+              <div>
+                <span className="bg-green-100 text-green-600 px-4 py-1 rounded-full text-xs sm:text-sm inline-block">
+                  Membership
+                </span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 text-gray-900">
+                  Join Our <span className="text-purple-600">Community</span>
+                </h2>
+                <p className="text-gray-500 mt-4 text-sm sm:text-base max-w-lg">
+                  Become a member today and unlock access to thousands of books,
+                  exclusive events, and premium facilities. Membership is completely free!
+                </p>
+
+                <div className="mt-6 space-y-3">
+                  {[
+                    "Access to 10,000+ books across all categories",
+                    "Online book reservations and renewals",
+                    "Free Wi-Fi and computer lab access",
+                    "Exclusive member events and workshops",
+                    "E-book and digital resource access",
+                    "Priority booking for study rooms"
+                  ].map((text, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <span className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0">
+                        <img src="src/assets/communtity/Container (2).png" alt="" className="w-full h-full" />
+                      </span>
+                      <p className="text-gray-600 text-sm sm:text-base">{text}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="mt-6 sm:mt-8 px-6 py-2.5 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition flex items-center gap-2 text-sm sm:text-base">
+                  <img src={icon3} alt="icon" className="h-3 w-3 sm:h-4 sm:w-4" />
+                  Register Now - Free
+                </button>
+              </div>
+
+              {/* Right Card */}
+              <div className="flex justify-center mt-8 lg:mt-0">
+                <div className="shadow-xl border border-gray-200 rounded-2xl p-6 sm:p-8 w-full max-w-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0">
+                      <img src="src/assets/communtity/Container (1).png" alt="" className="w-full h-full" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-base sm:text-lg">Free Membership</h3>
+                      <p className="text-gray-500 text-xs sm:text-sm">No hidden fees, completely free</p>
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  <div className="space-y-3 text-xs sm:text-sm">
+                    {[
+                      { label: "Registration Fee", value: "FREE" },
+                      { label: "Annual Membership", value: "FREE" },
+                      { label: "Book Borrowing", value: "FREE" },
+                      { label: "Wi-Fi Access", value: "FREE" }
+                    ].map((item, index) => (
+                      <div key={index} className="flex justify-between">
+                        <span className="text-gray-600">{item.label}</span>
+                        <span className="text-green-600 font-semibold">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Events Section */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20" 
+          style={{ background: `linear-gradient(90deg, ${COLORS.ourservices.primary} 0%, ${COLORS.ourservices.secondry} 50%, ${COLORS.ourservices.third} 100%)` }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+              <span className="bg-white text-purple-600 px-4 py-1 rounded-full shadow text-xs sm:text-sm inline-block">
                 Events & News
               </span>
-
-              <h2 className="text-3xl md:text-4xl font-bold mt-4 text-gray-900">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 text-gray-900">
                 Upcoming <span className="text-purple-600">Events</span>
               </h2>
-
-              <p className="text-gray-500 mt-2">
+              <p className="text-gray-500 mt-2 text-sm sm:text-base">
                 Join us for exciting events, workshops, and community programs
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-10">
-
-              <div className="bg-white border  gap-3 border-gray-200 rounded-xl p-6 m-5 flex  shadow-sm">
-
-                <div >
-                  <img
-                    src="src/assets/events/Container (1).png"
-                    alt="Book Fair"
-                    className="w-12 h-12"
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Card 1 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/events/Container (1).png" alt="Book Fair" className="w-full h-full object-contain" />
                 </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900">Book Fair 2025</h3>
-                  <p className="text-blue-600 text-sm mt-1">February 15-20, 2025</p>
-                  <p className="text-gray-500 text-sm mt-2">
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">Book Fair 2025</h3>
+                  <p className="text-blue-600 text-xs sm:text-sm mt-1">February 15-20, 2025</p>
+                  <p className="text-gray-500 text-xs sm:text-sm mt-2">
                     Annual book fair featuring publishers and authors
                   </p>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="bg-white border gap-3 border-gray-200 rounded-xl p-6 m-5 flex  shadow-sm   ">
-
-                <div >
-                  <img
-                    src="src/assets/events/Container (2).png"
-                    alt="Author Meet"
-                    className="w-12 h-12"
-                  />
+              <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/events/Container (2).png" alt="Author Meet" className="w-full h-full object-contain" />
                 </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900">Author Meet &amp; Greet</h3>
-                  <p className="text-blue-600 text-sm mt-1">March 5, 2025</p>
-                  <p className="text-gray-500 text-sm mt-2">
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">Author Meet &amp; Greet</h3>
+                  <p className="text-blue-600 text-xs sm:text-sm mt-1">March 5, 2025</p>
+                  <p className="text-gray-500 text-xs sm:text-sm mt-2">
                     Interactive session with bestselling authors
                   </p>
                 </div>
               </div>
-              <div className="bg-white border gap-3 border-gray-200 rounded-xl p-6 m-5 flex  shadow-sm">
 
-                <div >
-                  <img
-                    src="src/assets/events/Container (3).png"
-                    alt="Workshop"
-                    className="w-12 h-12"
-                  />
+              {/* Card 3 */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition md:col-span-2 lg:col-span-1">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                  <img src="src/assets/events/Container (3).png" alt="Workshop" className="w-full h-full object-contain" />
                 </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900">Reading Workshop</h3>
-                  <p className="text-blue-600 text-sm mt-1">Every Saturday</p>
-                  <p className="text-gray-500 text-sm mt-2">
+                <div className="text-left">
+                  <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">Reading Workshop</h3>
+                  <p className="text-blue-600 text-xs sm:text-sm mt-1">Every Saturday</p>
+                  <p className="text-gray-500 text-xs sm:text-sm mt-2">
                     Workshops for children and young readers
                   </p>
                 </div>
               </div>
-
             </div>
 
-            <button className="mt-10 px-6 py-3 bg-white border border-gray-300 text-purple-600 rounded-lg flex items-center gap-2 mx-auto hover:bg-purple-50">
-              View All Events →
-            </button>
-
+            <div className="text-center mt-8 sm:mt-10">
+              <button className="px-6 py-2.5 bg-white border border-gray-300 text-purple-600 rounded-lg inline-flex items-center gap-2 text-sm sm:text-base hover:bg-purple-50 transition">
+                View All Events →
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="w-full bg-white py-20 px-4">
-          <div className="max-w-6xl mx-auto">
+        {/* Testimonials Section */}
+        <div className="w-full bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+              <span className="inline-block bg-yellow-100 text-orange-500 px-4 py-1 rounded-full text-xs sm:text-sm">
+                Testimonials
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4 text-gray-900">
+                What Our <span className="text-purple-600">Members Say</span>
+              </h2>
+              <p className="text-gray-500 mt-2 text-sm sm:text-base">
+                Real feedback from our community members
+              </p>
+            </div>
 
-            {/* Badge */}
-            <span className="inline-block bg-yellow-100 text-orange-500 px-4 py-1 rounded-full text-sm">
-              Testimonials
-            </span>
-
-            {/* Heading */}
-            <h2 className="text-3xl md:text-4xl font-bold mt-4 text-gray-900">
-              What Our <span className="text-purple-600">Members Say</span>
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Real feedback from our community members
-            </p>
-
-            {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {/* Card 1 */}
-              <div className="border border-blue-200 rounded-xl p-6">
-
-                <div >⭐⭐⭐⭐⭐</div>
-
-                <p className="text-gray-600 mt-4 ">
+              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition">
+                <div className="text-yellow-400 text-sm sm:text-base">⭐⭐⭐⭐⭐</div>
+                <p className="text-gray-600 mt-4 text-sm sm:text-base">
                   "The online book reservation system is fantastic! I can easily request books and collect them at my convenience."
                 </p>
-
-                <div className="flex items-center gap-4 mt-6">
-                  <div >
-                    <img src="src\assets\testiminols\Container (1).png" alt="" />
+                <div className="flex items-center gap-3 sm:gap-4 mt-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                    <img src="src/assets/testiminols/Container (1).png" alt="" className="w-full h-full rounded-full object-cover" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Priya Sharma</p>
-                    <p className="text-sm text-gray-500">Student</p>
+                    <p className="font-semibold text-gray-900 text-sm sm:text-base">Priya Sharma</p>
+                    <p className="text-xs sm:text-sm text-gray-500">Student</p>
                   </div>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="border border-blue-200 rounded-xl p-6">
-
-                <div >⭐⭐⭐⭐⭐</div>
-
-                <p className="text-gray-600 mt-4 ">
+              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition">
+                <div className="text-yellow-400 text-sm sm:text-base">⭐⭐⭐⭐⭐</div>
+                <p className="text-gray-600 mt-4 text-sm sm:text-base">
                   "Excellent collection of reference materials and a perfect quiet environment for research work."
                 </p>
-
-                <div className="flex items-center gap-4 mt-6">
-                  <div>
-                    <img src="src\assets\testiminols\Container (2).png" alt="" />
+                <div className="flex items-center gap-3 sm:gap-4 mt-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                    <img src="src/assets/testiminols/Container (2).png" alt="" className="w-full h-full rounded-full object-cover" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Rajesh Kumar</p>
-                    <p className="text-sm text-gray-500">Researcher</p>
+                    <p className="font-semibold text-gray-900 text-sm sm:text-base">Rajesh Kumar</p>
+                    <p className="text-xs sm:text-sm text-gray-500">Researcher</p>
                   </div>
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="border border-blue-200 rounded-xl p-6">
-
-                <div >⭐⭐⭐⭐⭐</div>
-
-                <p className="text-gray-600 mt-4 ">
+              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition md:col-span-2 lg:col-span-1">
+                <div className="text-yellow-400 text-sm sm:text-base">⭐⭐⭐⭐⭐</div>
+                <p className="text-gray-600 mt-4 text-sm sm:text-base">
                   "The children's section is wonderful! My students love the reading programs offered here."
                 </p>
-
-                <div className="flex items-center gap-4 mt-6">
-                  <div >
-                    <img src="src\assets\testiminols\Container (3).png" alt="" />
+                <div className="flex items-center gap-3 sm:gap-4 mt-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                    <img src="src/assets/testiminols/Container (3).png" alt="" className="w-full h-full rounded-full object-cover" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Anita Desai</p>
-                    <p className="text-sm text-gray-500">Teacher</p>
+                    <p className="font-semibold text-gray-900 text-sm sm:text-base">Anita Desai</p>
+                    <p className="text-xs sm:text-sm text-gray-500">Teacher</p>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
 
-        <div >
+        {/* Newsletter Section */}
+        <div className="w-full">
           <div
-            className="w-full py-20 px-4 flex justify-center items-center"
+            className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 flex justify-center items-center"
             style={{
               background: "linear-gradient(90deg, #6D28D9 30%, #9333EA 60%, #DB2777 100%)",
-            }}>
-            <div className="  w-full text-center text-white">
+            }}
+          >
+            <div className="max-w-3xl w-full text-center text-white">
+              {/* Icon */}
+              <img src="src/assets/updated/Container (1).png" alt="" className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-4 sm:mb-6" />
 
-              <div >
-                {/* Icon */}
-                <img src="src/assets/updated/Container (1).png" alt="" className="w-40 h-40 mx-auto  mb-4 flex   " />
+              {/* Heading */}
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+                Stay Updated
+              </h2>
 
-
-                {/* Heading */}
-                <h2 className="text-3xl md:text-4xl font-bold">
-                  Stay Updated
-                </h2>
-
-                {/* Description */}
-                <p className="text-white/80 mt-2">
-                  Subscribe to our newsletter for the latest book arrivals,<br />
-                  events, and library news
-                </p>
-              </div>
+              {/* Description */}
+              <p className="text-white/80 mt-2 text-sm sm:text-base px-4">
+                Subscribe to our newsletter for the latest book arrivals,
+                events, and library news
+              </p>
 
               {/* Input + Button */}
-              <div className="mt-8 flex justify-center gap-3 max-w-xl mx-auto">
-
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto px-4">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-lg border border-white/30 outline-none tex-white"
+                  className="w-full px-4 py-2.5 sm:py-3 rounded-lg border border-white/30 outline-none bg-white/10 text-white placeholder-white/60 text-sm sm:text-base"
                 />
-
-                <button className="bg-white text-purple-600 px-7 py-2 rounded-lg flex items-center gap-2 font-medium shadow">
-                  <img src="src\assets\updated\Icon (1).png" alt="" className="3" />
+                <button className="bg-white text-purple-600 px-6 sm:px-7 py-2.5 sm:py-2 rounded-lg inline-flex items-center justify-center gap-2 font-medium shadow hover:bg-gray-100 transition text-sm sm:text-base whitespace-nowrap">
+                  <img src="src/assets/updated/Icon (1).png" alt="" className="h-3 w-3 sm:h-4 sm:w-4" />
                   Subscribe
                 </button>
-
               </div>
-
             </div>
           </div>
         </div>

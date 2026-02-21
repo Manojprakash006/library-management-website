@@ -5,12 +5,12 @@ import  Navbar  from "./layout/navbar/Navbar";
 import About from "./page/about us/About";
 import Collection from "./page/collection/Collection";
 import  Contact from "./page/contact/Contact";
-import Event from "./page/event/Event";
+import Event from "./page/eventss/Event";
 import Home from "./page/home/Home";
 import Login from "./page/login/Login";
 import Membership from "./page/membership/Membership";
 import Register from "./page/register/Register";
-import Services from "./page/services/Services";
+import Services from "./page/servicess/Services";
 
 
 

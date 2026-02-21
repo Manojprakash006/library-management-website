@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
+  const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -16,19 +18,40 @@ const Register = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Register', formData);
+    toast.success('Registration successful! Welcome to the library.', {
+      duration: 4000,
+      position: 'top-right',
+      style: {
+        background: '#ECFDF5',
+        color: '#065F46',
+        border: '1px solid #A7F3D0',
+        fontFamily: FONT?.primary,
+        fontSize: '14px',
+        padding: '12px 16px',
+        borderRadius: '12px',
+        boxShadow: '0px 8px 24px rgba(0,0,0,0.12)',
+      },
+      iconTheme: {
+        primary: '#16A34A',
+        secondary: '#ECFDF5',
+      },
+    });
+    setIsOpen(false);
   };
 
   const handleCancel = () => {
-    console.log('Cancel');
+    setIsOpen(false);
   };
 
   return (
     <>
+      <Toaster />
       {/* Overlay */}
+      {isOpen && (
       <div
         className="fixed inset-0 flex items-center justify-center z-50 px-4"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
+        onClick={handleCancel}
       >
         {/* Modal */}
         <div
@@ -38,6 +61,7 @@ const Register = () => {
             border: '1px solid #E5E7EB',
             maxWidth: '560px',
           }}
+          onClick={e => e.stopPropagation()}
         >
           {/* Close Button */}
           <button
@@ -318,6 +342,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+      )}
     </>
   );
 };
