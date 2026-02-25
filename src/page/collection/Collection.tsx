@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FONT, COLORS } from "../../constant/Constant";
+import { FONT, COLORS, FONTSIZE, FONTWEIGHT } from "../../constant/Constant";
 import Footer from '../../layout/footer/Footer';
 import {
   FiSearch,
@@ -14,6 +14,8 @@ import {
 } from 'react-icons/fi';
 import { BsInfoCircleFill } from 'react-icons/bs';
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
+import loginIcon from "../../assets/collection/Login icon.png";
+import { useNavigate } from 'react-router';
 
 const C = COLORS.bookCollection;
 
@@ -54,6 +56,7 @@ const Collection = () => {
   const [search, setSearch]     = useState('');
   const [currentPage, setPage]  = useState(1);
   const [hoveredCat, setHovCat] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const filtered = BOOKS.filter(b =>
     b.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -70,10 +73,9 @@ const Collection = () => {
   return (
     <div
       className="min-h-screen"
-      style={{ fontFamily: FONT.f1, backgroundColor: C.section.bg }}
+      style={{ fontFamily: FONT.f1, }}
     >
 
-      {/* ── Responsive Styles ── */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
@@ -100,29 +102,19 @@ const Collection = () => {
         }
       `}</style>
 
-      {/* ── HERO ── */}
-      <div
-        className="px-5 py-4  "
-        style={{ background: C.hero.gradient }}
-      >
-        <h1
-          className="text-xl font-bold m-0"
-          style={{ color: C.hero.title }}
-        >
-          Book Collections
-        </h1>
-        <p
-          className="text-xs mt-1 mb-0"
-          style={{ color: C.hero.subtitle }}
-        >
-          Explore our extensive collection and request books online
-        </p>
-      </div>
+              <div
+                className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#9A10F9] to-[#E60077] "
+              >
+                <div className="px-4 sm:px-6 md:px-16 lg:px-24">
+                  <h1 className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}>Book Collections</h1>
+                  <p className="text-white text-lg md:text-lg opacity-90">
+                    Explore our extensive collection and request books online
+                  </p>
+                </div>
+              </div>
 
-      {/* ── BODY ── */}
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-12">
+      <div className="px-4 sm:px-6 md:px-16 lg:px-24 mb-20">
 
-        {/* ── Login Alert ── */}
         <div
           className="flex items-center justify-between flex-wrap gap-3 rounded-2xl px-6 py-4 mb-8 border"
           style={{
@@ -131,10 +123,7 @@ const Collection = () => {
           }}
         >
           <div className="flex items-center gap-4">
-            <BsInfoCircleFill
-              size={28}
-              style={{ color: C.loginAlert.buttonBg, flexShrink: 0 }}
-            />
+            <img src={loginIcon} alt="Login Icon" className='w-8 h-8' />
             <div>
               <p
                 className="m-0 font-bold text-lg"
@@ -151,7 +140,8 @@ const Collection = () => {
             </div>
           </div>
           <button
-            className="border-none rounded-xl px-7 py-3 text-base font-semibold cursor-pointer whitespace-nowrap flex-shrink-0"
+            onClick={() => navigate("/login")}
+            className="border-none rounded-xl px-7 py-3 text-base font-semibold cursor-pointer whitespace-nowrap shrink-0"
             style={{
               background: C.loginAlert.buttonBg,
               color: C.loginAlert.buttonText,
@@ -162,7 +152,6 @@ const Collection = () => {
           </button>
         </div>
 
-        {/* ── Browse by Category ── */}
         <h2
           className="text-xl font-bold mt-0 mb-5"
           style={{ color: C.section.title }}
@@ -185,7 +174,7 @@ const Collection = () => {
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span
-                  className="flex-shrink-0 flex"
+                  className="shrink-0 flex"
                   style={{ color: C.categoryCard.hoverBorder }}
                 >
                   {React.cloneElement(cat.icon, { size: 20 })}
@@ -198,7 +187,7 @@ const Collection = () => {
                 </span>
               </div>
               <span
-                className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap flex-shrink-0"
+                className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap shrink-0"
                 style={{
                   background: C.section.bg,
                   color: C.categoryCard.text,
@@ -210,7 +199,6 @@ const Collection = () => {
           ))}
         </div>
 
-        {/* ── Search ── */}
         <div
           className="rounded-2xl px-6 py-4 mb-8 border"
           style={{
@@ -248,7 +236,6 @@ const Collection = () => {
           </div>
         </div>
 
-        {/* ── All Books ── */}
         <h2
           className="text-xl font-bold mt-0 mb-5"
           style={{ color: C.section.title }}
@@ -256,41 +243,36 @@ const Collection = () => {
           All Books ({filtered.length})
         </h2>
 
-        <div className="col-books-grid">
+        <div className="col-books-grid pb-20">
           {paginated.map(book => (
             <div
               key={book.id}
               className="rounded-2xl px-5 pt-4 pb-5 border"
               style={{
-                background: C.bookCard.bg,
+                background: book.available === false? C.pagination.activeText : C.bookCard.bg,
                 borderColor: C.bookCard.border,
                 boxShadow: C.bookCard.shadow,
               }}
             >
-              {/* Serial */}
               <p
-                className="m-0 mb-1.5 text-xs font-semibold"
-                style={{ color: C.section.subtitle }}
+                className={`${FONTSIZE[14]} leading-5`}
+                style={{ color: C.section.subtitle, ...FONTWEIGHT[700] }}
               >
                 {book.serial}
               </p>
-              {/* Title */}
               <p
                 className="m-0 mb-1 text-base font-bold leading-snug"
                 style={{ color: C.bookCard.title }}
               >
                 {book.title}
               </p>
-              {/* Author */}
               <p
                 className="m-0 mb-3 text-sm leading-snug"
                 style={{ color: C.bookCard.author }}
               >
                 {book.author}
               </p>
-              {/* Tags */}
               <div className="flex items-center gap-2 flex-wrap">
-                {/* Category tag */}
                 <span
                   className="text-xs font-medium rounded-lg px-2.5 py-1"
                   style={{
@@ -300,7 +282,6 @@ const Collection = () => {
                 >
                   {book.category}
                 </span>
-                {/* Rack tag */}
                 <span
                   className="text-xs font-medium rounded-lg px-2.5 py-1 inline-flex items-center gap-1"
                   style={{
@@ -311,7 +292,6 @@ const Collection = () => {
                   <FiDisc size={11} />
                   {book.rack}
                 </span>
-                {/* Status tag */}
                 <span
                   className="text-xs font-semibold rounded-lg px-2.5 py-1"
                   style={{
@@ -326,7 +306,6 @@ const Collection = () => {
           ))}
         </div>
 
-        {/* ── Pagination ── */}
         <div className="flex items-center justify-center gap-2 mt-8">
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}

@@ -100,8 +100,8 @@ export const COLORS = {
     shadow: "0 10px 25px rgba(0,0,0,0.08)",
     title: "#111827",
     desc: "#6B7280",
-    tagBg: "#EEF2FF",
-    tagText: "#4F39F6",
+    tagBg: "#030213",
+    tagText: "#FFFFFF",
   },
 
   /* Regular Event Cards */
@@ -152,6 +152,7 @@ membership: {
       badgeText: "#FFFFFF",
       buttonPrimary: "#FFFFFF",
       buttonPrimaryText: "#6C3EF4",
+      pTag: "#C6D2FF"
     },
 
     section: {
@@ -184,6 +185,13 @@ membership: {
       inputFocus: "#7B3FF2",
       buttonGradient: "linear-gradient(90deg, #6C3EF4 0%, #C03EFE 100%)",
       buttonText: "#FFFFFF",
+    },
+
+    req_Document: {
+      req_DocumentBG: "#EFF6FF",
+      req_DocumentBorder: "#BEDBFF",
+      textHeadColor: "#1C398E",
+      contentColor: "#193CB8",
     },
 
     process: {
@@ -279,7 +287,7 @@ membership: {
     section: {
       bg: "#F3F4F6",
       title: "#111827",
-      subtitle: "#6B7280",
+      subtitle: "#4F39F6",
     },
 
     loginAlert: {
@@ -309,21 +317,22 @@ membership: {
     },
 
     bookCard: {
-      bg: "#FFFFFF",
-      border: "#D1D5DB",
+      bg: "#F0FDF44D",
+      border: "#B9F8CF",
       shadow: "0px 6px 16px rgba(0,0,0,0.06)",
       title: "#111827",
       author: "#6B7280",
       tagBg: "#F3F4F6",
       tagText: "#4B5563",
+
     },
 
     status: {
-      availableBg: "#DCFCE7",
-      availableText: "#16A34A",
+      availableBg: "#00A63E",
+      availableText: "#FFFFFF",
 
-      issuedBg: "#FEE2E2",
-      issuedText: "#DC2626",
+      issuedBg: "#D4183D",
+      issuedText: "#FFFFFF",
     },
 
     pagination: {
@@ -426,10 +435,39 @@ loginModal: {
 
 
 export const FONT={
-    f1:"Arimo",
+    f1: "Arimo",
     f2: {
         heading:"font"
-    }
+    },
+    primary: "Arimo",
+    secondary: "Arimo",
 }
+
+// FONT Size and FONT Weight comman values:
+export const FONTSIZE: Record<number, string> = {
+  8:  "text-[clamp(8px,1.5vw,10px)]",
+  10: "text-[clamp(10px,1.8vw,12px)]",
+  12: "text-[clamp(12px,2vw,14px)]",
+  14: "text-[clamp(14px,2.2vw,16px)]",
+  16: "text-[clamp(16px,2.5vw,18px)]",
+  18: "text-[clamp(18px,2.8vw,20px)]",
+  20: "text-[clamp(20px,3vw,22px)]",
+  22: "text-[clamp(22px,3.2vw,24px)]",
+  24: "text-[clamp(24px,3.5vw,26px)]",
+  26: "text-[clamp(26px,3.8vw,28px)]",
+  28: "text-[clamp(28px,4vw,30px)]",
+  30: "text-[clamp(30px,4.2vw,32px)]",
+  32: "text-[clamp(32px,4.5vw,36px)]",
+};
+
+
+export const FONTWEIGHT = {
+  400: { fontWeight: 400 }, // Regular
+  500: { fontWeight: 500 }, // Medium
+  600: { fontWeight: 600 }, // SemiBold
+  700: { fontWeight: 700 }, // Bold
+  800: { fontWeight: 800 }, // ExtraBold
+  900: { fontWeight: 900 }, // Black
+};
 
 

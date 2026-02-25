@@ -1,5 +1,5 @@
 import React from "react";
-import { FONT, COLORS } from "../../constant/Constant";
+import { FONT, COLORS, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import {
   FaBookOpen,
@@ -66,36 +66,19 @@ const Services = () => {
 
   return (
     <>
-      {/* Header Section */}
       <div
-        className="px-6 py-8 sm:px-10 sm:py-4 md:px-12"
-        style={{ background: COLORS.services.header.bg }}
+          className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#01A641] to-[#019789] "
       >
-        <h1
-          className="text-2xl sm:text-3xl mb-2"
-          style={{
-            color: COLORS.services.header.text,
-            fontFamily: FONT.f1,
-          }}
-        >
-          Library Facilities
-        </h1>
-
-        <p
-          className="text-sm sm:text-base"
-          style={{
-            color: COLORS.services.header.subText,
-            fontFamily: FONT.f1,
-          }}
-        >
-          Modern amenities designed to enhance your learning experience
-        </p>
+          <div className="px-4 sm:px-6 md:px-16 lg:px-24">
+            <h1 className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}>Library Facilities</h1>
+            <p className="text-white text-lg md:text-lg opacity-90">
+              Modern amenities designed to enhance your learning experience
+            </p>
+          </div>
       </div>
 
-      {/* Facilities Grid */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 px-4 sm:px-8 md:px-12 py-8 sm:py-10"
-        style={{ backgroundColor: COLORS.services.section.bg }}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 px-3 sm:px-30 mb-10"
       >
         {facilities.map((item, index) => (
           <div
@@ -107,7 +90,7 @@ const Services = () => {
             }}
           >
             <div
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: item.bg }}
             >
               {item.icon}
@@ -118,8 +101,8 @@ const Services = () => {
                 className="text-sm sm:text-base mb-1"
                 style={{
                   color: COLORS.services.card.title,
-                  fontFamily: FONT.f1,
-                  fontWeight: 600,
+                  font: FONT.f1,
+                  fontWeight: 700,
                 }}
               >
                 {item.title}
@@ -129,7 +112,8 @@ const Services = () => {
                 className="text-xs sm:text-sm leading-relaxed"
                 style={{
                   color: COLORS.services.card.desc,
-                  fontFamily: FONT.f1,
+                  font: FONT.f1,
+                  fontWeight: 400
                 }}
               >
                 {item.desc}
@@ -139,13 +123,12 @@ const Services = () => {
         ))}
       </div>
 
-      {/* Additional Services */}
-      <div className="px-4 sm:px-8 md:px-12 pb-10 sm:pb-12">
+      <div className="px-4 sm:px-6 md:px-16 lg:px-24 mb-10 ">
         <h2
-          className="text-lg sm:text-xl mb-5 sm:mb-6"
+          className={`mb-5 sm:mb-6 ${FONTSIZE[24]} leading-8`}
           style={{
             color: COLORS.services.section.title,
-            fontFamily: FONT.f1,
+            font: FONT.f1,
             fontWeight: 700,
           }}
         >
@@ -155,20 +138,21 @@ const Services = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           <div>
             <h4
-              className="text-sm mb-1.5"
+              className={` mb-1.5 ${FONTSIZE[18]} leading-7`}
               style={{
                 color: COLORS.services.card.title,
-                fontFamily: FONT.f1,
-                fontWeight: 600,
+                font: FONT.f1,
+                fontWeight: 700,
               }}
             >
               Book Reservation
             </h4>
             <p
-              className="text-sm"
+              className={`${FONTSIZE[14]} leading-5`}
               style={{
                 color: COLORS.services.card.desc,
                 fontFamily: FONT.f1,
+                fontWeight: 400,
               }}
             >
               Reserve books online and collect them at your convenience.
@@ -177,45 +161,47 @@ const Services = () => {
 
           <div>
             <h4
-              className="text-sm mb-1.5"
+              className={` mb-1.5 ${FONTSIZE[18]} leading-7`}
               style={{
                 color: COLORS.services.card.title,
-                fontFamily: FONT.f1,
-                fontWeight: 600,
+                font: FONT.f1,
+                fontWeight: 700,
               }}
             >
               Inter-Library Loan
             </h4>
             <p
-              className="text-sm"
+              className={`${FONTSIZE[14]} leading-5`}
               style={{
                 color: COLORS.services.card.desc,
                 fontFamily: FONT.f1,
+                fontWeight: 400,
               }}
             >
-              Access books from partner libraries across the region.
+              Access books from partner libraries across the region
             </p>
           </div>
 
           <div>
             <h4
-              className="text-sm mb-1.5"
+              className={` mb-1.5 ${FONTSIZE[18]} leading-7`}
               style={{
                 color: COLORS.services.card.title,
-                fontFamily: FONT.f1,
-                fontWeight: 600,
+                font: FONT.f1,
+                fontWeight: 700,
               }}
             >
               Reference Service
             </h4>
             <p
-              className="text-sm"
+              className={`${FONTSIZE[14]} leading-5`}
               style={{
                 color: COLORS.services.card.desc,
                 fontFamily: FONT.f1,
+                fontWeight: 400,
               }}
             >
-              Expert librarians available to assist with research queries.
+              Expert librarians available to assist with research queries
             </p>
           </div>
         </div>

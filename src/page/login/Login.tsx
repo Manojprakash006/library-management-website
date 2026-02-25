@@ -1,21 +1,53 @@
 import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
+import { useNavigate } from 'react-router';
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const navigate = useNavigate();
+  const [error, setError] = useState<formError>({});
+  
+    type formError = {
+      email?: String,
+      password?: String,
+    }
+  
+    const Validate = () => { 
+  
+      let newError: formError = {};
+  
+      if(!email.trim()) newError.email = "Please Enter the Email";
+      if(!password.trim()) newError.password = "Please Enter the Password";
+  
+      if(Object.keys(newError).length > 0) {
+           setError(newError);
+           return false;
+        }
+        setError({});
+        return true;
+    }
+
+  const HandleClose = () => {
+    navigate(-1);
+  }
+
+  const HandleSubmit = () => {
+    if(!Validate()) return;
+    setEmail("");
+    setPassword("");
+    navigate("/");
+    console.log("Login Success");
+  }
 
   return (
-    /* Overlay */
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       style={{ backgroundColor: COLORS.loginModal.overlay }}
-      onClick={onClose}
     >
-      {/* Modal */}
-      <div
+      <div 
         className="relative w-full max-w-md rounded-2xl p-6 sm:p-8"
         style={{
           backgroundColor: COLORS.loginModal.modal.bg,
@@ -24,10 +56,9 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-          onClick={onClose}
+          onClick={HandleClose}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
@@ -39,11 +70,9 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           </svg>
         </button>
 
-        {/* Header */}
         <div className="flex items-center gap-3 mb-1">
-          {/* Icon */}
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
             style={{ backgroundColor: COLORS.loginModal.header.iconBg }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -68,9 +97,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           Enter your credentials to access your library account
         </p>
 
-        {/* Form */}
         <div className="space-y-4">
-          {/* Email Field */}
           <div>
             <label
               className="block text-sm font-medium mb-1.5"
@@ -94,9 +121,9 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                 boxShadow: emailFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
               }}
             />
+            <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
           </div>
 
-          {/* Password Field */}
           <div>
             <label
               className="block text-sm font-medium mb-1.5"
@@ -120,9 +147,9 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                 boxShadow: passwordFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
               }}
             />
+            <p className="text-red-400 mt-1 flex gap-2 items-center">{error.password}</p>
           </div>
 
-          {/* Forgot Password */}
           <div className="flex justify-end -mt-1">
             <a
               href="#"
@@ -139,9 +166,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3 mt-6">
-          {/* Cancel */}
           <button
             className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all border"
             style={{
@@ -152,13 +177,13 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E5E7EB')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.secondaryBg)}
-            onClick={onClose}
+            onClick={HandleClose}
           >
             Cancel
           </button>
 
-          {/* Login */}
-          <button
+          <button 
+            onClick={HandleSubmit}
             className="flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all"
             style={{
               fontFamily: FONT.secondary,
@@ -168,7 +193,6 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.primaryHover)}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.primaryBg)}
           >
-            {/* Login icon */}
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <path
                 d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"

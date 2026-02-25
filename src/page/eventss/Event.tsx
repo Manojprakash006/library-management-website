@@ -1,5 +1,5 @@
 import React from 'react'
-import { FONT, COLORS } from "../../constant/Constant";
+import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import {
   FiBook,
@@ -18,21 +18,22 @@ import {
   MdOutlineSchool,
   MdChildCare,
 } from "react-icons/md";
+import eventIcon from "../../assets/events/Head Event Icon.png"
 
 const C = COLORS.events;
 
 const Event = () => {
   return (
     <>
-      <div style={{ fontFamily: FONT.f1, background: C.page.bg }} className="min-h-screen">
+      <div style={{ fontFamily: FONT.f1, background: C.page.bg }} className="">
 
-        {/* ── Hero ── */}
-        <div style={{ background: C.hero.bg }} className="px-5 py-4">
-          <div className="max-w-[1400px] mx-auto">
+        <div style={{ background: C.hero.bg }} className="w-full py-6 px-4 mb-16">
+          <div className="px-4 sm:px-6 md:px-16 lg:px-24">
             <span
-              style={{ background: C.hero.badgeBg, color: C.hero.title }}
-              className="text-[11px] font-semibold px-3 py-1 rounded-full tracking-widest inline-block mb-3"
+              style={{ background: C.hero.badgeBg, color: C.hero.title, ...FONTWEIGHT[700] }}
+              className="md:flex gap-2 text-[11px] font-semibold flex justify-center items-center px-5 py-2 md:px-3 md:py-2 rounded-full tracking-widest w-fit mb-3"
             >
+            <img src={eventIcon} className='w-4 h-4' alt="" />
               Events & Programs
             </span>
             <h1
@@ -47,9 +48,8 @@ const Event = () => {
           </div>
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-5">
+        <div className="max-w-350 mx-auto px-5">
 
-          {/* ── Featured Events ── */}
           <section className="mt-12 mb-14">
             <h2
               style={{ color: C.section.title }}
@@ -61,52 +61,54 @@ const Event = () => {
               Don't miss these highlighted upcoming events
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 ">
 
-              {/* Featured Event 1 - Book Fair */}
               <div
                 style={{
                   background: C.featuredCard.bg,
-                  border: `1px solid ${C.featuredCard.border}`,
-                  boxShadow: C.featuredCard.shadow,
                 }}
-                className="rounded-2xl p-7 flex flex-col gap-3.5"
+                className={`rounded-2xl p-7 flex flex-col gap-3.5 shadow-2xl border-t-8 border-[#615FFF]`}
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex flex-col gap-3.5">
                   <div
                     style={{ background: "#EEF2FF", color: "#4F39F6" }}
-                    className="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center shrink-0"
+                    className="w-13 h-13 rounded-[14px] flex items-center justify-center shrink-0"
                   >
                     <FiBook size={28} />
                   </div>
                   <span
                     style={{ background: C.featuredCard.tagBg, color: C.featuredCard.tagText }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full flex items-center gap-1"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full flex items-center gap-1"
                   >
                     <FiBook size={12} /> Book Fair
                   </span>
                 </div>
 
-                <h3 style={{ color: C.featuredCard.title }} className="text-lg font-bold m-0">
+                <h3 style={{ color: C.featuredCard.title, ...FONTWEIGHT[700]  }} className={`${FONTSIZE[24]} leading-8`}>
                   Annual Book Fair 2025
                 </h3>
-                <p style={{ color: C.featuredCard.desc }} className="text-[13px] leading-relaxed m-0">
+                <p style={{ color: C.featuredCard.desc, ...FONTWEIGHT[400] }} className={`${FONTSIZE[16]} leading-6`}>
                   Join us for our biggest annual event featuring renowned publishers, bestselling authors, book launchers, and exclusive discounts on thousands of books.
                 </p>
 
-                <div style={{ color: C.section.subText }} className="flex flex-wrap gap-3 text-xs">
-                  <span className="flex items-center gap-1.5">
-                    <FiCalendar size={13} /> February 14-20, 2026
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiClock size={13} /> 10:00 AM - 7:00 PM
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiMapPin size={13} /> Main Hall
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiUsers size={13} /> 800+ expected
-                  </span>
+                <div style={{ color: C.section.subText }} className="flex flex-wrap gap-8 text-xs">
+                  <div className='flex flex-col gap-5'>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiCalendar size={13} className='w-4 h-4'/> February 14-20, 2026
+                    </span>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiClock size={13} className='w-4 h-4'/> 10:00 AM - 7:00 PM
+                    </span>
+                  </div>
+
+                  <div className='flex flex-col gap-5'>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiMapPin size={13} className='w-4 h-4'/> Main Hall
+                    </span>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiUsers size={13} className='w-4 h-4'/> 800+ expected
+                    </span>
+                  </div>
                 </div>
 
                 <button
@@ -117,50 +119,52 @@ const Event = () => {
                 </button>
               </div>
 
-              {/* Featured Event 2 - Author Session */}
               <div
                 style={{
                   background: C.featuredCard.bg,
-                  border: `1px solid ${C.featuredCard.border}`,
-                  boxShadow: C.featuredCard.shadow,
                 }}
-                className="rounded-2xl p-7 flex flex-col gap-3.5"
+                className="rounded-2xl p-7 flex flex-col gap-3.5 shadow-2xl border-t-8 border-[#F6339A]"
               >
-                <div className="flex items-center gap-3.5">
+                <div className="flex flex-col gap-3.5">
                   <div
                     style={{ background: "#FDF2F8", color: "#EC4899" }}
-                    className="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center shrink-0"
+                    className="w-13 h-13 rounded-[14px] flex items-center justify-center shrink-0"
                   >
                     <FiUser size={28} />
                   </div>
                   <span
                     style={{ background: C.featuredCard.tagBg, color: C.featuredCard.tagText }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full flex items-center gap-1"
+                    className="text-[11px] font-semibold w-fit px-2.5 py-0.75 rounded-full flex items-center gap-1"
                   >
                     <FiUser size={12} /> Author Session
                   </span>
                 </div>
 
-                <h3 style={{ color: C.featuredCard.title }} className="text-lg font-bold m-0">
+                <h3 style={{ color: C.featuredCard.title, ...FONTWEIGHT[700]  }} className={`${FONTSIZE[24]} leading-8`}>
                   Author Meet & Greet
                 </h3>
-                <p style={{ color: C.featuredCard.desc }} className="text-[13px] leading-relaxed m-0">
+                <p style={{ color: C.featuredCard.desc, ...FONTWEIGHT[400] }} className={`${FONTSIZE[16]} leading-6`}>
                   Interactive session with bestselling author Amia Tripathi. Book signing, Q&A, and discussion about his latest novel.
                 </p>
 
-                <div style={{ color: C.section.subText }} className="flex flex-wrap gap-3 text-xs">
-                  <span className="flex items-center gap-1.5">
-                    <FiCalendar size={13} /> March 5, 2025
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiClock size={13} /> 4:00 PM - 6:00 PM
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiMapPin size={13} /> Conference Room
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <FiUsers size={13} /> 180 seats
-                  </span>
+                <div style={{ color: C.section.subText }} className="flex flex-wrap gap-8 text-xs">
+                  <div className='flex flex-col gap-5'>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiCalendar size={13} className='w-4 h-4'/> March 5, 2025
+                    </span>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiClock size={13} className='w-4 h-4'/> 4:00 PM - 6:00 PM
+                    </span>
+                  </div>
+
+                  <div className='flex flex-col gap-5'>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiMapPin size={13} className='w-4 h-4'/> Conference Room
+                    </span>
+                    <span className={`flex items-center gap-1.5 text-[#101828] ${FONTSIZE[14]} leading-5`} style={{...FONTWEIGHT[700]}}>
+                      <FiUsers size={13} className='w-4 h-4'/> 100 seats
+                    </span>
+                  </div>
                 </div>
 
                 <button
@@ -173,7 +177,6 @@ const Event = () => {
             </div>
           </section>
 
-          {/* ── All Upcoming Events ── */}
           <section className="mb-14">
             <h2
               style={{ color: C.section.title }}
@@ -187,15 +190,14 @@ const Event = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-              {/* Event 1 - Book Fair */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-xl p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#EEF2FF", color: "#4F39F6" }}
                     className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -204,13 +206,13 @@ const Event = () => {
                   </div>
                   <span
                     style={{ color: "#4F39F6", background: "#4F39F615" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] font-semibold px-2.5 py-0.75 w-fit rounded-full"
                   >
                     Book Fair
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Annual Book Fair 2025
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -237,30 +239,29 @@ const Event = () => {
 </button>
               </div>
 
-              {/* Event 2 - Author Session */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#FDF2F8", color: "#EC4899" }}
-                    className="w-11 h-11 rounded-xl flex items-center justify-center"
+                    className="w-11 h-11  rounded-xl flex items-center justify-center"
                   >
                     <FiUser size={22} />
                   </div>
                   <span
                     style={{ color: "#EC4899", background: "#EC489915" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full"
                   >
                     Author Session
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Author Meet & Greet
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -279,23 +280,22 @@ const Event = () => {
                   </span>
                 </div>
 
-                 <button className="px-8 py-3 rounded-lg border border-blue-300 
+                <button className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
                    transition duration-200">
-  Learn More
-</button>
+                    Learn More
+                </button>
               </div>
 
-              {/* Event 3 - Workshop */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#ECFDF5", color: "#10B981" }}
                     className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -304,13 +304,13 @@ const Event = () => {
                   </div>
                   <span
                     style={{ color: "#10B981", background: "#10B98115" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full"
                   >
                     Workshop
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Children's Reading Workshop
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -329,23 +329,22 @@ const Event = () => {
                   </span>
                 </div>
 
-                 <button className="px-8 py-3 rounded-lg border border-blue-300 
+                <button className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
                    transition duration-200">
-  Learn More
-</button>
+                    Learn More
+                </button>
               </div>
 
-              {/* Event 4 - Literary Event */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#FFFBEB", color: "#F59E0B" }}
                     className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -354,13 +353,13 @@ const Event = () => {
                   </div>
                   <span
                     style={{ color: "#F59E0B", background: "#F59E0B15" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full"
                   >
                     Literary Event
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Poetry & Literature Evening
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -379,23 +378,22 @@ const Event = () => {
                   </span>
                 </div>
 
-                 <button className="px-8 py-3 rounded-lg border border-blue-300 
+                <button className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
                    transition duration-200">
-  Learn More
-</button>
+                    Learn More
+                </button>
               </div>
 
-              {/* Event 5 - Workshop (Digital Literacy) */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#ECFDF5", color: "#10B981" }}
                     className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -404,13 +402,13 @@ const Event = () => {
                   </div>
                   <span
                     style={{ color: "#10B981", background: "#10B98115" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full"
                   >
                     Workshop
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Digital Literacy Workshop
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -429,23 +427,22 @@ const Event = () => {
                   </span>
                 </div>
 
-                 <button className="px-8 py-3 rounded-lg border border-blue-300 
+                <button className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
                    transition duration-200">
-  Learn More
-</button>
+                    Learn More
+                </button>
               </div>
 
-              {/* Event 6 - Book Club */}
               <div
                 style={{
                   background: C.card.bg,
                   border: `1px solid ${C.card.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3">
                   <div
                     style={{ background: "#EDE9FE", color: "#7C3AED" }}
                     className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -454,13 +451,13 @@ const Event = () => {
                   </div>
                   <span
                     style={{ color: "#7C3AED", background: "#7C3AED15" }}
-                    className="text-[11px] font-semibold px-2.5 py-[3px] rounded-full"
+                    className="text-[11px] w-fit font-semibold px-2.5 py-0.75 rounded-full"
                   >
                     Book Club
                   </span>
                 </div>
 
-                <h3 style={{ color: C.card.title }} className="text-[15px] font-bold m-0">
+                <h3 style={{ color: C.card.title, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Book Club Meeting
                 </h3>
                 <p style={{ color: C.card.desc }} className="text-xs leading-relaxed m-0">
@@ -479,17 +476,16 @@ const Event = () => {
                   </span>
                 </div>
 
-                 <button className="px-8 py-3 rounded-lg border border-blue-300 
+                <button className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
                    transition duration-200">
-  Learn More
-</button>
+                    Learn More
+                </button>
               </div>
             </div>
           </section>
 
-          {/* ── Past Events ── */}
           <section className="mb-14">
             <h2
               style={{ color: C.section.title }}
@@ -503,13 +499,12 @@ const Event = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-              {/* Past Event 1 - Reading Marathon */}
               <div
                 style={{
                   background: C.pastCard.bg,
                   border: `1px solid ${C.pastCard.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
                 <div className="w-11 h-11 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400">
                   <FiBook size={20} />
@@ -517,24 +512,23 @@ const Event = () => {
                 <h3 style={{ color: C.pastCard.title }} className="text-[15px] font-bold m-0">
                   New Year Reading Marathon
                 </h3>
+                <span style={{ color: "#4F39F6" }} className="font-semibold">January 1, 2026</span>
                 <p style={{ color: C.pastCard.desc }} className="text-xs leading-relaxed m-0">
                   A 12-hour reading marathon to kickstart the new year with knowledge.
                 </p>
                 <div style={{ color: C.section.subText }} className="flex flex-col gap-1 text-xs">
-                  <span style={{ color: "#4F39F6" }} className="font-semibold">January 1, 2026</span>
                   <span className="flex items-center gap-1">
                     <FiUsers size={12} /> 320 participants
                   </span>
                 </div>
               </div>
 
-              {/* Past Event 2 - Science Fiction Festival */}
               <div
                 style={{
                   background: C.pastCard.bg,
                   border: `1px solid ${C.pastCard.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
                 <div className="w-11 h-11 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400">
                   <FiBook size={20} />
@@ -542,24 +536,23 @@ const Event = () => {
                 <h3 style={{ color: C.pastCard.title }} className="text-[15px] font-bold m-0">
                   Science Fiction Festival
                 </h3>
+                <span style={{ color: "#4F39F6" }} className="font-semibold">December 21-26, 2024</span>
                 <p style={{ color: C.pastCard.desc }} className="text-xs leading-relaxed m-0">
                   Celebrated sci-fi literature with author talks, cosplay, and panel discussions.
                 </p>
                 <div style={{ color: C.section.subText }} className="flex flex-col gap-1 text-xs">
-                  <span style={{ color: "#EC4899" }} className="font-semibold">December 21-26, 2024</span>
                   <span className="flex items-center gap-1">
                     <FiUsers size={12} /> 500+ attended
                   </span>
                 </div>
               </div>
 
-              {/* Past Event 3 - Book Drive */}
               <div
                 style={{
                   background: C.pastCard.bg,
                   border: `1px solid ${C.pastCard.border}`,
                 }}
-                className="rounded-[14px] p-[22px] flex flex-col gap-2.5"
+                className="rounded-[14px] p-5.5 flex flex-col gap-2.5"
               >
                 <div className="w-11 h-11 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400">
                   <FiBook size={20} />
@@ -567,11 +560,11 @@ const Event = () => {
                 <h3 style={{ color: C.pastCard.title }} className="text-[15px] font-bold m-0">
                   Holiday Book Drive
                 </h3>
+                <span style={{ color: "#4F39F6" }} className="font-semibold">December 18-28, 2024</span>
                 <p style={{ color: C.pastCard.desc }} className="text-xs leading-relaxed m-0">
                   Community book donation drive to support underprivileged school children.
                 </p>
                 <div style={{ color: C.section.subText }} className="flex flex-col gap-1 text-xs">
-                  <span style={{ color: "#10B981" }} className="font-semibold">December 18-28, 2024</span>
                   <span className="flex items-center gap-1">
                     <FiUsers size={12} /> 620+ books donated
                   </span>
@@ -580,9 +573,7 @@ const Event = () => {
             </div>
           </section>
 
-          {/* ── Event Categories ── */}
           <section
-            style={{ background: C.categories.bg }}
             className="rounded-[20px] px-8 py-10 mb-14 text-center"
           >
             <h2
@@ -595,9 +586,8 @@ const Event = () => {
               We organize various types of events throughout the year
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
 
-              {/* Category 1 - Book Fairs */}
               <div className="flex flex-col items-center gap-3">
                 <div
                   style={{ background: "#4F39F618", color: "#4F39F6" }}
@@ -605,7 +595,7 @@ const Event = () => {
                 >
                   <MdMenuBook size={28} />
                 </div>
-                <p style={{ color: C.categories.text }} className="font-bold text-sm m-0">
+                <p style={{ color: C.categories.text, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Book Fairs
                 </p>
                 <p style={{ color: C.section.subText }} className="text-xs m-0">
@@ -613,7 +603,6 @@ const Event = () => {
                 </p>
               </div>
 
-              {/* Category 2 - Author Sessions */}
               <div className="flex flex-col items-center gap-3">
                 <div
                   style={{ background: "#EC489918", color: "#EC4899" }}
@@ -621,7 +610,7 @@ const Event = () => {
                 >
                   <MdOutlinePersonPin size={28} />
                 </div>
-                <p style={{ color: C.categories.text }} className="font-bold text-sm m-0">
+                <p style={{ color: C.categories.text, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Author Sessions
                 </p>
                 <p style={{ color: C.section.subText }} className="text-xs m-0">
@@ -629,7 +618,6 @@ const Event = () => {
                 </p>
               </div>
 
-              {/* Category 3 - Workshops */}
               <div className="flex flex-col items-center gap-3">
                 <div
                   style={{ background: "#10B98118", color: "#10B981" }}
@@ -637,7 +625,7 @@ const Event = () => {
                 >
                   <MdOutlineSchool size={28} />
                 </div>
-                <p style={{ color: C.categories.text }} className="font-bold text-sm m-0">
+                <p style={{ color: C.categories.text, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Workshops
                 </p>
                 <p style={{ color: C.section.subText }} className="text-xs m-0">
@@ -645,7 +633,6 @@ const Event = () => {
                 </p>
               </div>
 
-              {/* Category 4 - Kids Programs */}
               <div className="flex flex-col items-center gap-3">
                 <div
                   style={{ background: "#F59E0B18", color: "#F59E0B" }}
@@ -653,7 +640,7 @@ const Event = () => {
                 >
                   <MdChildCare size={28} />
                 </div>
-                <p style={{ color: C.categories.text }} className="font-bold text-sm m-0">
+                <p style={{ color: C.categories.text, ...FONTWEIGHT[700] }} className={`${FONTSIZE[18]} leading-7`}>
                   Kids Programs
                 </p>
                 <p style={{ color: C.section.subText }} className="text-xs m-0">
@@ -665,7 +652,6 @@ const Event = () => {
 
         </div>
 
-        {/* ── Newsletter ── */}
         <div style={{ background: C.newsletter.bg }} className="px-5 py-14 text-center">
           <h2
             style={{ color: C.newsletter.title }}
@@ -673,18 +659,18 @@ const Event = () => {
           >
             Want to Stay Updated?
           </h2>
-          <p style={{ color: C.newsletter.subText }} className="text-[15px] mb-7">
+          <p style={{ color: C.newsletter.subText }} className={`${FONTSIZE[20]} leading-7 mb-7`}>
             Subscribe to our newsletter to receive event notifications and updates.
           </p>
           <button
             style={{
               background: C.newsletter.buttonBg,
               color: C.newsletter.buttonText,
-              fontFamily: FONT.f1,
+              font: FONT.f1,
             }}
             className="border-none rounded-xl px-7 py-3.5 font-bold text-sm cursor-pointer"
           >
-            Join Our Newsletter
+            Subscribe to Newsletter
           </button>
         </div>
 

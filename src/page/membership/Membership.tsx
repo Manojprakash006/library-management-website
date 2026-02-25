@@ -1,5 +1,5 @@
-import React from 'react'
-import { FONT, COLORS } from "../../constant/Constant";
+import React, { useState } from 'react'
+import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
 import Footer from '../../layout/footer/Footer';
 import {
   FiBook,
@@ -17,6 +17,7 @@ import {
   FiCheckCircle,
   FiArrowRight,
 } from 'react-icons/fi';
+import { useNavigate } from 'react-router';
 
 const Membership = () => {
 
@@ -65,13 +66,55 @@ const Membership = () => {
     },
   ];
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [error, setError] = useState<formError>({});
+  const navigate = useNavigate();
+
+  type formError = {
+    name?: string,
+    email?: string,
+    phone?: string,
+    address?: string,
+  }
+
+  const Validate = () => {
+    
+    let newError: formError = {};
+    
+    if(!name.trim()) newError.name = "Name is Required";
+    if(!email.trim()) newError.email = "Email is Required";
+    if(!phone.trim()) newError.phone = "Phone Number is Required";
+    if(!address.trim()) newError.address = "Address is Required";
+
+    if(Object.keys(newError).length > 0) {
+           setError(newError);
+           return false;
+        }
+        setError({});
+        return true;
+  }
+
+  const HandleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!Validate) return;
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
+    setError({});
+    navigate("/login");
+    console.log("Form Submitted")
+  }
+
   return (
     <>
       <div style={{ fontFamily: FONT.f1 }} className="min-h-screen">
 
-        {/* ── Hero Banner ── */}
-        <div style={{ background: COLORS.membership.hero.gradient }} className="w-full py-3 px-5">
-          <div className="max-w-7xl mx-auto">
+        <div style={{ background: COLORS.membership.hero.gradient }} className="w-full py-6 px-5">
+          <div className="px-4 sm:px-6 md:px-16 lg:px-24">
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4"
               style={{ background: COLORS.membership.hero.badgeBg, color: COLORS.membership.hero.badgeText }}
@@ -84,21 +127,22 @@ const Membership = () => {
             <p className="text-sm sm:text-base mb-6 max-w-xl" style={{ color: COLORS.membership.hero.subtitle }}>
               Become a member today and unlock access to thousands of books, premium facilities, and exclusive events
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center w-fit rounded-2xl p-2 sm:p-3 md:p-4  " style={{ background: COLORS.membership.hero.badgeBg, color: COLORS.membership.hero.badgeText }}>
               <span
-                className="px-5 py-2 rounded-full text-sm font-bold"
-                style={{ background: COLORS.membership.hero.buttonPrimary, color: COLORS.membership.hero.buttonPrimaryText }}
+                className={`px-3 sm:px-4 md:px-5 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm md:text-2xl lg:text-3xl leading-6 sm:leading-7 md:leading-8 `}
+                style={{  color: COLORS.membership.hero.buttonPrimary, ...FONTWEIGHT[700] }}
               >
                 100% FREE
               </span>
-              <span className="text-xs" style={{ color: COLORS.membership.hero.subtitle }}>
-                No Registration Fee &nbsp;·&nbsp; Lifetime Validity
-              </span>
+              <div className="w-px h-5 sm:h-6 bg-gray-300 mx-2 sm:mx-4"></div>
+              <div className={`flex flex-col gap-0 sm:gap-1`}>
+                <h1 className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`}  style={{...FONTWEIGHT[700], color: COLORS.membership.hero.buttonPrimary}}>No Registration Fee</h1>
+                <p className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`}  style={{...FONTWEIGHT[400], color: COLORS.membership.hero.pTag}}>Lifetime Validity</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* ── Membership Benefits ── */}
         <section className="py-16 px-5">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-14">
@@ -126,8 +170,7 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* ── Quick Registration ── */}
-        <section className="py-14 px-5 bg-white">
+        <section className="py-14 px-5 bg-[#F8F9FE]">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: COLORS.membership.section.title }}>
@@ -137,7 +180,7 @@ const Membership = () => {
                 Fill out the form below to start your membership journey
               </p>
             </div>
-            <div
+            <form onSubmit={HandleSubmit}
               className="rounded-3xl p-6 sm:p-10 max-w-6xl mx-auto"
               style={{
                 background: COLORS.membership.registration.cardBg,
@@ -145,7 +188,6 @@ const Membership = () => {
               }}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* Full Name */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
                     Full Name <span style={{ color: '#EF4444' }}>*</span>
@@ -153,6 +195,8 @@ const Membership = () => {
                   <input
                     type="text"
                     placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition"
                     style={{
                       background: COLORS.membership.registration.inputBg,
@@ -160,8 +204,8 @@ const Membership = () => {
                       color: COLORS.membership.section.title,
                     }}
                   />
+                  <p className="text-red-400 mt-1 flex gap-2 items-center">{error.name}</p>
                 </div>
-                {/* Email */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
                     Email Address <span style={{ color: '#EF4444' }}>*</span>
@@ -169,6 +213,8 @@ const Membership = () => {
                   <input
                     type="email"
                     placeholder="john@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition"
                     style={{
                       background: COLORS.membership.registration.inputBg,
@@ -176,8 +222,8 @@ const Membership = () => {
                       color: COLORS.membership.section.title,
                     }}
                   />
+                  <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
                 </div>
-                {/* Phone */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
                     Phone Number
@@ -185,6 +231,8 @@ const Membership = () => {
                   <input
                     type="tel"
                     placeholder="+91-9876543210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition"
                     style={{
                       background: COLORS.membership.registration.inputBg,
@@ -192,8 +240,8 @@ const Membership = () => {
                       color: COLORS.membership.section.title,
                     }}
                   />
+                  <p className="text-red-400 mt-1 flex gap-2 items-center">{error.phone}</p>
                 </div>
-                {/* Complete Address */}
                 <div className="flex flex-col gap-1 sm:col-span-2">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
                     Complete Address
@@ -201,6 +249,8 @@ const Membership = () => {
                   <textarea
                     rows={3}
                     placeholder="Your complete residential address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                     className="rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition resize-none"
                     style={{
                       background: COLORS.membership.registration.inputBg,
@@ -208,27 +258,26 @@ const Membership = () => {
                       color: COLORS.membership.section.title,
                     }}
                   />
+                  <p className="text-red-400 mt-1 flex gap-2 items-center">{error.address}</p>
                 </div>
               </div>
 
-              {/* Required Documents */}
               <div
-                className="mt-6 rounded-xl p-4 text-xs"
-                style={{ background: COLORS.membership.registration.inputBg, color: COLORS.membership.section.subtitle }}
+                className="mt-6 rounded-xl p-4 text-xs border"
+                style={{ background: COLORS.membership.req_Document.req_DocumentBG, borderColor: COLORS.membership.req_Document.req_DocumentBorder }}
               >
-                <p className="font-semibold mb-2" style={{ color: COLORS.membership.section.title }}>
+                <p className="font-semibold mb-2" style={{ color: COLORS.membership.req_Document.textHeadColor }}>
                   Required Documents (Visit Library):
                 </p>
-                <ul className="list-disc list-inside space-y-1">
+                <ul className="list-disc list-inside space-y-1 pl-5" style={{color: COLORS.membership.req_Document.contentColor}}>
                   <li>Photo ID (Aadhar, PAN Passport, or Driving License)</li>
                   <li>Proof of Address (Utility Bill/Bank Statement)</li>
                   <li>2 Passport Size Photos</li>
                 </ul>
               </div>
 
-              {/* Submit Button */}
-              <button
-                className="mt-6 w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition hover:opacity-90"
+              <button type='submit'
+                className="mt-6 w-full cursor-pointer py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition hover:opacity-90"
                 style={{
                   background: COLORS.membership.registration.buttonGradient,
                   color: COLORS.membership.registration.buttonText,
@@ -236,11 +285,10 @@ const Membership = () => {
               >
                 <FiCheckCircle size={16} /> Submit Registration
               </button>
-            </div>
+            </form>
           </div>
         </section>
 
-        {/* ── Registration Process ── */}
         <section style={{ background: COLORS.membership.section.bg }} className="py-16 px-5">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-14">
@@ -254,7 +302,6 @@ const Membership = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-12 relative">
               {processSteps.map((step, i) => (
                 <div key={i} className="flex flex-col items-center text-center gap-4 relative">
-                  {/* Icon box with number badge */}
                   <div className="relative">
                     <div
                       className="w-20 h-20 rounded-3xl flex items-center justify-center"
@@ -262,7 +309,6 @@ const Membership = () => {
                     >
                       {step.icon}
                     </div>
-                    {/* Number badge */}
                     <div
                       className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
                       style={{ background: COLORS.membership.hero.gradient, border: '2px solid #fff' }}
@@ -271,7 +317,6 @@ const Membership = () => {
                     </div>
                   </div>
 
-                  {/* Connector line between steps */}
                   {i < processSteps.length - 1 && (
                     <div
                       className="hidden sm:block absolute top-10 left-[calc(50%+2.8rem)] w-[calc(100%-5.6rem)] h-px"
@@ -287,7 +332,6 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* ── FAQ ── */}
         <section className="py-16 px-5 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-14">
@@ -298,7 +342,7 @@ const Membership = () => {
                 Everything you need to know about membership
               </p>
             </div>
-            <div className="max-w-4xl mx-auto flex flex-col gap-10">
+            <div className=" mx-auto flex flex-col gap-10">
               {faqs.map((faq, i) => (
                 <div key={i} className="flex flex-col gap-2">
                   <div className="flex items-start gap-3">
@@ -314,7 +358,6 @@ const Membership = () => {
           </div>
         </section>
 
-        {/* ── CTA ── */}
         <section style={{ background: COLORS.membership.cta.gradient }} className="py-14 px-5">
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: COLORS.membership.cta.title }}>
@@ -325,12 +368,14 @@ const Membership = () => {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
+                onClick={() => navigate("/register")}
                 className="px-8 py-3 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition"
                 style={{ background: COLORS.membership.cta.buttonPrimary, color: COLORS.membership.cta.buttonPrimaryText }}
               >
                 Register Now <FiArrowRight size={15} />
               </button>
               <button
+              onClick={() => navigate("/")}
                 className="px-8 py-3 rounded-full text-sm font-bold hover:opacity-80 transition"
                 style={{ background: COLORS.membership.cta.buttonSecondaryBg, color: COLORS.membership.cta.buttonSecondaryText, border: '1px solid rgba(255,255,255,0.3)' }}
               >

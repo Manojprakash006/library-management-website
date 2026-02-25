@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import  Navbar  from "./layout/navbar/Navbar";
 // import Header from "./layout/header/Header";
@@ -11,13 +11,14 @@ import Login from "./page/login/Login";
 import Membership from "./page/membership/Membership";
 import Register from "./page/register/Register";
 import Services from "./page/servicess/Services";
-
-
+import ScrollToTop from './page/ScrollToTop';
 
 const App = () => {
+
   return (
 <BrowserRouter>
-  <Navbar />
+  <ScrollToTop />
+  <Navbar  />
   {/* <Header /> */}
   <Routes>
     <Route path="/" element={<Home />} />

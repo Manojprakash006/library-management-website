@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
+import { useNavigate } from 'react-router';
 
 const Register = () => {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -11,26 +15,74 @@ const Register = () => {
     confirmPassword: '',
   });
 
+  const [error, setError] = useState<formError>({});
+    
+      type formError = {
+        fullName?: String,
+        email?: String,
+        phone?: string,
+        address?: string,
+        password?: string,
+        confirmPassword?: string
+      }
+    
+      const Validate = () => { 
+    
+        let newError: formError = {};
+    
+        if(!formData.fullName.trim()) newError.fullName = "Please Enter the FullName";
+        if(!formData.email.trim()) newError.email = "Please Enter the Email";
+        if(!formData.phone.trim()) newError.phone = "Please Enter the Phone Number";
+        if(!formData.address.trim()) newError.address = "Please Enter the Address";
+        if(!formData.password.trim()) newError.password = "Please Enter the Password";
+        if(!formData.confirmPassword.trim()) newError.password = "Please confirm the Password";
+        if (formData.password.trim() && formData.confirmPassword.trim() && formData.password !== formData.confirmPassword) {
+            newError.confirmPassword = "Password Mismatched";}
+  
+        if(Object.keys(newError).length > 0) {
+             setError(newError);
+             return false;
+          }
+          setError({});
+          return true;
+      }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+
+    e.preventDefault();
+
+    if(!Validate()) return;
+
+    setFormData({
+      fullName: '',
+    email: '',
+    phone: '',
+    address: '',
+    password: '',
+    confirmPassword: '',
+    });
+    setError({});
     console.log('Register', formData);
+
+    navigate("/login");
+    
   };
 
   const handleCancel = () => {
     console.log('Cancel');
+    navigate(-1);
   };
 
   return (
     <>
-      {/* Overlay */}
       <div
         className="fixed inset-0 flex items-center justify-center z-50 px-4"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
       >
-        {/* Modal */}
         <div
           className="relative bg-white rounded-2xl w-full mx-auto overflow-hidden"
           style={{
@@ -39,7 +91,6 @@ const Register = () => {
             maxWidth: '560px',
           }}
         >
-          {/* Close Button */}
           <button
             onClick={handleCancel}
             className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors z-10"
@@ -50,12 +101,10 @@ const Register = () => {
             </svg>
           </button>
 
-          {/* Content */}
-          <div className="px-6 pt-5 pb-5">
-            {/* Header */}
+          <form onSubmit={handleSubmit} className="px-6 pt-5 pb-5">
             <div className="flex items-start gap-3 mb-1 pr-6">
               <div
-                className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center mt-0.5"
+                className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center mt-0.5"
                 style={{ backgroundColor: '#DCFCE7' }}
               >
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -81,12 +130,9 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-gray-100 my-3" />
 
-            {/* Form Fields */}
             <div className="flex flex-col gap-2">
-              {/* Full Name */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -110,9 +156,9 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.fullName}</p>
               </div>
 
-              {/* Email */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -136,9 +182,9 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
               </div>
 
-              {/* Phone Number */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -162,9 +208,9 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.phone}</p>
               </div>
 
-              {/* Address */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -188,9 +234,9 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.address}</p>
               </div>
 
-              {/* Password */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -214,9 +260,9 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.password}</p>
               </div>
 
-              {/* Confirm Password */}
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
@@ -240,10 +286,10 @@ const Register = () => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.confirmPassword}</p>
               </div>
             </div>
 
-            {/* Info Box */}
             <div
               className="mt-3 rounded-xl px-3.5 py-2.5"
               style={{
@@ -265,7 +311,7 @@ const Register = () => {
                   'Track your issued books in your dashboard',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <svg className="flex-shrink-0 mt-0.5" width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <svg className="shrink-0 mt-0.5" width="13" height="13" viewBox="0 0 14 14" fill="none">
                       <circle cx="7" cy="7" r="7" fill="#16A34A" fillOpacity="0.15" />
                       <path d="M4.5 7l1.8 1.8L9.5 5.5" stroke="#16A34A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -280,7 +326,6 @@ const Register = () => {
               </ul>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex items-center justify-end gap-3 mt-3">
               <button
                 onClick={handleCancel}
@@ -294,8 +339,7 @@ const Register = () => {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleSubmit}
+              <button type='submit'
                 className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: '#16A34A',
@@ -315,7 +359,7 @@ const Register = () => {
                 Register Now
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </>

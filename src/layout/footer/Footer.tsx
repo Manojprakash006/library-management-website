@@ -1,5 +1,12 @@
-import React from 'react'
 import { FONT, COLORS } from '../../constant/Constant'
+import fbIcon from "../../assets/footer/Link.png"
+import twitterIcon from "../../assets/footer/Link (1).png"
+import instaIcon from "../../assets/footer/Link (2).png"
+import linkedInIcon from "../../assets/footer/Link (3).png"
+import locationIcon from "../../assets/footer/Location icon.png"
+import callIcon from "../../assets/footer/Call icon.png"
+import msgBoxIcon from "../../assets/footer/MessageBox icon.png"
+import { Link } from 'react-router'
 
 const Footer = () => {
   return (
@@ -8,7 +15,6 @@ const Footer = () => {
 
   <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
 
-    {/* Column 1 */}
     <div>
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -24,31 +30,28 @@ const Footer = () => {
       </p>
 
       <div className="flex gap-3">
-        <div className="w-9 h-9 bg-white/10 rounded-full"> <img src="src\assets\footer\Link.png" alt="" /></div>
-        <div className="w-9 h-9 bg-white/10 rounded-full"> <img src="src\assets\footer\Link (1).png" alt="" /></div>
-        <div className="w-9 h-9 bg-white/10 rounded-full"> <img src="src\assets\footer\Link (2).png" alt="" /></div>
-        <div className="w-9 h-9 bg-white/10 rounded-full"> <img src="src\assets\footer\Link (3).png" alt="" /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={fbIcon} alt="FB Icon" className='w-5 h-5' /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={twitterIcon} alt="Twitter Icon" className='w-5 h-5' /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={instaIcon} alt="Insta Icon" className='w-5 h-5' /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={linkedInIcon} alt="Linkedin Icon" className='w-5 h-5' /></div>
       </div>
     </div>
 
-    {/* Column 2 */}
     <div>
       <h4 className="font-semibold mb-4">Quick Links</h4>
-      <ul className="space-y-2 text-sm text-gray-300">
-        <li>About Us</li>
-        <li>Library Services</li>
-        <li>Membership</li>
-        <li>Events & Programs</li>
-        <li>Digital Resources</li>
+      <ul className="flex flex-col gap-3 text-sm text-gray-300">
+        <Link to={"/about"} className='w-fit'>About Us</Link>
+        <Link to={"/services"} className='w-fit'>Library Services</Link>
+        <Link to={"/membership"} className='w-fit'>Membership</Link>
+        <Link to={"/event"} className='w-fit'>Events & Programs</Link>
       </ul>
     </div>
 
-    {/* Column 3 */}
     <div>
       <h4 className="font-semibold mb-4">Contact Us</h4>
 
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-8 h-8 bg-white/10 rounded-lg"><img src="src\assets\footer\Container (3).png" alt="" /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={locationIcon} alt="FB Icon" className='w-5 h-5' /></div>
         <p className="text-sm text-gray-300">
           Visit Us<br />
           123 Library Street<br />
@@ -57,7 +60,7 @@ const Footer = () => {
       </div>
 
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-8 h-8 bg-white/10 rounded-lg"> <img src="src\assets\footer\Container (4).png" alt="" /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={callIcon} alt="FB Icon" className='w-5 h-5' /></div>
         <p className="text-sm text-gray-300">
           Call Us<br />
           +91-444-1234-5678
@@ -65,7 +68,7 @@ const Footer = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-white/10 rounded-lg"> <img src="src\assets\footer\Container (5).png " alt="" /></div>
+        <div className="w-10 h-10 md:w-12 md:h-8 lg:w-10 lg:h-10 bg-[#FFFFFF1A] rounded-xl flex justify-center items-center"> <img src={msgBoxIcon} alt="FB Icon" className='w-5 h-5' /></div>
         <p className="text-sm text-gray-300">
           Email Us<br />
           info@citycentrallibrary.org
@@ -73,7 +76,6 @@ const Footer = () => {
       </div>
     </div>
 
-    {/* Column 4 */}
     <div>
       <h4 className="font-semibold mb-4">Opening Hours</h4>
 
@@ -100,7 +102,6 @@ const Footer = () => {
 
   </div>
 
-  {/* Bottom Bar */}
   <div className="max-w-7xl mx-auto mt-10 border-t border-white/10 pt-4 flex flex-col md:flex-row justify-between text-sm text-gray-400">
     <p>© 2026 City Central Library. All rights reserved.</p>
     <div className="flex gap-4 mt-2 md:mt-0">

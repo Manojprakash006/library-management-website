@@ -3,12 +3,36 @@ import { FONT, COLORS } from "../../constant/Constant";
 import { toast, Toaster } from 'react-hot-toast';
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [error, setError] = useState<formError>({});
+
+  type formError = {
+    email?: String,
+    password?: String,
+  }
+
+  const Validate = () => { 
+
+    let newError: formError = {};
+
+    if(!email.trim()) newError.email = "Please Enter the Email";
+    if(!password.trim()) newError.password = "Please Enter the Password";
+
+    if(Object.keys(newError).length > 0) {
+         setError(newError);
+         return false;
+      }
+      setError({});
+      return true;
+  }
 
   const handleLogin = () => {
+
+    if(!Validate()) return;
+
     toast.success('Login successful! Welcome back.', {
       duration: 3000,
       position: 'top-right',
@@ -27,6 +51,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
         secondary: COLORS.loginModal.button.primaryText,
       },
     });
+    onClose?.();
   };
 
   return (
@@ -67,7 +92,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           <div className="flex items-center gap-3 mb-1">
             {/* Icon */}
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: COLORS.loginModal.header.iconBg }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -118,6 +143,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   boxShadow: emailFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
                 }}
               />
+              <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
             </div>
 
             {/* Password Field */}
@@ -144,6 +170,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   boxShadow: passwordFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
                 }}
               />
+              <p className="text-red-400 mt-1 flex gap-2 items-center">{error.password}</p>
             </div>
 
             {/* Forgot Password */}
