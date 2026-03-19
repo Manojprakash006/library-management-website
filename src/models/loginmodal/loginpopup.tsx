@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { toast, Toaster } from 'react-hot-toast';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
+import type { RootState, AppDispatch } from '../../store/store';
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
   const [email, setEmail] = useState("");
@@ -8,6 +11,12 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState<formError>({});
+
+  const dispatch = useAppDispatch();
+
+  const { loading, success, error: apiError, member } = useAppSelector(
+    (state) => state.loginMember
+  );
 
   type formError = {
     email?: String,
@@ -29,30 +38,60 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
       return true;
   }
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    if (!Validate()) return;
 
-    if(!Validate()) return;
+    const payload = {
+      email,
+      password,
+    };
 
-    toast.success('Login successful! Welcome back.', {
-      duration: 3000,
-      position: 'top-right',
-      style: {
-        background: COLORS.loginModal.modal.bg,
-        color: COLORS.loginModal.header.title,
-        border: `1px solid ${COLORS.loginModal.modal.border}`,
-        boxShadow: COLORS.loginModal.modal.shadow,
-        fontFamily: FONT.secondary,
-        fontSize: '14px',
-        padding: '12px 16px',
-        borderRadius: '10px',
-      },
-      iconTheme: {
-        primary: COLORS.loginModal.button.primaryBg,
-        secondary: COLORS.loginModal.button.primaryText,
-      },
-    });
-    onClose?.();
-  };
+    try {
+      const resultAction = await dispatch(loginMemberThunk(payload));
+
+      console.log("LOGIN RESULT:", resultAction); 
+
+      if (loginMemberThunk.fulfilled.match(resultAction)) {
+        toast.success('Login successful! Welcome back.', {
+          duration: 3000,
+          position: 'top-right',
+          style: {
+            background: COLORS.loginModal.modal.bg,
+            color: COLORS.loginModal.header.title,
+            border: `1px solid ${COLORS.loginModal.modal.border}`,
+            boxShadow: COLORS.loginModal.modal.shadow,
+            fontFamily: FONT.secondary,
+            fontSize: '14px',
+            padding: '12px 16px',
+            borderRadius: '10px',
+          },
+        });
+
+        console.log("LOGIN SUCCESS");
+
+        const token = resultAction.payload.data?.token
+        console.log("LOGIN-TOKEN :", token);
+
+        if (!token) {
+          console.log("TOKEN MISSING");
+          return;
+        }
+        localStorage.setItem("authToken", token);
+
+        console.log("STORED:", localStorage.getItem("authToken"));
+
+        onClose?.();
+
+        window.location.href = `http://localhost:5174?token=${token}`;
+
+      } else {
+        toast.error(resultAction.payload as string || "Login failed");
+      }
+
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+};
 
   return (
     <>
@@ -117,6 +156,9 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             Enter your credentials to access your library account
           </p>
 
+          {apiError && (
+            <p className="text-red-500 text-sm mb-2">{apiError}</p>
+          )}
           {/* Form */}
           <div className="space-y-4">
             {/* Email Field */}
@@ -210,6 +252,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
             {/* Login */}
             <button
+              disabled = {loading}
               className="flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all"
               style={{
                 fontFamily: FONT.secondary,
@@ -230,7 +273,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   strokeLinejoin="round"
                 />
               </svg>
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
           </div>
         </div>

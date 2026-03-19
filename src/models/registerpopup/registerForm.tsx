@@ -1,106 +1,115 @@
 import React, { useState } from 'react'
-import { FONT, COLORS } from "../../constant/Constant";
-import toast, { Toaster } from 'react-hot-toast';
+import { FONT, COLORS } from '../../constant/Constant';
+import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerMemberThunk } from '../../store/thunks/authThunk';
+import type { RootState, AppDispatch } from '../../store/store';
 
-interface RegisterFormProps {
-  onClose?: () => void;
-}
+const Register = () => {
 
-const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { loading, success, error: apiError } = useSelector(
+    (state: RootState) => state.auth
+  )
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     email: '',
     phone: '',
     address: '',
     password: '',
     confirmPassword: '',
   });
-  const [error, setError] = useState<formError>({});
-  
-    type formError = {
-      fullName?: String,
-      email?: String,
-      phone?: string,
-      address?: string,
-      password?: string,
-      confirmPassword?: string
-    }
-  
-    const Validate = () => { 
-  
-      let newError: formError = {};
-  
-      if(!formData.fullName.trim()) newError.fullName = "Please Enter the FullName";
-      if(!formData.email.trim()) newError.email = "Please Enter the Email";
-      if(!formData.phone.trim()) newError.phone = "Please Enter the Phone Number";
-      if(!formData.address.trim()) newError.address = "Please Enter the Address";
-      if(!formData.password.trim()) newError.password = "Please Enter the Password";
-      if(!formData.confirmPassword.trim()) newError.password = "Please confirm the Password";
-      if (formData.password.trim() && formData.confirmPassword.trim() && formData.password !== formData.confirmPassword) {
-          newError.confirmPassword = "Password Mismatched";}
 
-      if(Object.keys(newError).length > 0) {
-           setError(newError);
-           return false;
-        }
-        setError({});
-        return true;
-    }
+  type formError = {
+    name?: string,
+    email?: string,
+    phone?: string,
+    address?: string,
+    password?: string,
+    confirmPassword?: string
+  }
+  const [error, setError] = useState<formError>({});
+    
+    
+      const Validate = () => { 
+    
+        let newError: formError = {};
+    
+        if(!formData.name.trim()) newError.name = "Please Enter the FullName";
+        if(!formData.email.trim()) newError.email = "Please Enter the Email";
+        if(!formData.phone.trim()) newError.phone = "Please Enter the Phone Number";
+        if(!formData.address.trim()) newError.address = "Please Enter the Address";
+        if(!formData.password.trim()) newError.password = "Please Enter the Password";
+        if(!formData.confirmPassword.trim()) newError.confirmPassword = "Please confirm the Password";
+        if (formData.password.trim() && formData.confirmPassword.trim() && formData.password !== formData.confirmPassword) {
+            newError.confirmPassword = "Password Mismatched";}
+  
+        if(Object.keys(newError).length > 0) {
+             setError(newError);
+             return false;
+          }
+          setError({});
+          return true;
+      }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
 
     e.preventDefault();
 
     if(!Validate()) return;
 
-    setFormData({
-      fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    password: '',
-    confirmPassword: '',
-    });
-    setError({});
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      password: formData.password
+    }
 
-    toast.success('Registration successful! Welcome to the library.', {
-      duration: 4000,
-      position: 'top-right',
-      style: {
-        background: '#ECFDF5',
-        color: '#065F46',
-        border: '1px solid #A7F3D0',
-        font: FONT?.primary,
-        fontSize: '14px',
-        padding: '12px 16px',
-        borderRadius: '12px',
-        boxShadow: '0px 8px 24px rgba(0,0,0,0.12)',
-      },
-      iconTheme: {
-        primary: '#16A34A',
-        secondary: '#ECFDF5',
-      },
-    });
-    onClose?.();
-    console.log("Form Submitted | Registered")
+    try {
+      const resultAction = await dispatch(registerMemberThunk(payload));
+
+      if(registerMemberThunk.fulfilled.match(resultAction)) {
+
+        console.log("Registration Successful");
+
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          address: '',
+          password: '',
+          confirmPassword: '',
+          });
+          setError({});
+          console.log('Register', payload);
+
+          navigate("/login");
+      }
+    } catch(error) {
+      console.log("Registration Failed", error);
+    }
+    
   };
 
   const handleCancel = () => {
-    onClose?.();
+    console.log('Cancel');
+    navigate(-1);
   };
 
   return (
     <>
-      <Toaster />
       <div
         className="fixed inset-0 flex items-center justify-center z-50 px-4"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
-        onClick={handleCancel}
       >
         <div
           className="relative bg-white rounded-2xl w-full mx-auto overflow-hidden"
@@ -109,10 +118,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
             border: '1px solid #E5E7EB',
             maxWidth: '560px',
           }}
-          onClick={e => e.stopPropagation()}
         >
           <button
-            onClick={onClose}
+            onClick={handleCancel}
             className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors z-10"
             aria-label="Close"
           >
@@ -121,7 +129,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
             </svg>
           </button>
 
-          <form className="px-6 pt-5 pb-5" onSubmit={handleSubmit}>
+          {apiError && ( <p className='text-red-500 text-sm mb-2'>{apiError}</p>)}
+
+          <form onSubmit={handleSubmit} className="px-6 pt-5 pb-5">
             <div className="flex items-start gap-3 mb-1 pr-6">
               <div
                 className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center mt-0.5"
@@ -162,8 +172,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
                 </label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   placeholder="John Doe"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
@@ -176,7 +186,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
                   onFocus={e => (e.target.style.borderColor = '#16A34A')}
                   onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
                 />
-              <p className="text-red-400 mt-1 flex gap-2 items-center">{error.fullName}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.name}</p>
               </div>
 
               <div>
@@ -359,8 +369,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
               >
                 Cancel
               </button>
-              <button
-              type='submit'
+              <button type='submit' disabled = {loading}
                 className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: '#16A34A',
@@ -377,15 +386,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({onClose}) => {
                   />
                   <path d="M12 5.5l1.5 1.5-3 3" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Register Now
+                {loading? "Registering" : "Register Now"}
               </button>
             </div>
           </form>
         </div>
       </div>
-      
     </>
   );
 };
 
-export default RegisterForm;
+export default Register;
