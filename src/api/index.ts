@@ -7,7 +7,6 @@ class Client {
     auth: {
       login: (data: any) => httpClient.post(API_END_POINTS.auth.login, data),
       register: (data: any) => httpClient.post(API_END_POINTS.auth.register, data),
-      // logout: () => httpClient.post(API_END_POINTS.auth.logout, {}),
     },
   }
 }
