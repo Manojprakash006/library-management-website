@@ -16,6 +16,7 @@ import { BsInfoCircleFill } from 'react-icons/bs';
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
 import loginIcon from "../../assets/collection/Login icon.png";
 import { useNavigate } from 'react-router';
+import Login from '../../models/loginmodal/loginpopup';
 
 const C = COLORS.bookCollection;
 
@@ -57,6 +58,7 @@ const Collection = () => {
   const [currentPage, setPage]  = useState(1);
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
 
   const filtered = BOOKS.filter(b =>
     b.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -71,11 +73,7 @@ const Collection = () => {
   const handleSearch = (v: string) => { setSearch(v); setPage(1); };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ fontFamily: FONT.f1, }}
-    >
-
+    <div className="min-h-screen" style={{ fontFamily: FONT.f1 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
@@ -102,19 +100,20 @@ const Collection = () => {
         }
       `}</style>
 
-              <div
-                className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#9A10F9] to-[#E60077] "
-              >
-                <div className="px-4 sm:px-6 md:px-16 lg:px-24">
-                  <h1 className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}>Book Collections</h1>
-                  <p className="text-white text-lg md:text-lg opacity-90">
-                    Explore our extensive collection and request books online
-                  </p>
-                </div>
-              </div>
+      <div className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#9A10F9] to-[#E60077] ">
+        <div className="px-4 sm:px-6 md:px-16 lg:px-24">
+          <h1
+            className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}
+          >
+            Book Collections
+          </h1>
+          <p className="text-white text-lg md:text-lg opacity-90">
+            Explore our extensive collection and request books online
+          </p>
+        </div>
+      </div>
 
       <div className="px-4 sm:px-6 md:px-16 lg:px-24 mb-20">
-
         <div
           className="flex items-center justify-between flex-wrap gap-3 rounded-2xl px-6 py-4 mb-8 border"
           style={{
@@ -123,7 +122,7 @@ const Collection = () => {
           }}
         >
           <div className="flex items-center gap-4">
-            <img src={loginIcon} alt="Login Icon" className='w-8 h-8' />
+            <img src={loginIcon} alt="Login Icon" className="w-8 h-8" />
             <div>
               <p
                 className="m-0 font-bold text-lg"
@@ -140,7 +139,8 @@ const Collection = () => {
             </div>
           </div>
           <button
-            onClick={() => navigate("/login")}
+            // onClick={() => navigate("/login")}
+            onClick={() => setShowLogin(true)}
             className="border-none rounded-xl px-7 py-3 text-base font-semibold cursor-pointer whitespace-nowrap shrink-0"
             style={{
               background: C.loginAlert.buttonBg,
@@ -160,7 +160,7 @@ const Collection = () => {
         </h2>
 
         <div className="col-cat-grid">
-          {CATEGORIES.map(cat => (
+          {CATEGORIES.map((cat) => (
             <div
               key={cat.id}
               onMouseEnter={() => setHovCat(cat.id)}
@@ -168,7 +168,10 @@ const Collection = () => {
               className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-colors duration-200 gap-2 border-2"
               style={{
                 background: C.categoryCard.bg,
-                borderColor: hoveredCat === cat.id ? C.categoryCard.hoverBorder : C.categoryCard.border,
+                borderColor:
+                  hoveredCat === cat.id
+                    ? C.categoryCard.hoverBorder
+                    : C.categoryCard.border,
                 boxShadow: C.categoryCard.shadow,
               }}
             >
@@ -225,7 +228,7 @@ const Collection = () => {
             />
             <input
               value={search}
-              onChange={e => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search by book name, author, Book ID, or rack number..."
               className="border-none outline-none bg-transparent text-base w-full"
               style={{
@@ -244,12 +247,15 @@ const Collection = () => {
         </h2>
 
         <div className="col-books-grid pb-20">
-          {paginated.map(book => (
+          {paginated.map((book) => (
             <div
               key={book.id}
               className="rounded-2xl px-5 pt-4 pb-5 border"
               style={{
-                background: book.available === false? C.pagination.activeText : C.bookCard.bg,
+                background:
+                  book.available === false
+                    ? C.pagination.activeText
+                    : C.bookCard.bg,
                 borderColor: C.bookCard.border,
                 boxShadow: C.bookCard.shadow,
               }}
@@ -295,11 +301,15 @@ const Collection = () => {
                 <span
                   className="text-xs font-semibold rounded-lg px-2.5 py-1"
                   style={{
-                    background: book.available ? C.status.availableBg : C.status.issuedBg,
-                    color:      book.available ? C.status.availableText : C.status.issuedText,
+                    background: book.available
+                      ? C.status.availableBg
+                      : C.status.issuedBg,
+                    color: book.available
+                      ? C.status.availableText
+                      : C.status.issuedText,
                   }}
                 >
-                  {book.available ? '✓ Available' : '✗ Issued'}
+                  {book.available ? "✓ Available" : "✗ Issued"}
                 </span>
               </div>
             </div>
@@ -308,7 +318,7 @@ const Collection = () => {
 
         <div className="flex items-center justify-center gap-2 mt-8">
           <button
-            onClick={() => setPage(p => Math.max(1, p - 1))}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
             style={{ borderColor: C.pagination.border }}
@@ -316,15 +326,21 @@ const Collection = () => {
             <FiChevronLeft size={20} style={{ color: C.pagination.text }} />
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
               onClick={() => setPage(p)}
               className="w-10 h-10 rounded-xl font-semibold text-base cursor-pointer border p-0"
               style={{
-                borderColor: p === currentPage ? C.pagination.activeBg : C.pagination.border,
-                background:  p === currentPage ? C.pagination.activeBg : '#fff',
-                color:       p === currentPage ? C.pagination.activeText : C.pagination.text,
+                borderColor:
+                  p === currentPage
+                    ? C.pagination.activeBg
+                    : C.pagination.border,
+                background: p === currentPage ? C.pagination.activeBg : "#fff",
+                color:
+                  p === currentPage
+                    ? C.pagination.activeText
+                    : C.pagination.text,
                 fontFamily: FONT.f1,
               }}
             >
@@ -333,7 +349,7 @@ const Collection = () => {
           ))}
 
           <button
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
             style={{ borderColor: C.pagination.border }}
@@ -341,10 +357,11 @@ const Collection = () => {
             <FiChevronRight size={20} style={{ color: C.pagination.text }} />
           </button>
         </div>
-
       </div>
 
       <Footer />
+
+      {showLogin && <Login onClose={() => setShowLogin(false)} />}
     </div>
   );
 };
