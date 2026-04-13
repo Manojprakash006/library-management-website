@@ -4,11 +4,11 @@ import Footer from '../../layout/footer/Footer';
 import {
   FiSearch,
   FiChevronLeft,
-  FiChevronRight,
+  FiChevronRight,   
   FiBookOpen,
   FiFeather,
   FiTool,
-  FiGrid,
+  FiGrid,   
   FiUsers,
   FiDisc,
 } from 'react-icons/fi';

@@ -7,7 +7,7 @@ import {
   FiCalendar,
   FiClock,
   FiMapPin,
-  FiUsers,
+  FiUsers,      
   FiBookOpen,
   FiMonitor,
   FiStar,

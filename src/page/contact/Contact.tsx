@@ -8,7 +8,7 @@ import {
   FiClock,
   FiSend
 } from 'react-icons/fi';
-
+        
 const Contact = () => {
   const c = COLORS.contact;
 

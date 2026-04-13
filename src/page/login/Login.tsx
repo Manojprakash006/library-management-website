@@ -204,7 +204,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             </svg>
             Login
           </button>
-        </div>
+        </div>    
       </div>
     </div>
   );

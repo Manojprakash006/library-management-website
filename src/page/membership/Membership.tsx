@@ -8,7 +8,7 @@ import {
   FiMonitor,
   FiUsers,
   FiCalendar,
-  FiGlobe,
+  FiGlobe,     
   FiTag,
   FiFileText,
   FiMapPin,

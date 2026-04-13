@@ -26,7 +26,7 @@ const HomeAboutPage: React.FC = () => {
     navigate("/register");
 
   }
-
+   
   return (
     <>
       <div style={{ font: FONT.f1 }}>
