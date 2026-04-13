@@ -11,10 +11,16 @@ import locatioIcon from "../../assets/aboutus/Location Icon.png";
 import DarklocationIcon from "../../assets/aboutus/location icon black.png";
 import rightarrIcon from "../../assets/events/Right Arrow Icon.png";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Register from "../../models/registerpopup/registerForm";
+import { useLocation } from "react-router-dom";
+import Login from "../../models/loginmodal/loginpopup";
 
 const HomeAboutPage: React.FC = () => {
+
+
+  const location = useLocation();
+  const [showLogin, setShowLogin] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,7 +30,6 @@ const HomeAboutPage: React.FC = () => {
 
   
 
-
 const [showRegister, setShowRegister] = useState(false);
 
 const HandleRegister = (e: any) => {
@@ -33,6 +38,13 @@ const HandleRegister = (e: any) => {
 };
 
 
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+
+  if (params.get("login") === "true") {
+    setShowLogin(true);
+  }
+}, [location.search]);
 
   return (
     <>
@@ -1038,6 +1050,7 @@ const HandleRegister = (e: any) => {
       <Footer />
 
       {showRegister && <Register onClose={() => setShowRegister(false)} />}
+      {showLogin && <Login onClose={() => setShowLogin(false)} />}
     </>
   );
 };

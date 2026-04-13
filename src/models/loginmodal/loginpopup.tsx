@@ -4,7 +4,8 @@ import { toast, Toaster } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
 import type { RootState, AppDispatch } from '../../store/store';
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { APP_CONFIG } from "../../Config/appconfig";
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
   const navigate = useNavigate();
@@ -84,7 +85,8 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
         onClose?.();
 
-        window.location.href = `http://localhost:5174?token=${token}`;
+       
+        window.location.href = `${APP_CONFIG.MEMBER_URL}?token=${token}`;
 
       } else {
         toast.error(resultAction.payload as string || "Login failed");
