@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { toast, Toaster } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
-import type { RootState, AppDispatch } from '../../store/store';
 import { useNavigate } from "react-router-dom";
 import { APP_CONFIG } from "../../Config/appconfig";
 
@@ -17,7 +16,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
   const dispatch = useAppDispatch();
 
-  const { loading, success, error: apiError, member } = useAppSelector(
+  const { loading, error: apiError } = useAppSelector(
     (state) => state.loginMember
   );
 
