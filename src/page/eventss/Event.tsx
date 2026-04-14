@@ -314,7 +314,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200  cursor-pointer"
                 >
                   Learn More
                 </button>
@@ -375,7 +375,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200  cursor-pointer"
                 >
                   Learn More
                 </button>
@@ -437,7 +437,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200 cursor-pointer"
                 >
                   Learn More
                 </button>
@@ -498,7 +498,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200 cursor-pointer"
                 >
                   Learn More
                 </button>
@@ -559,7 +559,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200 cursor-pointer"
                 >
                   Learn More
                 </button>
@@ -620,7 +620,7 @@ const Event = () => {
                   className="px-8 py-3 rounded-lg border border-blue-300 
                    bg-white text-blue-600 
                    hover:bg-gray-100 
-                   transition duration-200"
+                   transition duration-200  cursor-pointer"
                 >
                   Learn More
                 </button>
