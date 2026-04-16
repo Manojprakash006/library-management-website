@@ -18,6 +18,10 @@ import loginIcon from "../../assets/collection/Login icon.png";
 import { useNavigate } from 'react-router';
 import Login from '../../models/loginmodal/loginpopup';
 
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+
 const C = COLORS.bookCollection;
 
 const CATEGORIES = [
@@ -30,41 +34,39 @@ const CATEGORIES = [
   { id: 7, label: 'Magazines',        count: 2, icon: <MdOutlineNewspaper size={18}/> },
 ];
 
-const BOOKS = [
-  { id: 1,  serial: 'ID : 1',  title: 'Data Structures',                         author: 'Robert Lafore',                             category: 'Computer Science', rack: 'Rack 01', available: true  },
-  { id: 2,  serial: 'ID : 2',  title: 'Operating Systems',                       author: 'Abraham Silberschatz',                      category: 'Computer Science', rack: 'Rack 03', available: false },
-  { id: 3,  serial: 'ID : 3',  title: 'The Great Gatsby',                        author: 'F. Scott Fitzgerald',                       category: 'Fiction',          rack: 'Rack 03', available: true  },
-  { id: 4,  serial: 'ID : 4',  title: 'To Kill a Mockingbird',                   author: 'Harper Lee',                                category: 'Fiction',          rack: 'Rack 01', available: true  },
-  { id: 5,  serial: 'ID : 5',  title: 'Introduction to Algorithms',              author: 'Thomas H. Cormen',                          category: 'Computer Science', rack: 'Rack 05', available: true  },
-  { id: 6,  serial: 'ID : 6',  title: 'A Brief History of Time',                 author: 'Stephen Hawking',                           category: 'Science',          rack: 'Rack 05', available: true  },
-  { id: 7,  serial: 'ID : 7',  title: 'The Origin of Species',                   author: 'Charles Darwin',                            category: 'Science',          rack: 'Rack 05', available: true  },
-  { id: 8,  serial: 'ID : 8',  title: 'Mechanical Engineering Handbook',         author: 'Dan B. Marghitu',                           category: 'Computer Science', rack: 'Rack 06', available: true  },
-  { id: 9,  serial: 'ID : 9',  title: 'Civil Engineering Materials',             author: 'Peter A. Claisse',                          category: 'Engineering',      rack: 'Rack 09', available: true  },
-  { id: 10, serial: 'ID : 10', title: "Harry Potter & Philosopher's Stone",      author: 'J.K. Rowling',                              category: 'Kids',             rack: 'Rack 05', available: true  },
-  { id: 11, serial: 'ID : 11', title: 'Charlie and the Chocolate Factory',       author: 'Roald Dahl',                                category: 'Kids',             rack: 'Rack 06', available: true  },
-  { id: 12, serial: 'ID : 12', title: 'Sapiens',                                 author: 'Yuval Noah Harari',                         category: 'Non-Fiction',      rack: 'Rack 02', available: true  },
-  { id: 13, serial: 'ID : 13', title: 'Educated',                                author: 'Tara Westover',                             category: 'Non-Fiction',      rack: 'Rack 05', available: true  },
-  { id: 14, serial: 'ID : 14', title: 'National Geographic Magazine - Jan 2025', author: 'National Geographic',                       category: 'Magazines',        rack: 'Rack 04', available: true  },
-  { id: 15, serial: 'ID : 15', title: 'Time Magazine - Jan 2025',                author: 'Time Inc.',                                 category: 'Magazines',        rack: 'Rack 02', available: true  },
-  { id: 16, serial: 'ID : 16', title: 'Clean Code',                              author: 'Robert C. Martin',                          category: 'Computer Science', rack: 'Rack 03', available: true  },
-  { id: 17, serial: 'ID : 17', title: 'The Pragmatic Programmer',                author: 'Andrew Hunt, David Thomas',                 category: 'Computer Science', rack: 'Rack 03', available: true  },
-  { id: 18, serial: 'ID : 18', title: 'Design Patterns',                         author: 'Erich Gamma, Richard Helm, Ralph Johnson',  category: 'Computer Science', rack: 'Rack 04', available: true  },
-];
 
 const PAGE_SIZE = 18;
 
 const Collection = () => {
+
+
+  const dispatch = useAppDispatch();
+
+  const { books, loading, error } = useAppSelector((state) => state.collection);
+
+
+
+
+  useEffect(() => {
+    dispatch(fetchBrowseBooksData());
+  }, [dispatch]);
+
+
   const [search, setSearch]     = useState('');
   const [currentPage, setPage]  = useState(1);
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
 
-  const filtered = BOOKS.filter(b =>
-    b.title.toLowerCase().includes(search.toLowerCase()) ||
-    b.author.toLowerCase().includes(search.toLowerCase()) ||
-    b.category.toLowerCase().includes(search.toLowerCase()) ||
-    b.rack.toLowerCase().includes(search.toLowerCase())
+  
+
+
+  const filtered = books.filter(
+    (b: any) =>
+      b.title?.toLowerCase().includes(search.toLowerCase()) ||
+      b.author?.toLowerCase().includes(search.toLowerCase()) ||
+      b.category?.toLowerCase().includes(search.toLowerCase()) ||
+      b.rack?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -139,7 +141,6 @@ const Collection = () => {
             </div>
           </div>
           <button
-            // onClick={() => navigate("/login")}
             onClick={() => setShowLogin(true)}
             className="border-none rounded-xl px-7 py-3 text-base font-semibold cursor-pointer whitespace-nowrap shrink-0"
             style={{
@@ -246,8 +247,11 @@ const Collection = () => {
           All Books ({filtered.length})
         </h2>
 
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
         <div className="col-books-grid pb-20">
-          {paginated.map((book) => (
+          {paginated.map((book: any) => (
             <div
               key={book.id}
               className="rounded-2xl px-5 pt-4 pb-5 border"
@@ -294,9 +298,10 @@ const Collection = () => {
                     background: C.bookCard.tagBg,
                     color: C.bookCard.tagText,
                   }}
+                  
                 >
                   <FiDisc size={11} />
-                  {book.rack}
+                  {book.rackNumber}
                 </span>
                 <span
                   className="text-xs font-semibold rounded-lg px-2.5 py-1"
