@@ -266,13 +266,13 @@ const { books, loading, error } = useAppSelector((state) => state.collection);
                 className="m-0 mb-1 text-base font-bold leading-snug"
                 style={{ color: C.bookCard.title }}
               >
-                {book.title}
+                {(book.title).toUpperCase()}
               </p>
               <p
                 className="m-0 mb-3 text-sm leading-snug"
                 style={{ color: C.bookCard.author }}
               >
-                {book.author}
+                {(book.author).toUpperCase()}
               </p>
               <div className="flex items-center gap-2 flex-wrap">
                 <span
