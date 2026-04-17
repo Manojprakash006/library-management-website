@@ -151,8 +151,8 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           </div>
 
           <div className="flex justify-end -mt-1">
-            <a
-              href="#"
+            <button
+              onClick={() => navigate('/forgot-password')}
               className="text-sm transition-colors"
               style={{
                 fontFamily: FONT.secondary,
@@ -162,7 +162,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
               onMouseLeave={(e) => (e.currentTarget.style.color = COLORS.loginModal.link.color)}
             >
               Forgot password?
-            </a>
+            </button>
           </div>
         </div>
 

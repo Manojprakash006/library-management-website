@@ -20,3 +20,25 @@ export const registerMemberThunk = createAsyncThunk<any, RegisterPayload, { reje
     }
   }
 );
+
+export const forgotPasswordThunk = createAsyncThunk<any, string, { rejectValue: string }>(
+  "auth/forgotPassword", async(email: string, {rejectWithValue}) => {
+    try {
+      const response = await httpClient.post(API_END_POINTS.auth.forgotPassword, { email });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error?.response?.data?.message || "Forgot Password Request Failed");
+    }
+  }
+);
+
+export const resetPasswordThunk = createAsyncThunk<any, any, { rejectValue: string }>(
+  "auth/resetPassword", async(payload: any, {rejectWithValue}) => {
+    try {
+      const response = await httpClient.post(API_END_POINTS.auth.resetPassword, payload);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error?.response?.data?.message || "Reset Password Failed");
+    }
+  }
+);

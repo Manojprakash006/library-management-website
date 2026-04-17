@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
-import { toast, Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-hot-toast';
+
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
 import type { RootState, AppDispatch } from '../../store/store';
@@ -13,6 +16,8 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
   const [error, setError] = useState<formError>({});
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
 
   const { loading, success, error: apiError, member } = useAppSelector(
     (state) => state.loginMember
@@ -95,7 +100,6 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
   return (
     <>
-      <Toaster />
       {/* Overlay */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
@@ -217,8 +221,11 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
             {/* Forgot Password */}
             <div className="flex justify-end -mt-1">
-              <a
-                href="#"
+              <button
+                onClick={() => {
+                  onClose?.();
+                  navigate('/forgot-password');
+                }}
                 className="text-sm transition-colors"
                 style={{
                   fontFamily: FONT.secondary,
@@ -228,7 +235,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                 onMouseLeave={(e) => (e.currentTarget.style.color = COLORS.loginModal.link.color)}
               >
                 Forgot password?
-              </a>
+              </button>
             </div>
           </div>
 

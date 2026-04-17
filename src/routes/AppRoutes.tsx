@@ -11,6 +11,8 @@ import Login from '../models/loginmodal/loginpopup';
 import Membership from '../page/membership/Membership';
 import RegisterForm from '../models/registerpopup/registerForm';
 import Services from "../page/servicess/Services";
+import ForgotPassword from '../page/login/ForgotPassword';
+import ResetPassword from '../page/login/ResetPassword';
 import ScrollToTop from '../page/ScrollToTop';
 
 export const AppRoutes = () => {
@@ -28,6 +30,8 @@ export const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/membership" element={<Membership />} />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/services" element={<Services />} />
       </Routes>
     </>
