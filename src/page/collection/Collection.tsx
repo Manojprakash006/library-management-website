@@ -39,27 +39,19 @@ const PAGE_SIZE = 18;
 
 const Collection = () => {
 
+const dispatch = useAppDispatch();
 
-  const dispatch = useAppDispatch();
-
-  const { books, loading, error } = useAppSelector((state) => state.collection);
-
-
-
+const { books, loading, error } = useAppSelector((state) => state.collection);
 
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
   }, [dispatch]);
-
 
   const [search, setSearch]     = useState('');
   const [currentPage, setPage]  = useState(1);
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
-
-  
-
 
   const filtered = books.filter(
     (b: any) =>
