@@ -25,13 +25,13 @@ import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk"
 const C = COLORS.bookCollection;
 
 const CATEGORIES = [
-  { id: 1, label: 'Fiction',          count: 2, icon: <MdOutlineBook size={18} />    },
-  { id: 2, label: 'Non-Fiction',      count: 2, icon: <FiBookOpen size={16} />       },
-  { id: 3, label: 'Science',          count: 2, icon: <FiFeather size={16} />        },
-  { id: 4, label: 'Engineering',      count: 3, icon: <FiTool size={16} />           },
-  { id: 5, label: 'Computer Science', count: 3, icon: <FiGrid size={16} />           },
-  { id: 6, label: 'Kids',             count: 2, icon: <FiUsers size={16} />          },
-  { id: 7, label: 'Magazines',        count: 2, icon: <MdOutlineNewspaper size={18}/> },
+  { id: 1, label: 'Fiction', count: 2, icon: <MdOutlineBook size={18} /> },
+  { id: 2, label: 'Non-Fiction', count: 2, icon: <FiBookOpen size={16} /> },
+  { id: 3, label: 'Science', count: 2, icon: <FiFeather size={16} /> },
+  { id: 4, label: 'Engineering', count: 3, icon: <FiTool size={16} /> },
+  { id: 5, label: 'Computer Science', count: 3, icon: <FiGrid size={16} /> },
+  { id: 6, label: 'Kids', count: 2, icon: <FiUsers size={16} /> },
+  { id: 7, label: 'Magazines', count: 2, icon: <MdOutlineNewspaper size={18} /> },
 ];
 
 
@@ -39,16 +39,16 @@ const PAGE_SIZE = 18;
 
 const Collection = () => {
 
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-const { books, loading, error } = useAppSelector((state) => state.collection);
+  const { books, loading, error } = useAppSelector((state) => state.collection);
 
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
   }, [dispatch]);
 
-  const [search, setSearch]     = useState('');
-  const [currentPage, setPage]  = useState(1);
+  const [search, setSearch] = useState('');
+  const [currentPage, setPage] = useState(1);
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
@@ -62,7 +62,7 @@ const { books, loading, error } = useAppSelector((state) => state.collection);
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const handleSearch = (v: string) => { setSearch(v); setPage(1); };
 
@@ -290,7 +290,7 @@ const { books, loading, error } = useAppSelector((state) => state.collection);
                     background: C.bookCard.tagBg,
                     color: C.bookCard.tagText,
                   }}
-                  
+
                 >
                   <FiDisc size={11} />
                   {book.rackNumber}
