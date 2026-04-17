@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import { Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router-dom'
 import Navbar from '../layout/navbar/Navbar';
-// import Header from "./layout/header/Header";
 import About from '../page/about us/About';
 import Collection from '../page/collection/Collection';
 import Contact from '../page/contact/Contact';
@@ -20,7 +18,7 @@ export const AppRoutes = () => {
     <>
       <ScrollToTop />
       <Navbar  />
-      {/* <Header /> */}
+      
       <Routes>
         <Route path="/" element={<HomeAboutPage />} />
         <Route path="/about" element={<About />} />

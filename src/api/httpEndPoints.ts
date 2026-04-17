@@ -1,5 +1,4 @@
 export const API_END_POINTS = {
-
   auth: {
     login: "/library/members/member-auth/login",
     register: "/library/members/member-auth/register",
@@ -7,4 +6,10 @@ export const API_END_POINTS = {
     resetPassword: "/library/members/member-auth/reset-password",
   },
 
-}
+  collection: {
+    browseBooks: "/library/books/books",
+    bookRequest: "/library/requests/requests",
+    bookReviews: "library/members/member-dashboard/book-reviews",
+    likesCount: "library/books/books",
+  },
+};

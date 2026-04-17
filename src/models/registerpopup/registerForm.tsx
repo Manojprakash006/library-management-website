@@ -99,6 +99,8 @@ const Register = ({ onClose }: { onClose?: () => void }) => {
         setError({});
         console.log("Register", payload);
 
+       
+        onClose?.();
         navigate("/login");
       }
     } catch (error) {
