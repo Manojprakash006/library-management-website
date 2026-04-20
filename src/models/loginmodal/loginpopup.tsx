@@ -8,12 +8,15 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
 import { useNavigate } from "react-router-dom";
 import { APP_CONFIG } from "../../Config/appconfig";
+import eyeIcon from "../../assets/eyeIcon.png";
+import closedEyeIcon from "../../assets/closedEyeIcon.png";
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailFocused, setEmailFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState<formError>({});
 
@@ -212,7 +215,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
               </p>
             </div>
 
-            <div>
+            <div className="relative">
               <label
                 className="block text-sm font-medium mb-1.5"
                 style={{
@@ -223,26 +226,33 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={() => setPasswordFocused(true)}
                 onBlur={() => setPasswordFocused(false)}
-                className="w-full rounded-lg px-4 py-2.5 text-sm outline-none transition-all"
+                className="w-full rounded-lg px-4 py-2.5 pr-10 text-sm outline-none transition-all"
                 style={{
                   fontFamily: FONT.secondary,
                   backgroundColor: COLORS.loginModal.input.bg,
                   border: `1.5px solid ${passwordFocused ? COLORS.loginModal.input.focus : COLORS.loginModal.input.border}`,
                   color: COLORS.loginModal.input.text,
-                  boxShadow: passwordFocused
-                    ? `0 0 0 3px ${COLORS.loginModal.input.focus}22`
-                    : "none",
+                  boxShadow: passwordFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
                 }}
               />
-              <p className="text-red-400 mt-1 flex gap-2 items-center">
-                {error.password}
-              </p>
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 translate-y-1/6"
+              >
+                <img
+                  src={showPassword ? eyeIcon : closedEyeIcon}
+                  alt="toggle password"
+                  className="w-5 h-5 object-contain cursor-pointer"
+                />
+              </button>
             </div>
 
            
@@ -252,7 +262,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   onClose?.();
                   navigate('/forgot-password');
                 }}
-                className="text-sm transition-colors"
+                className="text-sm transition-colors cursor-pointer"
                 style={{
                   fontFamily: FONT.secondary,
                   color: COLORS.loginModal.link.color,
@@ -273,7 +283,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           <div className="flex items-center gap-3 mt-6">
             
             <button
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all border"
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all border"
               style={{
                 fontFamily: FONT.secondary,
                 backgroundColor: COLORS.loginModal.button.secondaryBg,
@@ -301,7 +311,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
          
             <button
               disabled={loading}
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all"
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center justify-center gap-2 transition-all"
               style={{
                 fontFamily: FONT.secondary,
                 backgroundColor: COLORS.loginModal.button.primaryBg,

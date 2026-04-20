@@ -4,12 +4,14 @@ import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
   books: Book[];
+  totalBooks: number;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: browseBookState = {
   books: [],
+  totalBooks: 0,
   loading: false,
   error: null as string | null,
 };
@@ -28,7 +30,8 @@ const browswBooksSlice = createSlice({
 
       .addCase(fetchBrowseBooksData.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload;
+        state.books = action.payload.books;
+        state.totalBooks = action.payload.total;
       })
 
       .addCase(fetchBrowseBooksData.rejected, (state, action) => {
