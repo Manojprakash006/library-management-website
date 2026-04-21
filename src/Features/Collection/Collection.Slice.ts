@@ -4,6 +4,7 @@ import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
   books: Book[];
+  totalBooks: number;
   loading: boolean;
   error: string | null;
   total: number;
@@ -14,6 +15,7 @@ interface browseBookState {
 
 const initialState: browseBookState = {
   books: [],
+  totalBooks: 0,
   loading: false,
   error: null as string | null,
   total: 0,

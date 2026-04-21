@@ -324,7 +324,7 @@ const Collection = () => {
           className="text-xl font-bold mt-0 mb-5"
           style={{ color: C.section.title }}
         >
-          All Books ({filtered.length})
+          All Books ({totalBooks})
         </h2>
 
         {loading && <p>Loading...</p>}

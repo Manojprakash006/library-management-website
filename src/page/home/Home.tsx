@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
 import searchicon from "../../assets/navbar/search icon.png";
 
@@ -11,13 +11,21 @@ import locatioIcon from "../../assets/aboutus/Location Icon.png";
 import DarklocationIcon from "../../assets/aboutus/location icon black.png";
 import rightarrIcon from "../../assets/events/Right Arrow Icon.png";
 import { useNavigate } from "react-router";
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import Register from "../../models/registerpopup/registerForm";
 import { useLocation } from "react-router-dom";
 import Login from "../../models/loginmodal/loginpopup";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
 
 const HomeAboutPage: React.FC = () => {
 
+  const dispatch = useAppDispatch();
+  const totalBooks = useAppSelector((state) => state.collection.totalBooks);
+  
+  useEffect(() => {
+    dispatch(fetchBrowseBooksData());
+  }, [dispatch]);
 
   const location = useLocation();
   const [showLogin, setShowLogin] = useState(false);
@@ -27,8 +35,6 @@ const HomeAboutPage: React.FC = () => {
   const HandleCollections = () => {
     navigate("/collection");
   }
-
-  
 
 const [showRegister, setShowRegister] = useState(false);
 
@@ -93,7 +99,7 @@ useEffect(() => {
 
           <p className="text-gray-600 mt-6 sm:mt-8 max-w-2xl px-4 text-sm sm:text-base md:text-lg">
             Your gateway to knowledge with over{" "}
-            <span className="text-[#4F39F6] font-semibold">10,000 books</span>,
+            <span className="text-[#4F39F6] font-semibold">{totalBooks}</span>,
             digital resources, and world-class facilities. Join our community
             today!
           </p>
@@ -124,7 +130,7 @@ useEffect(() => {
               <h3
                 className={`text-2xl sm:text-3xl font-bold bg-linear-to-r from-[#615FFF] to-[#4F39F6] bg-clip-text text-transparent`}
               >
-                10,000+
+                {totalBooks}
               </h3>
               <p
                 className={`text-[#4A5565] text-sm sm:text-base mt-1 ${FONTSIZE[14]} leading-5`}
