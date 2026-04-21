@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FONT, COLORS, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import container6 from "../../assets/aboutus/Container (6).png"
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
 
 const About = () => {
+
+  const dispatch = useAppDispatch();
+  const totalBooks = useAppSelector((state) => state.collection.totalBooks);
+  
+  useEffect(() => {
+    dispatch(fetchBrowseBooksData());
+  }, [dispatch]);
+  
   return (
     <>
       <div style={{ fontFamily: FONT.f1 }}>
@@ -121,7 +131,7 @@ const About = () => {
                 <p className="text-gray-600 text-base">Years of Service</p>
               </div>
               <div>
-                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">10,000+</div>
+                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">{totalBooks}</div>
                 <p className="text-gray-600 text-base">Total Books</p>
               </div>
               <div>

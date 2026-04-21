@@ -16,71 +16,101 @@ import { BsInfoCircleFill } from 'react-icons/bs';
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
 import loginIcon from "../../assets/collection/Login icon.png";
 import { useNavigate } from 'react-router';
+import Login from '../../models/loginmodal/loginpopup';
+
+import { useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import Pagination from '../../component/shared/Pagination';
 
 const C = COLORS.bookCollection;
 
-const CATEGORIES = [
-  { id: 1, label: 'Fiction',          count: 2, icon: <MdOutlineBook size={18} />    },
-  { id: 2, label: 'Non-Fiction',      count: 2, icon: <FiBookOpen size={16} />       },
-  { id: 3, label: 'Science',          count: 2, icon: <FiFeather size={16} />        },
-  { id: 4, label: 'Engineering',      count: 3, icon: <FiTool size={16} />           },
-  { id: 5, label: 'Computer Science', count: 3, icon: <FiGrid size={16} />           },
-  { id: 6, label: 'Kids',             count: 2, icon: <FiUsers size={16} />          },
-  { id: 7, label: 'Magazines',        count: 2, icon: <MdOutlineNewspaper size={18}/> },
-];
+const getIconForCategory = (label: string) => {
+  const l = label.toLowerCase();
+  if (l.includes('fiction')) return <MdOutlineBook size={18} />;
+  if (l.includes('science')) return <FiFeather size={16} />;
+  if (l.includes('engineering') || l.includes('tool')) return <FiTool size={16} />;
+  if (l.includes('computer') || l.includes('grid')) return <FiGrid size={16} />;
+  if (l.includes('kid') || l.includes('user')) return <FiUsers size={16} />;
+  if (l.includes('magazine') || l.includes('news')) return <MdOutlineNewspaper size={18} />;
+  return <FiBookOpen size={16} />;
+};
 
-const BOOKS = [
-  { id: 1,  serial: 'ID : 1',  title: 'Data Structures',                         author: 'Robert Lafore',                             category: 'Computer Science', rack: 'Rack 01', available: true  },
-  { id: 2,  serial: 'ID : 2',  title: 'Operating Systems',                       author: 'Abraham Silberschatz',                      category: 'Computer Science', rack: 'Rack 03', available: false },
-  { id: 3,  serial: 'ID : 3',  title: 'The Great Gatsby',                        author: 'F. Scott Fitzgerald',                       category: 'Fiction',          rack: 'Rack 03', available: true  },
-  { id: 4,  serial: 'ID : 4',  title: 'To Kill a Mockingbird',                   author: 'Harper Lee',                                category: 'Fiction',          rack: 'Rack 01', available: true  },
-  { id: 5,  serial: 'ID : 5',  title: 'Introduction to Algorithms',              author: 'Thomas H. Cormen',                          category: 'Computer Science', rack: 'Rack 05', available: true  },
-  { id: 6,  serial: 'ID : 6',  title: 'A Brief History of Time',                 author: 'Stephen Hawking',                           category: 'Science',          rack: 'Rack 05', available: true  },
-  { id: 7,  serial: 'ID : 7',  title: 'The Origin of Species',                   author: 'Charles Darwin',                            category: 'Science',          rack: 'Rack 05', available: true  },
-  { id: 8,  serial: 'ID : 8',  title: 'Mechanical Engineering Handbook',         author: 'Dan B. Marghitu',                           category: 'Computer Science', rack: 'Rack 06', available: true  },
-  { id: 9,  serial: 'ID : 9',  title: 'Civil Engineering Materials',             author: 'Peter A. Claisse',                          category: 'Engineering',      rack: 'Rack 09', available: true  },
-  { id: 10, serial: 'ID : 10', title: "Harry Potter & Philosopher's Stone",      author: 'J.K. Rowling',                              category: 'Kids',             rack: 'Rack 05', available: true  },
-  { id: 11, serial: 'ID : 11', title: 'Charlie and the Chocolate Factory',       author: 'Roald Dahl',                                category: 'Kids',             rack: 'Rack 06', available: true  },
-  { id: 12, serial: 'ID : 12', title: 'Sapiens',                                 author: 'Yuval Noah Harari',                         category: 'Non-Fiction',      rack: 'Rack 02', available: true  },
-  { id: 13, serial: 'ID : 13', title: 'Educated',                                author: 'Tara Westover',                             category: 'Non-Fiction',      rack: 'Rack 05', available: true  },
-  { id: 14, serial: 'ID : 14', title: 'National Geographic Magazine - Jan 2025', author: 'National Geographic',                       category: 'Magazines',        rack: 'Rack 04', available: true  },
-  { id: 15, serial: 'ID : 15', title: 'Time Magazine - Jan 2025',                author: 'Time Inc.',                                 category: 'Magazines',        rack: 'Rack 02', available: true  },
-  { id: 16, serial: 'ID : 16', title: 'Clean Code',                              author: 'Robert C. Martin',                          category: 'Computer Science', rack: 'Rack 03', available: true  },
-  { id: 17, serial: 'ID : 17', title: 'The Pragmatic Programmer',                author: 'Andrew Hunt, David Thomas',                 category: 'Computer Science', rack: 'Rack 03', available: true  },
-  { id: 18, serial: 'ID : 18', title: 'Design Patterns',                         author: 'Erich Gamma, Richard Helm, Ralph Johnson',  category: 'Computer Science', rack: 'Rack 04', available: true  },
-];
 
 const PAGE_SIZE = 18;
 
 const Collection = () => {
-  const [search, setSearch]     = useState('');
-  const [currentPage, setPage]  = useState(1);
+
+  const dispatch = useAppDispatch();
+
+  const { books, loading, error, page: currentPage, totalPages, total } = useAppSelector((state) => state.collection);
+
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchBrowseBooksData({ 
+      page: 1, 
+      limit: PAGE_SIZE,
+      search: search || undefined,
+      category: selectedCategory || undefined
+    }));
+  }, [dispatch, search, selectedCategory]);
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(fetchBrowseBooksData({ 
+      page: newPage, 
+      limit: PAGE_SIZE,
+      search: search || undefined,
+      category: selectedCategory || undefined
+    }));
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  };
+
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
 
-  const filtered = BOOKS.filter(b =>
-    b.title.toLowerCase().includes(search.toLowerCase()) ||
-    b.author.toLowerCase().includes(search.toLowerCase()) ||
-    b.category.toLowerCase().includes(search.toLowerCase()) ||
-    b.rack.toLowerCase().includes(search.toLowerCase())
-  );
+  const categories = useMemo(() => {
+    const counts: Record<string, number> = {};
+    books.forEach((b: any) => {
+      const cat = b.category || 'Other';
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+    return Object.entries(counts).map(([label, count], index) => ({
+      id: index + 1,
+      label,
+      count,
+      icon: getIconForCategory(label)
+    }));
+  }, [books]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const filtered = useMemo(() => {
+    return books.filter((b: any) => {
+      const matchesSearch = 
+        b.title?.toLowerCase().includes(search.toLowerCase()) ||
+        b.author?.toLowerCase().includes(search.toLowerCase()) ||
+        b.category?.toLowerCase().includes(search.toLowerCase()) ||
+        b.rackNumber?.toString().toLowerCase().includes(search.toLowerCase());
+      
+      const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [books, search, selectedCategory]);
 
-  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
+  const handleSearch = (v: string) => { setSearch(v); };
+  const handleCategorySelect = (cat: string) => {
+    setSelectedCategory(prev => prev === cat ? null : cat);
+  };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ fontFamily: FONT.f1, }}
-    >
-
+    <div className="min-h-screen" style={{ fontFamily: FONT.f1 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
 
-        .col-cat-grid {
+        .col-cat-grid   {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 10px;
@@ -102,19 +132,20 @@ const Collection = () => {
         }
       `}</style>
 
-              <div
-                className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#9A10F9] to-[#E60077] "
-              >
-                <div className="px-4 sm:px-6 md:px-16 lg:px-24">
-                  <h1 className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}>Book Collections</h1>
-                  <p className="text-white text-lg md:text-lg opacity-90">
-                    Explore our extensive collection and request books online
-                  </p>
-                </div>
-              </div>
+      <div className="w-full py-8 px-4 mb-16 bg-linear-to-r from-[#9A10F9] to-[#E60077] ">
+        <div className="px-4 sm:px-6 md:px-16 lg:px-24">
+          <h1
+            className={` font-bold text-white mb-3 ${FONTSIZE[32]} leading-10`}
+          >
+            Book Collections
+          </h1>
+          <p className="text-white text-lg md:text-lg opacity-90">
+            Explore our extensive collection and request books online
+          </p>
+        </div>
+      </div>
 
       <div className="px-4 sm:px-6 md:px-16 lg:px-24 mb-20">
-
         <div
           className="flex items-center justify-between flex-wrap gap-3 rounded-2xl px-6 py-4 mb-8 border"
           style={{
@@ -123,7 +154,7 @@ const Collection = () => {
           }}
         >
           <div className="flex items-center gap-4">
-            <img src={loginIcon} alt="Login Icon" className='w-8 h-8' />
+            <img src={loginIcon} alt="Login Icon" className="w-8 h-8" />
             <div>
               <p
                 className="m-0 font-bold text-lg"
@@ -140,7 +171,7 @@ const Collection = () => {
             </div>
           </div>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => setShowLogin(true)}
             className="border-none rounded-xl px-7 py-3 text-base font-semibold cursor-pointer whitespace-nowrap shrink-0"
             style={{
               background: C.loginAlert.buttonBg,
@@ -160,28 +191,78 @@ const Collection = () => {
         </h2>
 
         <div className="col-cat-grid">
-          {CATEGORIES.map(cat => (
+          {/* All Categories Option */}
+          <div
+            onMouseEnter={() => setHovCat(0)}
+            onMouseLeave={() => setHovCat(null)}
+            onClick={() => setSelectedCategory(null)}
+            className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-all duration-200 gap-2 border-2"
+            style={{
+              background: selectedCategory === null ? 'rgba(154, 16, 249, 0.05)' : C.categoryCard.bg,
+              borderColor:
+                selectedCategory === null 
+                  ? '#9A10F9'
+                  : hoveredCat === 0
+                    ? C.categoryCard.hoverBorder
+                    : C.categoryCard.border,
+              boxShadow: selectedCategory === null ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
+              transform: selectedCategory === null ? 'translateY(-2px)' : 'none'
+            }}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <span
+                className="shrink-0 flex"
+                style={{ color: selectedCategory === null ? '#9A10F9' : C.categoryCard.hoverBorder }}
+              >
+                <FiGrid size={20} />
+              </span>
+              <span
+                className="text-base font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
+                style={{ color: selectedCategory === null ? '#9A10F9' : C.categoryCard.title }}
+              >
+                All Collections
+              </span>
+            </div>
+            <span
+              className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap shrink-0"
+              style={{
+                background: selectedCategory === null ? '#9A10F9' : C.section.bg,
+                color: selectedCategory === null ? '#fff' : C.categoryCard.text,
+              }}
+            >
+              {total} books
+            </span>
+          </div>
+
+          {categories.map((cat) => (
             <div
               key={cat.id}
               onMouseEnter={() => setHovCat(cat.id)}
               onMouseLeave={() => setHovCat(null)}
-              className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-colors duration-200 gap-2 border-2"
+              onClick={() => handleCategorySelect(cat.label)}
+              className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-all duration-200 gap-2 border-2"
               style={{
-                background: C.categoryCard.bg,
-                borderColor: hoveredCat === cat.id ? C.categoryCard.hoverBorder : C.categoryCard.border,
-                boxShadow: C.categoryCard.shadow,
+                background: selectedCategory === cat.label ? 'rgba(154, 16, 249, 0.05)' : C.categoryCard.bg,
+                borderColor:
+                  selectedCategory === cat.label 
+                    ? '#9A10F9'
+                    : hoveredCat === cat.id
+                      ? C.categoryCard.hoverBorder
+                      : C.categoryCard.border,
+                boxShadow: selectedCategory === cat.label ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
+                transform: selectedCategory === cat.label ? 'translateY(-2px)' : 'none'
               }}
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span
                   className="shrink-0 flex"
-                  style={{ color: C.categoryCard.hoverBorder }}
+                  style={{ color: selectedCategory === cat.label ? '#9A10F9' : C.categoryCard.hoverBorder }}
                 >
                   {React.cloneElement(cat.icon, { size: 20 })}
                 </span>
                 <span
                   className="text-base font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
-                  style={{ color: C.categoryCard.title }}
+                  style={{ color: selectedCategory === cat.label ? '#9A10F9' : C.categoryCard.title }}
                 >
                   {cat.label}
                 </span>
@@ -189,14 +270,17 @@ const Collection = () => {
               <span
                 className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap shrink-0"
                 style={{
-                  background: C.section.bg,
-                  color: C.categoryCard.text,
+                  background: selectedCategory === cat.label ? '#9A10F9' : C.section.bg,
+                  color: selectedCategory === cat.label ? '#fff' : C.categoryCard.text,
                 }}
               >
                 {cat.count} books
               </span>
             </div>
           ))}
+          {categories.length === 0 && !loading && (
+            <p className="col-span-full text-center py-4 opacity-70">No categories found.</p>
+          )}
         </div>
 
         <div
@@ -225,7 +309,7 @@ const Collection = () => {
             />
             <input
               value={search}
-              onChange={e => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search by book name, author, Book ID, or rack number..."
               className="border-none outline-none bg-transparent text-base w-full"
               style={{
@@ -240,16 +324,22 @@ const Collection = () => {
           className="text-xl font-bold mt-0 mb-5"
           style={{ color: C.section.title }}
         >
-          All Books ({filtered.length})
+          All Books ({totalBooks})
         </h2>
 
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
         <div className="col-books-grid pb-20">
-          {paginated.map(book => (
+          {filtered.map((book: any) => (
             <div
-              key={book.id}
+              key={book._id || book.bookId}
               className="rounded-2xl px-5 pt-4 pb-5 border"
               style={{
-                background: book.available === false? C.pagination.activeText : C.bookCard.bg,
+                background:
+                  book.available === false
+                    ? C.pagination.activeText
+                    : C.bookCard.bg,
                 borderColor: C.bookCard.border,
                 boxShadow: C.bookCard.shadow,
               }}
@@ -264,13 +354,13 @@ const Collection = () => {
                 className="m-0 mb-1 text-base font-bold leading-snug"
                 style={{ color: C.bookCard.title }}
               >
-                {book.title}
+                {(book.title).toUpperCase()}
               </p>
               <p
                 className="m-0 mb-3 text-sm leading-snug"
                 style={{ color: C.bookCard.author }}
               >
-                {book.author}
+                {(book.author).toUpperCase()}
               </p>
               <div className="flex items-center gap-2 flex-wrap">
                 <span
@@ -288,63 +378,41 @@ const Collection = () => {
                     background: C.bookCard.tagBg,
                     color: C.bookCard.tagText,
                   }}
+
                 >
                   <FiDisc size={11} />
-                  {book.rack}
+                  {book.rackNumber}
                 </span>
                 <span
                   className="text-xs font-semibold rounded-lg px-2.5 py-1"
                   style={{
-                    background: book.available ? C.status.availableBg : C.status.issuedBg,
-                    color:      book.available ? C.status.availableText : C.status.issuedText,
+                    background: book.available
+                      ? C.status.availableBg
+                      : C.status.issuedBg,
+                    color: book.available
+                      ? C.status.availableText
+                      : C.status.issuedText,
                   }}
                 >
-                  {book.available ? '✓ Available' : '✗ Issued'}
+                  {book.available ? "✓ Available" : "✗ Issued"}
                 </span>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="flex items-center justify-center gap-2 mt-8">
-          <button
-            onClick={() => setPage(p => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
-            style={{ borderColor: C.pagination.border }}
-          >
-            <FiChevronLeft size={20} style={{ color: C.pagination.text }} />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              className="w-10 h-10 rounded-xl font-semibold text-base cursor-pointer border p-0"
-              style={{
-                borderColor: p === currentPage ? C.pagination.activeBg : C.pagination.border,
-                background:  p === currentPage ? C.pagination.activeBg : '#fff',
-                color:       p === currentPage ? C.pagination.activeText : C.pagination.text,
-                fontFamily: FONT.f1,
-              }}
-            >
-              {p}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-            className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
-            style={{ borderColor: C.pagination.border }}
-          >
-            <FiChevronRight size={20} style={{ color: C.pagination.text }} />
-          </button>
-        </div>
-
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          totalEntries={total}
+          limit={PAGE_SIZE}
+        />
       </div>
 
       <Footer />
+
+      {showLogin && <Login onClose={() => setShowLogin(false)} />}
     </div>
   );
 };

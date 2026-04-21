@@ -5,118 +5,126 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerMemberThunk } from '../../store/thunks/authThunk';
 import type { RootState, AppDispatch } from '../../store/store';
 
-const Register = () => {
-
+const Register = ({ onClose }: { onClose?: () => void }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { loading, success, error: apiError } = useSelector(
-    (state: RootState) => state.auth
-  )
+  const {
+    loading,
+    
+    error: apiError,
+  } = useSelector((state: RootState) => state.auth);
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    password: "",
+    confirmPassword: "",
   });
 
   type formError = {
-    name?: string,
-    email?: string,
-    phone?: string,
-    address?: string,
-    password?: string,
-    confirmPassword?: string
-  }
+    name?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    password?: string;
+    confirmPassword?: string;
+  };
   const [error, setError] = useState<formError>({});
-    
-    
-      const Validate = () => { 
-    
-        let newError: formError = {};
-    
-        if(!formData.name.trim()) newError.name = "Please Enter the FullName";
-        if(!formData.email.trim()) newError.email = "Please Enter the Email";
-        if(!formData.phone.trim()) newError.phone = "Please Enter the Phone Number";
-        if(!formData.address.trim()) newError.address = "Please Enter the Address";
-        if(!formData.password.trim()) newError.password = "Please Enter the Password";
-        if(!formData.confirmPassword.trim()) newError.confirmPassword = "Please confirm the Password";
-        if (formData.password.trim() && formData.confirmPassword.trim() && formData.password !== formData.confirmPassword) {
-            newError.confirmPassword = "Password Mismatched";}
-  
-        if(Object.keys(newError).length > 0) {
-             setError(newError);
-             return false;
-          }
-          setError({});
-          return true;
-      }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const Validate = () => {
+    let newError: formError = {};
+
+    if (!formData.name.trim()) newError.name = "Please Enter the FullName";
+    if (!formData.email.trim()) newError.email = "Please Enter the Email";
+    if (!formData.phone.trim())
+      newError.phone = "Please Enter the Phone Number";
+    if (!formData.address.trim()) newError.address = "Please Enter the Address";
+    if (!formData.password.trim())
+      newError.password = "Please Enter the Password";
+    if (!formData.confirmPassword.trim())
+      newError.confirmPassword = "Please confirm the Password";
+    if (
+      formData.password.trim() &&
+      formData.confirmPassword.trim() &&
+      formData.password !== formData.confirmPassword
+    ) {
+      newError.confirmPassword = "Password Mismatched";
+    }
+
+    if (Object.keys(newError).length > 0) {
+      setError(newError);
+      return false;
+    }
+    setError({});
+    return true;
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-
     e.preventDefault();
 
-    if(!Validate()) return;
+    if (!Validate()) return;
 
     const payload = {
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
       address: formData.address,
-      password: formData.password
-    }
+      password: formData.password,
+    };
 
     try {
       const resultAction = await dispatch(registerMemberThunk(payload));
 
-      if(registerMemberThunk.fulfilled.match(resultAction)) {
-
+      if (registerMemberThunk.fulfilled.match(resultAction)) {
         console.log("Registration Successful");
 
         setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          address: '',
-          password: '',
-          confirmPassword: '',
-          });
-          setError({});
-          console.log('Register', payload);
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setError({});
+        console.log("Register", payload);
 
-          navigate("/login");
+       
+        onClose?.();
+        navigate("/login");
       }
-    } catch(error) {
+    } catch (error) {
       console.log("Registration Failed", error);
     }
-    
   };
 
   const handleCancel = () => {
-    console.log('Cancel');
-    navigate(-1);
+    console.log("Cancel");
+   onClose?.();
   };
 
   return (
     <>
       <div
         className="fixed inset-0 flex items-center justify-center z-50 px-4"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)' }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
       >
         <div
           className="relative bg-white rounded-2xl w-full mx-auto overflow-hidden"
           style={{
-            boxShadow: '0px 20px 50px rgba(0,0,0,0.15)',
-            border: '1px solid #E5E7EB',
-            maxWidth: '560px',
+            boxShadow: "0px 20px 50px rgba(0,0,0,0.15)",
+            border: "1px solid #E5E7EB",
+            maxWidth: "560px",
           }}
         >
           <button
@@ -125,17 +133,22 @@ const Register = () => {
             aria-label="Close"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M12 4L4 12M4 4l8 8" stroke="#6B7280" strokeWidth="1.8" strokeLinecap="round" />
+              <path
+                d="M12 4L4 12M4 4l8 8"
+                stroke="#6B7280"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
 
-          {apiError && ( <p className='text-red-500 text-sm mb-2'>{apiError}</p>)}
+          {apiError && <p className="text-red-500 text-sm mb-2">{apiError}</p>}
 
           <form onSubmit={handleSubmit} className="px-6 pt-5 pb-5">
             <div className="flex items-start gap-3 mb-1 pr-6">
               <div
                 className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center mt-0.5"
-                style={{ backgroundColor: '#DCFCE7' }}
+                style={{ backgroundColor: "#DCFCE7" }}
               >
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
                   <path
@@ -147,15 +160,22 @@ const Register = () => {
               <div>
                 <h2
                   className="text-base font-semibold leading-tight"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
                   Register Now
                 </h2>
                 <p
                   className="text-xs mt-0.5 leading-snug"
-                  style={{ color: COLORS?.registerModal?.header?.subtitle ?? '#6B7280', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.subtitle ?? "#6B7280",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Create your free library account to start browsing and requesting books
+                  Create your free library account to start browsing and
+                  requesting books
                 </p>
               </div>
             </div>
@@ -166,9 +186,12 @@ const Register = () => {
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Full Name <span style={{ color: '#16A34A' }}>*</span>
+                  Full Name <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -178,23 +201,28 @@ const Register = () => {
                   placeholder="John Doe"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.name}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.name}
+                </p>
               </div>
 
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Email Address <span style={{ color: '#16A34A' }}>*</span>
+                  Email Address <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <input
                   type="email"
@@ -204,23 +232,28 @@ const Register = () => {
                   placeholder="your.email@example.com"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.email}
+                </p>
               </div>
 
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Phone Number <span style={{ color: '#16A34A' }}>*</span>
+                  Phone Number <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <input
                   type="tel"
@@ -230,23 +263,28 @@ const Register = () => {
                   placeholder="+91-9876543210"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.phone}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.phone}
+                </p>
               </div>
 
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Address <span style={{ color: '#16A34A' }}>*</span>
+                  Address <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <textarea
                   name="address"
@@ -256,23 +294,28 @@ const Register = () => {
                   rows={2}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all resize-none"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.address}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.address}
+                </p>
               </div>
 
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Password <span style={{ color: '#16A34A' }}>*</span>
+                  Password <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <input
                   type="password"
@@ -282,23 +325,28 @@ const Register = () => {
                   placeholder="At least 6 characters"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.password}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.password}
+                </p>
               </div>
 
               <div>
                 <label
                   className="block text-xs font-medium mb-1"
-                  style={{ color: COLORS?.registerModal?.header?.title ?? '#111827', fontFamily: FONT?.primary }}
+                  style={{
+                    color: COLORS?.registerModal?.header?.title ?? "#111827",
+                    fontFamily: FONT?.primary,
+                  }}
                 >
-                  Confirm Password <span style={{ color: '#16A34A' }}>*</span>
+                  Confirm Password <span style={{ color: "#16A34A" }}>*</span>
                 </label>
                 <input
                   type="password"
@@ -308,46 +356,66 @@ const Register = () => {
                   placeholder="Re-enter your password"
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-all"
                   style={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1.5px solid #E5E7EB',
-                    color: '#111827',
+                    backgroundColor: "#F3F4F6",
+                    border: "1.5px solid #E5E7EB",
+                    color: "#111827",
                     fontFamily: FONT?.primary,
                   }}
-                  onFocus={e => (e.target.style.borderColor = '#16A34A')}
-                  onBlur={e => (e.target.style.borderColor = '#E5E7EB')}
+                  onFocus={(e) => (e.target.style.borderColor = "#16A34A")}
+                  onBlur={(e) => (e.target.style.borderColor = "#E5E7EB")}
                 />
-                <p className="text-red-400 mt-1 flex gap-2 items-center">{error.confirmPassword}</p>
+                <p className="text-red-400 mt-1 flex gap-2 items-center">
+                  {error.confirmPassword}
+                </p>
               </div>
             </div>
 
             <div
               className="mt-3 rounded-xl px-3.5 py-2.5"
               style={{
-                backgroundColor: '#ECFDF5',
-                border: '1px solid #A7F3D0',
+                backgroundColor: "#ECFDF5",
+                border: "1px solid #A7F3D0",
               }}
             >
               <p
                 className="text-xs font-semibold mb-1.5 flex items-center gap-1.5"
-                style={{ color: '#065F46', fontFamily: FONT?.primary }}
+                style={{ color: "#065F46", fontFamily: FONT?.primary }}
               >
                 <span>📚</span> What's Next?
               </p>
               <ul className="flex flex-col gap-1">
                 {[
-                  'Registration is instant & free',
-                  'Browse collections and request books online',
-                  'Admin will approve your book requests',
-                  'Track your issued books in your dashboard',
+                  "Registration is instant & free",
+                  "Browse collections and request books online",
+                  "Admin will approve your book requests",
+                  "Track your issued books in your dashboard",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <svg className="shrink-0 mt-0.5" width="13" height="13" viewBox="0 0 14 14" fill="none">
-                      <circle cx="7" cy="7" r="7" fill="#16A34A" fillOpacity="0.15" />
-                      <path d="M4.5 7l1.8 1.8L9.5 5.5" stroke="#16A34A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      className="shrink-0 mt-0.5"
+                      width="13"
+                      height="13"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                    >
+                      <circle
+                        cx="7"
+                        cy="7"
+                        r="7"
+                        fill="#16A34A"
+                        fillOpacity="0.15"
+                      />
+                      <path
+                        d="M4.5 7l1.8 1.8L9.5 5.5"
+                        stroke="#16A34A"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                     <span
                       className="text-xs leading-snug"
-                      style={{ color: '#047857', fontFamily: FONT?.primary }}
+                      style={{ color: "#047857", fontFamily: FONT?.primary }}
                     >
                       {item}
                     </span>
@@ -361,32 +429,49 @@ const Register = () => {
                 onClick={handleCancel}
                 className="px-5 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-gray-200"
                 style={{
-                  backgroundColor: '#F3F4F6',
-                  color: COLORS?.registerModal?.button?.secondaryText ?? '#111827',
-                  border: '1px solid #D1D5DB',
+                  backgroundColor: "#F3F4F6",
+                  color:
+                    COLORS?.registerModal?.button?.secondaryText ?? "#111827",
+                  border: "1px solid #D1D5DB",
                   fontFamily: FONT?.primary,
                 }}
               >
                 Cancel
               </button>
-              <button type='submit' disabled = {loading}
+              <button
+                type="submit"
+                disabled={loading}
                 className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors"
                 style={{
-                  backgroundColor: '#16A34A',
-                  color: '#FFFFFF',
+                  backgroundColor: "#16A34A",
+                  color: "#FFFFFF",
                   fontFamily: FONT?.primary,
                 }}
-                onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.backgroundColor = '#15803D')}
-                onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.backgroundColor = '#16A34A')}
+                onMouseEnter={(e) =>
+                  ((
+                    e.currentTarget as HTMLButtonElement
+                  ).style.backgroundColor = "#15803D")
+                }
+                onMouseLeave={(e) =>
+                  ((
+                    e.currentTarget as HTMLButtonElement
+                  ).style.backgroundColor = "#16A34A")
+                }
               >
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
                   <path
                     d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 1.5c-3.314 0-5.5 1.5-5.5 2.25V13h11v-1.25c0-.75-2.186-2.25-5.5-2.25Z"
                     fill="#FFFFFF"
                   />
-                  <path d="M12 5.5l1.5 1.5-3 3" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M12 5.5l1.5 1.5-3 3"
+                    stroke="#FFFFFF"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
-                {loading? "Registering" : "Register Now"}
+                {loading ? "Registering" : "Register Now"}
               </button>
             </div>
           </form>

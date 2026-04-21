@@ -9,6 +9,8 @@ import searchicon from "../../assets/navbar/search icon.png";
 import Register from "../../models/registerpopup/registerForm";
 import Login from "../../models/loginmodal/loginpopup";
 
+
+
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();

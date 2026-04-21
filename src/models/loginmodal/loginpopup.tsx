@@ -1,20 +1,30 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
-import { toast, Toaster } from 'react-hot-toast';
+// import { useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-hot-toast';
+
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMemberThunk } from '../../store/thunks/loginMemberThunk';
-import type { RootState, AppDispatch } from '../../store/store';
+import { useNavigate } from "react-router-dom";
+import { APP_CONFIG } from "../../Config/appconfig";
+import eyeIcon from "../../assets/eyeIcon.png";
+import closedEyeIcon from "../../assets/closedEyeIcon.png";
 
 const Login = ({ onClose }: { onClose?: () => void }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailFocused, setEmailFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState<formError>({});
 
   const dispatch = useAppDispatch();
+  // const navigate = useNavigate();
 
-  const { loading, success, error: apiError, member } = useAppSelector(
+
+  const { loading, error: apiError } = useAppSelector(
     (state) => state.loginMember
   );
 
@@ -82,7 +92,8 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
         onClose?.();
 
-        window.location.href = `http://localhost:5174?token=${token}`;
+       
+        window.location.href = `${APP_CONFIG.MEMBER_URL}?token=${token}`;
 
       } else {
         toast.error(resultAction.payload as string || "Login failed");
@@ -95,14 +106,13 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
   return (
     <>
-      <Toaster />
       {/* Overlay */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
         style={{ backgroundColor: COLORS.loginModal.overlay }}
         onClick={onClose}
       >
-        {/* Modal */}
+        
         <div
           className="relative w-full max-w-md rounded-2xl p-6 sm:p-8"
           style={{
@@ -112,10 +122,16 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close Button */}
           <button
             className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-            onClick={onClose}
+          
+            onClick={() => {
+              if (onClose) {
+                onClose();
+              } else {
+                navigate(-1);
+              }
+            }}
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path
@@ -143,7 +159,10 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             </div>
             <h2
               className="text-lg font-semibold"
-              style={{ fontFamily: FONT.primary, color: COLORS.loginModal.header.title }}
+              style={{
+                fontFamily: FONT.primary,
+                color: COLORS.loginModal.header.title,
+              }}
             >
               Member Login
             </h2>
@@ -151,21 +170,25 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
 
           <p
             className="text-sm mb-6 ml-12"
-            style={{ fontFamily: FONT.secondary, color: COLORS.loginModal.header.subtitle }}
+            style={{
+              fontFamily: FONT.secondary,
+              color: COLORS.loginModal.header.subtitle,
+            }}
           >
             Enter your credentials to access your library account
           </p>
 
-          {apiError && (
-            <p className="text-red-500 text-sm mb-2">{apiError}</p>
-          )}
-          {/* Form */}
+          {apiError && <p className="text-red-500 text-sm mb-2">{apiError}</p>}
+
           <div className="space-y-4">
-            {/* Email Field */}
+            
             <div>
               <label
                 className="block text-sm font-medium mb-1.5"
-                style={{ fontFamily: FONT.secondary, color: COLORS.loginModal.header.title }}
+                style={{
+                  fontFamily: FONT.secondary,
+                  color: COLORS.loginModal.header.title,
+                }}
               >
                 Email Address
               </label>
@@ -182,28 +205,34 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   backgroundColor: COLORS.loginModal.input.bg,
                   border: `1.5px solid ${emailFocused ? COLORS.loginModal.input.focus : COLORS.loginModal.input.border}`,
                   color: COLORS.loginModal.input.text,
-                  boxShadow: emailFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
+                  boxShadow: emailFocused
+                    ? `0 0 0 3px ${COLORS.loginModal.input.focus}22`
+                    : "none",
                 }}
               />
-              <p className="text-red-400 mt-1 flex gap-2 items-center">{error.email}</p>
+              <p className="text-red-400 mt-1 flex gap-2 items-center">
+                {error.email}
+              </p>
             </div>
 
-            {/* Password Field */}
-            <div>
+            <div className="relative">
               <label
                 className="block text-sm font-medium mb-1.5"
-                style={{ fontFamily: FONT.secondary, color: COLORS.loginModal.header.title }}
+                style={{
+                  fontFamily: FONT.secondary,
+                  color: COLORS.loginModal.header.title,
+                }}
               >
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={() => setPasswordFocused(true)}
                 onBlur={() => setPasswordFocused(false)}
-                className="w-full rounded-lg px-4 py-2.5 text-sm outline-none transition-all"
+                className="w-full rounded-lg px-4 py-2.5 pr-10 text-sm outline-none transition-all"
                 style={{
                   fontFamily: FONT.secondary,
                   backgroundColor: COLORS.loginModal.input.bg,
@@ -212,58 +241,92 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
                   boxShadow: passwordFocused ? `0 0 0 3px ${COLORS.loginModal.input.focus}22` : 'none',
                 }}
               />
-              <p className="text-red-400 mt-1 flex gap-2 items-center">{error.password}</p>
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 translate-y-1/6"
+              >
+                <img
+                  src={showPassword ? eyeIcon : closedEyeIcon}
+                  alt="toggle password"
+                  className="w-5 h-5 object-contain cursor-pointer"
+                />
+              </button>
             </div>
 
-            {/* Forgot Password */}
+           
             <div className="flex justify-end -mt-1">
-              <a
-                href="#"
-                className="text-sm transition-colors"
+              <button
+                onClick={() => {
+                  onClose?.();
+                  navigate('/forgot-password');
+                }}
+                className="text-sm transition-colors cursor-pointer"
                 style={{
                   fontFamily: FONT.secondary,
                   color: COLORS.loginModal.link.color,
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = COLORS.loginModal.link.hover)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = COLORS.loginModal.link.color)}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = COLORS.loginModal.link.hover)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = COLORS.loginModal.link.color)
+                }
               >
                 Forgot password?
-              </a>
+              </button>
             </div>
           </div>
 
-          {/* Action Buttons */}
+        
           <div className="flex items-center gap-3 mt-6">
-            {/* Cancel */}
+            
             <button
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium transition-all border"
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all border"
               style={{
                 fontFamily: FONT.secondary,
                 backgroundColor: COLORS.loginModal.button.secondaryBg,
                 color: COLORS.loginModal.button.secondaryText,
                 borderColor: COLORS.loginModal.button.secondaryBorder,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#E5E7EB')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.secondaryBg)}
-              onClick={onClose}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#E5E7EB")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  COLORS.loginModal.button.secondaryBg)
+              }
+              onClick={() => {
+                if (onClose) {
+                  onClose();
+                } else {
+                  navigate(-1);
+                }
+              }}
             >
               Cancel
             </button>
 
-            {/* Login */}
+         
             <button
-              disabled = {loading}
-              className="flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all"
+              disabled={loading}
+              className="flex-1 py-2.5 rounded-lg text-sm font-medium cursor-pointer flex items-center justify-center gap-2 transition-all"
               style={{
                 fontFamily: FONT.secondary,
                 backgroundColor: COLORS.loginModal.button.primaryBg,
                 color: COLORS.loginModal.button.primaryText,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.primaryHover)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = COLORS.loginModal.button.primaryBg)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  COLORS.loginModal.button.primaryHover)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  COLORS.loginModal.button.primaryBg)
+              }
               onClick={handleLogin}
             >
-              {/* Login icon */}
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"
