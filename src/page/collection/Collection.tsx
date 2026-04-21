@@ -18,21 +18,23 @@ import loginIcon from "../../assets/collection/Login icon.png";
 import { useNavigate } from 'react-router';
 import Login from '../../models/loginmodal/loginpopup';
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import Pagination from '../../component/shared/Pagination';
 
 const C = COLORS.bookCollection;
 
-const CATEGORIES = [
-  { id: 1, label: 'Fiction', count: 2, icon: <MdOutlineBook size={18} /> },
-  { id: 2, label: 'Non-Fiction', count: 2, icon: <FiBookOpen size={16} /> },
-  { id: 3, label: 'Science', count: 2, icon: <FiFeather size={16} /> },
-  { id: 4, label: 'Engineering', count: 3, icon: <FiTool size={16} /> },
-  { id: 5, label: 'Computer Science', count: 3, icon: <FiGrid size={16} /> },
-  { id: 6, label: 'Kids', count: 2, icon: <FiUsers size={16} /> },
-  { id: 7, label: 'Magazines', count: 2, icon: <MdOutlineNewspaper size={18} /> },
-];
+const getIconForCategory = (label: string) => {
+  const l = label.toLowerCase();
+  if (l.includes('fiction')) return <MdOutlineBook size={18} />;
+  if (l.includes('science')) return <FiFeather size={16} />;
+  if (l.includes('engineering') || l.includes('tool')) return <FiTool size={16} />;
+  if (l.includes('computer') || l.includes('grid')) return <FiGrid size={16} />;
+  if (l.includes('kid') || l.includes('user')) return <FiUsers size={16} />;
+  if (l.includes('magazine') || l.includes('news')) return <MdOutlineNewspaper size={18} />;
+  return <FiBookOpen size={16} />;
+};
 
 
 const PAGE_SIZE = 18;
@@ -41,30 +43,66 @@ const Collection = () => {
 
   const dispatch = useAppDispatch();
 
-  const { books, loading, error } = useAppSelector((state) => state.collection);
-
-  useEffect(() => {
-    dispatch(fetchBrowseBooksData());
-  }, [dispatch]);
+  const { books, loading, error, page: currentPage, totalPages, total } = useAppSelector((state) => state.collection);
 
   const [search, setSearch] = useState('');
-  const [currentPage, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useEffect(() => {
+    dispatch(fetchBrowseBooksData({ 
+      page: 1, 
+      limit: PAGE_SIZE,
+      search: search || undefined,
+      category: selectedCategory || undefined
+    }));
+  }, [dispatch, search, selectedCategory]);
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(fetchBrowseBooksData({ 
+      page: newPage, 
+      limit: PAGE_SIZE,
+      search: search || undefined,
+      category: selectedCategory || undefined
+    }));
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  };
+
   const [hoveredCat, setHovCat] = useState<number | null>(null);
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
 
-  const filtered = books.filter(
-    (b: any) =>
-      b.title?.toLowerCase().includes(search.toLowerCase()) ||
-      b.author?.toLowerCase().includes(search.toLowerCase()) ||
-      b.category?.toLowerCase().includes(search.toLowerCase()) ||
-      b.rack?.toLowerCase().includes(search.toLowerCase()),
-  );
+  const categories = useMemo(() => {
+    const counts: Record<string, number> = {};
+    books.forEach((b: any) => {
+      const cat = b.category || 'Other';
+      counts[cat] = (counts[cat] || 0) + 1;
+    });
+    return Object.entries(counts).map(([label, count], index) => ({
+      id: index + 1,
+      label,
+      count,
+      icon: getIconForCategory(label)
+    }));
+  }, [books]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const filtered = useMemo(() => {
+    return books.filter((b: any) => {
+      const matchesSearch = 
+        b.title?.toLowerCase().includes(search.toLowerCase()) ||
+        b.author?.toLowerCase().includes(search.toLowerCase()) ||
+        b.category?.toLowerCase().includes(search.toLowerCase()) ||
+        b.rackNumber?.toString().toLowerCase().includes(search.toLowerCase());
+      
+      const matchesCategory = selectedCategory ? b.category === selectedCategory : true;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [books, search, selectedCategory]);
 
-  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
+  const handleSearch = (v: string) => { setSearch(v); };
+  const handleCategorySelect = (cat: string) => {
+    setSelectedCategory(prev => prev === cat ? null : cat);
+  };
 
   return (
     <div className="min-h-screen" style={{ fontFamily: FONT.f1 }}>
@@ -72,7 +110,7 @@ const Collection = () => {
         @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
 
-        .col-cat-grid {
+        .col-cat-grid   {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 10px;
@@ -153,31 +191,78 @@ const Collection = () => {
         </h2>
 
         <div className="col-cat-grid">
-          {CATEGORIES.map((cat) => (
+          {/* All Categories Option */}
+          <div
+            onMouseEnter={() => setHovCat(0)}
+            onMouseLeave={() => setHovCat(null)}
+            onClick={() => setSelectedCategory(null)}
+            className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-all duration-200 gap-2 border-2"
+            style={{
+              background: selectedCategory === null ? 'rgba(154, 16, 249, 0.05)' : C.categoryCard.bg,
+              borderColor:
+                selectedCategory === null 
+                  ? '#9A10F9'
+                  : hoveredCat === 0
+                    ? C.categoryCard.hoverBorder
+                    : C.categoryCard.border,
+              boxShadow: selectedCategory === null ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
+              transform: selectedCategory === null ? 'translateY(-2px)' : 'none'
+            }}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <span
+                className="shrink-0 flex"
+                style={{ color: selectedCategory === null ? '#9A10F9' : C.categoryCard.hoverBorder }}
+              >
+                <FiGrid size={20} />
+              </span>
+              <span
+                className="text-base font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
+                style={{ color: selectedCategory === null ? '#9A10F9' : C.categoryCard.title }}
+              >
+                All Collections
+              </span>
+            </div>
+            <span
+              className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap shrink-0"
+              style={{
+                background: selectedCategory === null ? '#9A10F9' : C.section.bg,
+                color: selectedCategory === null ? '#fff' : C.categoryCard.text,
+              }}
+            >
+              {total} books
+            </span>
+          </div>
+
+          {categories.map((cat) => (
             <div
               key={cat.id}
               onMouseEnter={() => setHovCat(cat.id)}
               onMouseLeave={() => setHovCat(null)}
-              className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-colors duration-200 gap-2 border-2"
+              onClick={() => handleCategorySelect(cat.label)}
+              className="flex items-center justify-between rounded-2xl px-5 py-3 cursor-pointer transition-all duration-200 gap-2 border-2"
               style={{
-                background: C.categoryCard.bg,
+                background: selectedCategory === cat.label ? 'rgba(154, 16, 249, 0.05)' : C.categoryCard.bg,
                 borderColor:
-                  hoveredCat === cat.id
-                    ? C.categoryCard.hoverBorder
-                    : C.categoryCard.border,
-                boxShadow: C.categoryCard.shadow,
+                  selectedCategory === cat.label 
+                    ? '#9A10F9'
+                    : hoveredCat === cat.id
+                      ? C.categoryCard.hoverBorder
+                      : C.categoryCard.border,
+                boxShadow: selectedCategory === cat.label ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
+                transform: selectedCategory === cat.label ? 'translateY(-2px)' : 'none'
               }}
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span
                   className="shrink-0 flex"
-                  style={{ color: C.categoryCard.hoverBorder }}
+                  style={{ color: selectedCategory === cat.label ? '#9A10F9' : C.categoryCard.hoverBorder }}
                 >
                   {React.cloneElement(cat.icon, { size: 20 })}
                 </span>
                 <span
                   className="text-base font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
-                  style={{ color: C.categoryCard.title }}
+                  style={{ color: selectedCategory === cat.label ? '#9A10F9' : C.categoryCard.title }}
                 >
                   {cat.label}
                 </span>
@@ -185,14 +270,17 @@ const Collection = () => {
               <span
                 className="text-sm font-semibold rounded-lg px-2.5 py-1 whitespace-nowrap shrink-0"
                 style={{
-                  background: C.section.bg,
-                  color: C.categoryCard.text,
+                  background: selectedCategory === cat.label ? '#9A10F9' : C.section.bg,
+                  color: selectedCategory === cat.label ? '#fff' : C.categoryCard.text,
                 }}
               >
                 {cat.count} books
               </span>
             </div>
           ))}
+          {categories.length === 0 && !loading && (
+            <p className="col-span-full text-center py-4 opacity-70">No categories found.</p>
+          )}
         </div>
 
         <div
@@ -243,9 +331,9 @@ const Collection = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <div className="col-books-grid pb-20">
-          {paginated.map((book: any) => (
+          {filtered.map((book: any) => (
             <div
-              key={book.id}
+              key={book._id || book.bookId}
               className="rounded-2xl px-5 pt-4 pb-5 border"
               style={{
                 background:
@@ -313,47 +401,13 @@ const Collection = () => {
           ))}
         </div>
 
-        <div className="flex items-center justify-center gap-2 mt-8">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
-            style={{ borderColor: C.pagination.border }}
-          >
-            <FiChevronLeft size={20} style={{ color: C.pagination.text }} />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              className="w-10 h-10 rounded-xl font-semibold text-base cursor-pointer border p-0"
-              style={{
-                borderColor:
-                  p === currentPage
-                    ? C.pagination.activeBg
-                    : C.pagination.border,
-                background: p === currentPage ? C.pagination.activeBg : "#fff",
-                color:
-                  p === currentPage
-                    ? C.pagination.activeText
-                    : C.pagination.text,
-                fontFamily: FONT.f1,
-              }}
-            >
-              {p}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-            className="w-10 h-10 rounded-xl bg-white border cursor-pointer flex items-center justify-center p-0 disabled:opacity-40"
-            style={{ borderColor: C.pagination.border }}
-          >
-            <FiChevronRight size={20} style={{ color: C.pagination.text }} />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          totalEntries={total}
+          limit={PAGE_SIZE}
+        />
       </div>
 
       <Footer />
