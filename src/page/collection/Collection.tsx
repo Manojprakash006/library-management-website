@@ -256,7 +256,7 @@ const totalBooks = useAppSelector((state) => state.collection.totalBooks);
                 borderColor: C.bookCard.border,
                 boxShadow: C.bookCard.shadow,
               }}
-            >
+            > 
               <p
                 className={`${FONTSIZE[14]} leading-5`}
                 style={{ color: C.section.subtitle, ...FONTWEIGHT[700] }}
