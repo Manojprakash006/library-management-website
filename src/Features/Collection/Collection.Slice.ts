@@ -46,18 +46,21 @@ const browswBooksSlice = createSlice({
         if (Array.isArray(action.payload)) {
           state.books = action.payload;
           state.total = action.payload.length;
+          state.totalBooks = action.payload.length;
           state.page = 1;
           state.limit = action.payload.length;
           state.totalPages = 1;
         } else if (action.payload && action.payload.data) {
           state.books = action.payload.data;
           state.total = action.payload.total || 0;
+          state.totalBooks = action.payload.total || 0;
           state.page = action.payload.page || 1;
           state.limit = action.payload.limit || 10;
           state.totalPages = action.payload.totalPages || 0;
         } else {
           state.books = [];
           state.total = 0;
+          state.totalBooks = 0;
           state.totalPages = 0;
         }
       })
