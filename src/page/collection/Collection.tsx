@@ -246,7 +246,7 @@ const Collection = () => {
                 borderColor:
                   selectedCategory === cat.label 
                     ? '#9A10F9'
-                    : hoveredCat === cat.id
+                    : hoveredCat === cat.id 
                       ? C.categoryCard.hoverBorder
                       : C.categoryCard.border,
                 boxShadow: selectedCategory === cat.label ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
