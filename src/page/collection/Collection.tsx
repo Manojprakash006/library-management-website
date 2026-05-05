@@ -15,7 +15,7 @@ import {
 import { BsInfoCircleFill } from 'react-icons/bs';
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
 import loginIcon from "../../assets/collection/Login icon.png";
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import Login from '../../models/loginmodal/loginpopup';
 
 import { useEffect, useMemo } from "react";
@@ -45,8 +45,18 @@ const Collection = () => {
 
   const { books, loading, error, page: currentPage, totalPages, total } = useAppSelector((state) => state.collection);
 
-  const [search, setSearch] = useState('');
+  const location = useLocation();
+  const initialSearch = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('search') || '';
+  }, [location.search]);
+
+  const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
 
   useEffect(() => {
     dispatch(fetchBrowseBooksData({ 

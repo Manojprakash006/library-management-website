@@ -33,10 +33,19 @@ const HomeAboutPage: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
 
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const HandleCollections = () => {
     navigate("/collection");
   }
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/collection?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate("/collection");
+    }
+  };
 
 const [showRegister, setShowRegister] = useState(false);
 
@@ -342,6 +351,9 @@ useEffect(() => {
                 type="text"
                 placeholder="Search by book name, author, category, or ISBN..."
                 className="w-full bg-transparent text-sm sm:text-base outline-none"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
             </div>
 
@@ -364,6 +376,7 @@ useEffect(() => {
             </div>
 
             <button
+              onClick={handleSearch}
               className="w-full mt-6 py-2.5 sm:py-3 cursor-pointer rounded-lg text-white flex items-center justify-center gap-2 text-sm sm:text-base hover:opacity-90 transition"
               style={{
                 background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 100%)`,
