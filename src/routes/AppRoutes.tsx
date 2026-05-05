@@ -15,12 +15,23 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../store/hooks';
 import { fetchLibraryInfoThunk } from '../Features/Contact/ContactThunk';
 import ScrollToTop from '../page/ScrollToTop';
+import { socketService } from '../services/socketService';
 
 export const AppRoutes = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchLibraryInfoThunk());
+
+    // Connect and listen for global updates
+    socketService.connect();
+    socketService.on('library_info_updated', () => {
+      dispatch(fetchLibraryInfoThunk());
+    });
+
+    return () => {
+      socketService.off('library_info_updated');
+    };
   }, [dispatch]);
 
   return (

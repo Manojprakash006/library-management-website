@@ -19,6 +19,8 @@ import Login from "../../models/loginmodal/loginpopup";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from "../../Features/Collection/CollectionThunk";
 import { getTopReviewsApi } from "../../Features/service/collection.Service";
+import { socketService } from "../../services/socketService";
+import { fetchLibraryInfoThunk } from "../../Features/Contact/ContactThunk";
 
 const HomeAboutPage: React.FC = () => {
 
@@ -61,6 +63,21 @@ const HomeAboutPage: React.FC = () => {
       }
     };
     fetchReviews();
+
+    // Real-time updates
+    socketService.connect();
+    socketService.on('REVIEW_CREATED', () => {
+      fetchReviews();
+    });
+
+    socketService.on('library_info_updated', () => {
+      dispatch(fetchLibraryInfoThunk());
+    });
+
+    return () => {
+      socketService.off('REVIEW_CREATED');
+      socketService.off('library_info_updated');
+    };
   }, [dispatch]);
 
   useEffect(() => {
