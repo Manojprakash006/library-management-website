@@ -5,3 +5,8 @@ export const getBrowseBooksApi = async (params?: { page: number; limit: number; 
   const response = await httpClient.get(API_END_POINTS.collection.browseBooks, { params });
   return response.data;
 };
+
+export const getCollectionStatsApi = async () => {
+  const response = await httpClient.get(API_END_POINTS.collection.collectionStats);
+  return response.data;
+};

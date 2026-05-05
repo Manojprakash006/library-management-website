@@ -16,17 +16,19 @@ import Register from "../../models/registerpopup/registerForm";
 import { useLocation } from "react-router-dom";
 import Login from "../../models/loginmodal/loginpopup";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchBrowseBooksData, fetchTotalMembers } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from "../../Features/Collection/CollectionThunk";
 
 const HomeAboutPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const totalBooks = useAppSelector((state) => state.collection.totalBooks);
   const totalMembers = useAppSelector((state) => state.collection.totalMembers);
+  const collectionStats = useAppSelector((state) => state.collection.collectionStats);
   
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
     dispatch(fetchTotalMembers());
+    dispatch(fetchCollectionStats());
   }, [dispatch]);
 
   const location = useLocation();
@@ -426,7 +428,7 @@ useEffect(() => {
                         Latest additions to our collection
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        250+ books
+                        {collectionStats?.newArrivals || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -450,7 +452,7 @@ useEffect(() => {
                         Most borrowed books this month
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        180+ books
+                        {collectionStats?.bestSellers || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -474,7 +476,7 @@ useEffect(() => {
                         Academic and research materials
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        1,000+ books
+                        {collectionStats?.reference || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -498,7 +500,7 @@ useEffect(() => {
                         Engaging stories for young readers
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        1,200+ books
+                        {collectionStats?.children || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -522,7 +524,7 @@ useEffect(() => {
                         Educational resources
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        2,500+ books
+                        {collectionStats?.academic || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -546,7 +548,7 @@ useEffect(() => {
                         Digital library resources
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        500+ titles
+                        {collectionStats?.ebooks || 0}+ titles
                       </span>
                     </div>
                   </div>

@@ -12,5 +12,6 @@ export const API_END_POINTS = {
     bookReviews: "library/members/member-dashboard/book-reviews",
     likesCount: "library/books/books",
     totalMembers: "/library/members/public-stats/member-count",
+    collectionStats: "/library/books/books/public/collection-stats",
   },
 };

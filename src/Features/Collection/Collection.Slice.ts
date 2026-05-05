@@ -1,11 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrowseBooksData, fetchTotalMembers } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from "../../Features/Collection/CollectionThunk";
 import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
   books: Book[];
   totalBooks: number;
   totalMembers: number;
+  collectionStats: {
+    newArrivals: number;
+    bestSellers: number;
+    reference: number;
+    children: number;
+    academic: number;
+    ebooks: number;
+  } | null;
   loading: boolean;
   error: string | null;
   total: number;
@@ -18,6 +26,7 @@ const initialState: browseBookState = {
   books: [],
   totalBooks: 0,
   totalMembers: 0,
+  collectionStats: null,
   loading: false,
   error: null as string | null,
   total: 0,
@@ -73,6 +82,9 @@ const browswBooksSlice = createSlice({
       })
       .addCase(fetchTotalMembers.fulfilled, (state, action) => {
         state.totalMembers = action.payload.data || 0;
+      })
+      .addCase(fetchCollectionStats.fulfilled, (state, action) => {
+        state.collectionStats = action.payload.data || null;
       });
   },
 });
