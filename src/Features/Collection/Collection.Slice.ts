@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers } from "../../Features/Collection/CollectionThunk";
 import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
   books: Book[];
   totalBooks: number;
+  totalMembers: number;
   loading: boolean;
   error: string | null;
   total: number;
@@ -16,6 +17,7 @@ interface browseBookState {
 const initialState: browseBookState = {
   books: [],
   totalBooks: 0,
+  totalMembers: 0,
   loading: false,
   error: null as string | null,
   total: 0,
@@ -68,6 +70,9 @@ const browswBooksSlice = createSlice({
       .addCase(fetchBrowseBooksData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Something went wrong";
+      })
+      .addCase(fetchTotalMembers.fulfilled, (state, action) => {
+        state.totalMembers = action.payload.data || 0;
       });
   },
 });

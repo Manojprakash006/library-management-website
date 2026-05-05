@@ -16,15 +16,17 @@ import Register from "../../models/registerpopup/registerForm";
 import { useLocation } from "react-router-dom";
 import Login from "../../models/loginmodal/loginpopup";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers } from "../../Features/Collection/CollectionThunk";
 
 const HomeAboutPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const totalBooks = useAppSelector((state) => state.collection.totalBooks);
+  const totalMembers = useAppSelector((state) => state.collection.totalMembers);
   
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
+    dispatch(fetchTotalMembers());
   }, [dispatch]);
 
   const location = useLocation();
@@ -142,7 +144,7 @@ useEffect(() => {
 
             <div className="bg-white shadow rounded-xl p-6 sm:p-8 text-center">
               <h3 className="text-2xl sm:text-3xl font-bold bg-linear-to-r from-[#AD46FF] to-[#9810FA] bg-clip-text text-transparent">
-                5,000+
+                {totalMembers}+
               </h3>
               <p
                 className={`text-[#4A5565] text-sm sm:text-base mt-1 ${FONTSIZE[14]} leading-5`}

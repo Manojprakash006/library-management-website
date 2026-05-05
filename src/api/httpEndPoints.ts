@@ -11,5 +11,6 @@ export const API_END_POINTS = {
     bookRequest: "/library/requests/requests",
     bookReviews: "library/members/member-dashboard/book-reviews",
     likesCount: "library/books/books",
+    totalMembers: "/library/members/public-stats/member-count",
   },
 };
