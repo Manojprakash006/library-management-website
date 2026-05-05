@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats, fetchVisitorStats } from "../../Features/Collection/CollectionThunk";
 import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
@@ -14,6 +14,7 @@ interface browseBookState {
     academic: number;
     ebooks: number;
   } | null;
+  visitorStats: number;
   loading: boolean;
   error: string | null;
   total: number;
@@ -27,6 +28,7 @@ const initialState: browseBookState = {
   totalBooks: 0,
   totalMembers: 0,
   collectionStats: null,
+  visitorStats: 0,
   loading: false,
   error: null as string | null,
   total: 0,
@@ -85,6 +87,9 @@ const browswBooksSlice = createSlice({
       })
       .addCase(fetchCollectionStats.fulfilled, (state, action) => {
         state.collectionStats = action.payload.data || null;
+      })
+      .addCase(fetchVisitorStats.fulfilled, (state, action) => {
+        state.visitorStats = action.payload.count || 0;
       });
   },
 });

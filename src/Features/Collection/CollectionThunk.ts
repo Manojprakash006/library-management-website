@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getBrowseBooksApi, getCollectionStatsApi } from "../service/collection.Service";
-import { getTotalMembersApi } from "../service/member.Service";
+import { getTotalMembersApi, getVisitorStatsApi } from "../service/member.Service";
 import type { Book } from "../../DataTypes/Type";
 
 export const fetchBrowseBooksData = createAsyncThunk<any, { page: number; limit: number; search?: string; category?: string } | undefined>(
@@ -32,6 +32,18 @@ export const fetchCollectionStats = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await getCollectionStatsApi();
+      return response;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchVisitorStats = createAsyncThunk(
+  "browseBooks/fetchVisitorStats",
+  async (_, thunkAPI) => {
+    try {
+      const response = await getVisitorStatsApi();
       return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data);

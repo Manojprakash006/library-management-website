@@ -3,15 +3,19 @@ import { FONT, COLORS, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import container6 from "../../assets/aboutus/Container (6).png"
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchVisitorStats } from "../../Features/Collection/CollectionThunk";
 
 const About = () => {
 
   const dispatch = useAppDispatch();
   const totalBooks = useAppSelector((state) => state.collection.totalBooks);
+  const totalMembers = useAppSelector((state) => state.collection.totalMembers);
+  const visitorStats = useAppSelector((state) => state.collection.visitorStats);
   
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
+    dispatch(fetchTotalMembers());
+    dispatch(fetchVisitorStats());
   }, [dispatch]);
   
   return (
@@ -135,11 +139,11 @@ const About = () => {
                 <p className="text-gray-600 text-base">Total Books</p>
               </div>
               <div>
-                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">5,000+</div>
+                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">{totalMembers}</div>
                 <p className="text-gray-600 text-base">Active Members</p>
               </div>
               <div>
-                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">100+</div>
+                <div className="text-4xl md:text-4xl font-bold text-purple-700 mb-2">{visitorStats || 0}+</div>
                 <p className="text-gray-600 text-base">Daily Visitors</p>
               </div>
             </div>

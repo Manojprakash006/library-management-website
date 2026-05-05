@@ -778,7 +778,7 @@ useEffect(() => {
                 </div>
 
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => setShowRegister(true)}
                   className=" cursor-pointer mt-6 sm:mt-8 px-6 py-2.5 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition flex items-center gap-2 text-sm sm:text-base"
                 >
                   <img
