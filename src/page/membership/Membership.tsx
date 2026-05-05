@@ -16,8 +16,13 @@ import {
   FiCreditCard,
   FiCheckCircle,
   FiArrowRight,
+  FiEye,
+  FiEyeOff,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerMemberThunk } from '../../store/thunks/authThunk';
+import type { RootState, AppDispatch } from '../../store/store';
 
 const Membership = () => {
 
@@ -70,43 +75,72 @@ const Membership = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<formError>({});
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { loading, error: apiError } = useSelector((state: RootState) => state.auth);
 
   type formError = {
     name?: string,
     email?: string,
     phone?: string,
     address?: string,
+    password?: string,
+    confirmPassword?: string,
   }
 
   const Validate = () => {
-    
-    let newError: formError = {};
-    
-    if(!name.trim()) newError.name = "Name is Required";
-    if(!email.trim()) newError.email = "Email is Required";
-    if(!phone.trim()) newError.phone = "Phone Number is Required";
-    if(!address.trim()) newError.address = "Address is Required";
 
-    if(Object.keys(newError).length > 0) {
-           setError(newError);
-           return false;
-        }
-        setError({});
-        return true;
+    let newError: formError = {};
+
+    if (!name.trim()) newError.name = "Please enter your full name";
+    if (!email.trim()) newError.email = "Please enter your email address";
+    if (!phone.trim()) newError.phone = "Phone number is required";
+    if (!address.trim()) newError.address = "Please enter your complete address";
+    if (!password.trim()) newError.password = "Password is required";
+    if (password.length > 0 && password.length < 6) newError.password = "Password must be at least 6 characters";
+    if (password !== confirmPassword) newError.confirmPassword = "Passwords do not match";
+
+    if (Object.keys(newError).length > 0) {
+      setError(newError);
+      return false;
+    }
+    setError({});
+    return true;
   }
 
-  const HandleSubmit = (e: React.FormEvent) => {
+  const HandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!Validate) return;
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
-    setError({});
-    navigate("/login");
-    console.log("Form Submitted")
+    if (!Validate()) return;
+
+    const payload = {
+      name,
+      email,
+      phone,
+      address,
+      password
+    };
+
+    try {
+      const resultAction = await dispatch(registerMemberThunk(payload));
+      if (registerMemberThunk.fulfilled.match(resultAction)) {
+        setName("");
+        setEmail("");
+        setPhone("");
+        setAddress("");
+        setPassword("");
+        setConfirmPassword("");
+        setError({});
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error("Registration failed:", err);
+    }
   }
 
   return (
@@ -130,14 +164,14 @@ const Membership = () => {
             <div className="flex flex-wrap items-center w-fit rounded-2xl p-2 sm:p-3 md:p-4  " style={{ background: COLORS.membership.hero.badgeBg, color: COLORS.membership.hero.badgeText }}>
               <span
                 className={`px-3 sm:px-4 md:px-5 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm md:text-2xl lg:text-3xl leading-6 sm:leading-7 md:leading-8 `}
-                style={{  color: COLORS.membership.hero.buttonPrimary, ...FONTWEIGHT[700] }}
+                style={{ color: COLORS.membership.hero.buttonPrimary, ...FONTWEIGHT[700] }}
               >
                 100% FREE
               </span>
               <div className="w-px h-5 sm:h-6 bg-gray-300 mx-2 sm:mx-4"></div>
               <div className={`flex flex-col gap-0 sm:gap-1`}>
-                <h1 className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`}  style={{...FONTWEIGHT[700], color: COLORS.membership.hero.buttonPrimary}}>No Registration Fee</h1>
-                <p className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`}  style={{...FONTWEIGHT[400], color: COLORS.membership.hero.pTag}}>Lifetime Validity</p>
+                <h1 className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`} style={{ ...FONTWEIGHT[700], color: COLORS.membership.hero.buttonPrimary }}>No Registration Fee</h1>
+                <p className={`text-xs sm:text-sm md:text-bass leading-4 sm:leading-5`} style={{ ...FONTWEIGHT[400], color: COLORS.membership.hero.pTag }}>Lifetime Validity</p>
               </div>
             </div>
           </div>
@@ -226,7 +260,7 @@ const Membership = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
-                    Phone Number
+                    Phone Number <span style={{ color: '#EF4444' }}>*</span>
                   </label>
                   <input
                     type="tel"
@@ -244,7 +278,7 @@ const Membership = () => {
                 </div>
                 <div className="flex flex-col gap-1 sm:col-span-2">
                   <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
-                    Complete Address
+                    Complete Address <span style={{ color: '#EF4444' }}>*</span>
                   </label>
                   <textarea
                     rows={3}
@@ -260,7 +294,62 @@ const Membership = () => {
                   />
                   <p className="text-red-400 mt-1 flex gap-2 items-center">{error.address}</p>
                 </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
+                    Password <span style={{ color: '#EF4444' }}>*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="******"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition"
+                      style={{
+                        background: COLORS.membership.registration.inputBg,
+                        borderColor: COLORS.membership.registration.inputBorder,
+                        color: COLORS.membership.section.title,
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition-colors"
+                    >
+                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
+                  <p className="text-red-400 text-xs mt-1">{error.password}</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold" style={{ color: COLORS.membership.section.title }}>
+                    Confirm Password <span style={{ color: '#EF4444' }}>*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="******"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none border focus:border-purple-500 transition"
+                      style={{
+                        background: COLORS.membership.registration.inputBg,
+                        borderColor: COLORS.membership.registration.inputBorder,
+                        color: COLORS.membership.section.title,
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition-colors"
+                    >
+                      {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
+                  <p className="text-red-400 text-xs mt-1">{error.confirmPassword}</p>
+                </div>
               </div>
+              {apiError && <p className="text-red-500 text-xs mt-4 text-center">{apiError}</p>}
 
               <div
                 className="mt-6 rounded-xl p-4 text-xs border"
@@ -269,7 +358,7 @@ const Membership = () => {
                 <p className="font-semibold mb-2" style={{ color: COLORS.membership.req_Document.textHeadColor }}>
                   Required Documents (Visit Library):
                 </p>
-                <ul className="list-disc list-inside space-y-1 pl-5" style={{color: COLORS.membership.req_Document.contentColor}}>
+                <ul className="list-disc list-inside space-y-1 pl-5" style={{ color: COLORS.membership.req_Document.contentColor }}>
                   <li>Photo ID (Aadhar, PAN Passport, or Driving License)</li>
                   <li>Proof of Address (Utility Bill/Bank Statement)</li>
                   <li>2 Passport Size Photos</li>
@@ -277,13 +366,14 @@ const Membership = () => {
               </div>
 
               <button type='submit'
-                className="mt-6 w-full cursor-pointer py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition hover:opacity-90"
+                disabled={loading}
+                className="mt-6 w-full cursor-pointer py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50"
                 style={{
                   background: COLORS.membership.registration.buttonGradient,
                   color: COLORS.membership.registration.buttonText,
                 }}
               >
-                <FiCheckCircle size={16} /> Submit Registration
+                <FiCheckCircle size={16} /> {loading ? "Registering..." : "Submit Registration"}
               </button>
             </form>
           </div>
@@ -375,7 +465,7 @@ const Membership = () => {
                 Register Now <FiArrowRight size={15} />
               </button>
               <button
-              onClick={() => navigate("/")}
+                onClick={() => navigate("/")}
                 className="px-8 py-3 rounded-full text-sm font-bold hover:opacity-80 transition"
                 style={{ background: COLORS.membership.cta.buttonSecondaryBg, color: COLORS.membership.cta.buttonSecondaryText, border: '1px solid rgba(255,255,255,0.3)' }}
               >
