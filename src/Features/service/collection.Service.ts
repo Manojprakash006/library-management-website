@@ -10,3 +10,8 @@ export const getCollectionStatsApi = async () => {
   const response = await httpClient.get(API_END_POINTS.collection.collectionStats);
   return response.data;
 };
+
+export const getTopReviewsApi = async () => {
+  const response = await httpClient.get('/library/books/books/public/top-reviews');
+  return response.data;
+};

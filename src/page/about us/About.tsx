@@ -11,6 +11,7 @@ const About = () => {
   const totalBooks = useAppSelector((state) => state.collection.totalBooks);
   const totalMembers = useAppSelector((state) => state.collection.totalMembers);
   const visitorStats = useAppSelector((state) => state.collection.visitorStats);
+  const { libraryInfo } = useAppSelector((state) => state.contact);
   
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
@@ -39,9 +40,9 @@ const About = () => {
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-4">Our History</h2>
             <p className="text-gray-600 text-base leading-relaxed mb-4">
-              Established in 1995, City Central Library has been a cornerstone of our community for over 28 years.
+              Established in 1995, {libraryInfo?.libraryName || 'City Central Library'} has been a cornerstone of our community.
               What began as a small collection of 500 books in a modest building has grown into a modern library
-              facility housing over 10,000 books, digital resources, and state-of-the-art amenities.
+              facility housing over {totalBooks}+ books, digital resources, and state-of-the-art amenities.
             </p>
             <p className="text-gray-600 text-base leading-relaxed">
               Throughout the years, we have continuously evolved to meet the changing needs of our community.

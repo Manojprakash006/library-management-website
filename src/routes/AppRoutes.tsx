@@ -11,9 +11,18 @@ import RegisterForm from '../models/registerpopup/registerForm';
 import Services from "../page/servicess/Services";
 import ForgotPassword from '../page/login/ForgotPassword';
 import ResetPassword from '../page/login/ResetPassword';
+import { useEffect } from 'react';
+import { useAppDispatch } from '../store/hooks';
+import { fetchLibraryInfoThunk } from '../Features/Contact/ContactThunk';
 import ScrollToTop from '../page/ScrollToTop';
 
 export const AppRoutes = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchLibraryInfoThunk());
+  }, [dispatch]);
+
   return (
     <>
       <ScrollToTop />

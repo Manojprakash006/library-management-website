@@ -15,4 +15,8 @@ export const API_END_POINTS = {
     collectionStats: "/library/books/books/public/collection-stats",
     visitorStats: "/library/members/library-visits/public/stats",
   },
+  contact: {
+    sendMessage: "/library/members/contact/send",
+    libraryInfo: "/library/members/contact/info",
+  },
 };

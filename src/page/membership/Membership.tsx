@@ -20,6 +20,7 @@ import {
   FiEyeOff,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
+import Register from '../../models/registerpopup/registerForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerMemberThunk } from '../../store/thunks/authThunk';
 import type { RootState, AppDispatch } from '../../store/store';
@@ -79,6 +80,7 @@ const Membership = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [error, setError] = useState<formError>({});
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -458,7 +460,7 @@ const Membership = () => {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
-                onClick={() => navigate("/register")}
+                onClick={() => setShowRegister(true)}
                 className="px-8 py-3 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition"
                 style={{ background: COLORS.membership.cta.buttonPrimary, color: COLORS.membership.cta.buttonPrimaryText }}
               >
@@ -477,6 +479,7 @@ const Membership = () => {
 
       </div>
       <Footer />
+      {showRegister && <Register onClose={() => setShowRegister(false)} />}
     </>
   );
 };
