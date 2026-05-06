@@ -24,6 +24,7 @@ import Register from '../../models/registerpopup/registerForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerMemberThunk } from '../../store/thunks/authThunk';
 import type { RootState, AppDispatch } from '../../store/store';
+import toast from 'react-hot-toast';
 
 const Membership = () => {
 
@@ -139,6 +140,7 @@ const Membership = () => {
         setConfirmPassword("");
         setError({});
         navigate("/login");
+        toast.success("Registraion success - continue Login");
       }
     } catch (err) {
       console.error("Registration failed:", err);
@@ -318,7 +320,7 @@ const Membership = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition-colors"
                     >
-                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                      {showPassword ? <FiEye size={18} /> : <FiEyeOff size={18} />}
                     </button>
                   </div>
                   <p className="text-red-400 text-xs mt-1">{error.password}</p>
@@ -345,7 +347,7 @@ const Membership = () => {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition-colors"
                     >
-                      {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                      {showConfirmPassword ? <FiEye size={18} /> : <FiEyeOff size={18} />}
                     </button>
                   </div>
                   <p className="text-red-400 text-xs mt-1">{error.confirmPassword}</p>
