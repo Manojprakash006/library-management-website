@@ -1,10 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats, fetchVisitorStats } from "../../Features/Collection/CollectionThunk";
 import type { Book } from "../../DataTypes/Type";
 
 interface browseBookState {
   books: Book[];
   totalBooks: number;
+  totalMembers: number;
+  collectionStats: {
+    newArrivals: number;
+    bestSellers: number;
+    reference: number;
+    children: number;
+    academic: number;
+    ebooks: number;
+  } | null;
+  visitorStats: number;
   loading: boolean;
   error: string | null;
   total: number;
@@ -16,6 +26,9 @@ interface browseBookState {
 const initialState: browseBookState = {
   books: [],
   totalBooks: 0,
+  totalMembers: 0,
+  collectionStats: null,
+  visitorStats: 0,
   loading: false,
   error: null as string | null,
   total: 0,
@@ -68,6 +81,15 @@ const browswBooksSlice = createSlice({
       .addCase(fetchBrowseBooksData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Something went wrong";
+      })
+      .addCase(fetchTotalMembers.fulfilled, (state, action) => {
+        state.totalMembers = action.payload.data || 0;
+      })
+      .addCase(fetchCollectionStats.fulfilled, (state, action) => {
+        state.collectionStats = action.payload.data || null;
+      })
+      .addCase(fetchVisitorStats.fulfilled, (state, action) => {
+        state.visitorStats = action.payload.count || 0;
       });
   },
 });

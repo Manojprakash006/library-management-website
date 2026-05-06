@@ -6,11 +6,19 @@ import {
   FiPhone,
   FiMail,
   FiClock,
-  FiSend
+  FiSend,
+  FiCheckCircle,
+  FiLoader
 } from 'react-icons/fi';
+import { getLibraryInfoApi, sendContactMessageApi } from '../../Features/service/contact.Service';
+import toast from 'react-hot-toast';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { sendContactMessageThunk } from '../../Features/Contact/ContactThunk';
 
 const Contact = () => {
   const c = COLORS.contact;
+  const dispatch = useAppDispatch();
+  const { libraryInfo, isSubmitting } = useAppSelector((state) => state.contact);
 
   const [form, setForm] = useState({
     name: '',
@@ -20,21 +28,21 @@ const Contact = () => {
     message: ''
   });
 
+  // Data is now fetched globally in AppRoutes.tsx
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const newForm = {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      subject: form.subject,
-      message: form.message,
-    };
-    newForm[e.target.name as keyof typeof newForm] = e.target.value;
-    setForm(newForm);
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    try {
+      await dispatch(sendContactMessageThunk(form)).unwrap();
+      toast.success("Message sent successfully!");
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    } catch (err: any) {
+      toast.error(err || "Failed to send message");
+    }
   };
 
   return (
@@ -72,9 +80,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Visit Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    City Central Library<br />
-                    123 Library Street, City Center<br />
-                    State - 600001, India
+                    {libraryInfo?.libraryName || 'City Central Library'}<br />
+                    {libraryInfo?.address || '123 Library Street, City Center, State - 600001, India'}
                   </p>
                 </div>
               </div>
@@ -89,8 +96,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Call Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    Main: +91-44-1234-5678<br />
-                    Reference Desk: +91-44-1234-5679<br />
+                    Main: {libraryInfo?.phone || '+91-44-1234-5678'}<br />
+                    Reference Desk: {libraryInfo?.referencePhone || '+91-44-1234-5679'}<br />
                     Available during library hours
                   </p>
                 </div>
@@ -106,8 +113,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Email Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    General: info@citycentrallibrary.org<br />
-                    Membership: membership@citycentrallibrary.org<br />
+                    General: {libraryInfo?.email || 'info@citycentrallibrary.org'}<br />
+                    Membership: {libraryInfo?.membershipEmail || 'membership@citycentrallibrary.org'}<br />
                     We respond within 24 hours
                   </p>
                 </div>
@@ -123,9 +130,9 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Opening Hours</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    Monday - Friday: 9:00 AM - 8:00 PM<br />
-                    Saturday - Sunday: 10:00 AM - 6:00 PM<br />
-                    Closed on public holidays
+                    {libraryInfo?.weekdaysHours || 'Monday - Friday: 9:00 AM - 8:00 PM'}<br />
+                    {libraryInfo?.weekendHours || 'Saturday - Sunday: 10:00 AM - 6:00 PM'}<br />
+                    {libraryInfo?.holidaysInfo || 'Closed on public holidays'}
                   </p>
                 </div>
               </div>
@@ -224,13 +231,14 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold cursor-pointer border-none transition-colors duration-200"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold cursor-pointer border-none transition-colors duration-200 disabled:opacity-50"
                 style={{ backgroundColor: c.button.bg, color: c.button.text, font: FONT.f1 }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = c.button.hover)}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = c.button.bg)}
+                onMouseEnter={e => !isSubmitting && (e.currentTarget.style.backgroundColor = c.button.hover)}
+                onMouseLeave={e => !isSubmitting && (e.currentTarget.style.backgroundColor = c.button.bg)}
               >
-                <FiSend size={16} />
-                Send Message
+                {isSubmitting ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
+                {isSubmitting ? "Sending Message..." : "Send Message"}
               </button>
 
             </form>
@@ -246,7 +254,7 @@ const Contact = () => {
             Location Map
           </h3>
           <p className="m-0 text-xs" style={{ color: c.map.text }}>
-            123 Library Street, City Center, State - 600001
+            {libraryInfo?.address || '123 Library Street, City Center, State - 600001'}
           </p>
           <p className="mt-1 m-0 text-xs" style={{ color: c.map.text }}>
             (In production, Google Maps would be embedded here)

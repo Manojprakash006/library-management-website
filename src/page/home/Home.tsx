@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
 import searchicon from "../../assets/navbar/search icon.png";
 
@@ -16,41 +17,111 @@ import Register from "../../models/registerpopup/registerForm";
 import { useLocation } from "react-router-dom";
 import Login from "../../models/loginmodal/loginpopup";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchBrowseBooksData } from "../../Features/Collection/CollectionThunk";
+import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from "../../Features/Collection/CollectionThunk";
+import { getTopReviewsApi } from "../../Features/service/collection.Service";
+import { socketService } from "../../services/socketService";
+import { fetchLibraryInfoThunk } from "../../Features/Contact/ContactThunk";
 
 const HomeAboutPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const totalBooks = useAppSelector((state) => state.collection.totalBooks);
-  
+  const totalMembers = useAppSelector((state) => state.collection.totalMembers);
+  const collectionStats = useAppSelector((state) => state.collection.collectionStats);
+  const { libraryInfo } = useAppSelector((state) => state.contact);
+
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    if (reviews.length > 3) {
+      setCurrentIndex((prev) => (prev + 1 >= reviews.length - 2 ? 0 : prev + 1));
+    }
+  };
+
+  const handlePrev = () => {
+    if (reviews.length > 3) {
+      setCurrentIndex((prev) => (prev - 1 < 0 ? reviews.length - 3 : prev - 1));
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchBrowseBooksData());
+    dispatch(fetchTotalMembers());
+    dispatch(fetchCollectionStats());
+
+    const fetchReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        const response = await getTopReviewsApi();
+        setReviews(response.data || []);
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+    fetchReviews();
+
+    // Real-time updates
+    socketService.connect();
+    socketService.on('REVIEW_CREATED', () => {
+      fetchReviews();
+    });
+
+    socketService.on('library_info_updated', () => {
+      dispatch(fetchLibraryInfoThunk());
+    });
+
+    return () => {
+      socketService.off('REVIEW_CREATED');
+      socketService.off('library_info_updated');
+    };
   }, [dispatch]);
+
+  useEffect(() => {
+    if (reviews.length > 3) {
+      const interval = setInterval(() => {
+        handleNext();
+      }, 4000); // Auto-slide every 4 seconds
+      return () => clearInterval(interval);
+    }
+  }, [reviews.length, currentIndex]);
 
   const location = useLocation();
   const [showLogin, setShowLogin] = useState(false);
 
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const HandleCollections = () => {
     navigate("/collection");
   }
 
-const [showRegister, setShowRegister] = useState(false);
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/collection?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate("/collection");
+    }
+  };
 
-const HandleRegister = (e: any) => {
-  e.preventDefault();
-  setShowRegister(true);
-};
+  const [showRegister, setShowRegister] = useState(false);
+
+  const HandleRegister = (e: any) => {
+    e.preventDefault();
+    setShowRegister(true);
+  };
 
 
-useEffect(() => {
-  const params = new URLSearchParams(location.search);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
 
-  if (params.get("login") === "true") {
-    setShowLogin(true);
-  }
-}, [location.search]);
+    if (params.get("login") === "true") {
+      setShowLogin(true);
+    }
+  }, [location.search]);
 
   return (
     <>
@@ -62,7 +133,7 @@ useEffect(() => {
               style={{ ...FONTWEIGHT[700] }}
               className={`${FONTSIZE[14]} leading-5 bg-linear-to-r from-[#4F39F6] to-[#9810FA] bg-clip-text text-transparent`}
             >
-              Welcome to City Central Library
+              Welcome to {libraryInfo?.libraryName || 'City Central Library'}
             </span>
           </div>
 
@@ -142,7 +213,7 @@ useEffect(() => {
 
             <div className="bg-white shadow rounded-xl p-6 sm:p-8 text-center">
               <h3 className="text-2xl sm:text-3xl font-bold bg-linear-to-r from-[#AD46FF] to-[#9810FA] bg-clip-text text-transparent">
-                5,000+
+                {totalMembers}+
               </h3>
               <p
                 className={`text-[#4A5565] text-sm sm:text-base mt-1 ${FONTSIZE[14]} leading-5`}
@@ -184,12 +255,12 @@ useEffect(() => {
                   className={`mt-6 py-2 rounded-lg w-fit ${FONTSIZE[26]} leading-10 bg-linear-to-r from-[#4F39F6] to-[#9810FA] bg-clip-text text-transparent`}
                   style={{ ...FONTWEIGHT[700] }}
                 >
-                  Since 2026
+                  Serving Since 2026
                 </h2>
 
                 <p className="text-gray-600 mt-4 text-sm sm:text-base leading-relaxed">
-                  City Central Library has been a cornerstone of knowledge and
-                  learning for over 28 years. We're dedicated to providing free
+                  {libraryInfo?.libraryName || 'City Central Library'} has been a cornerstone of knowledge and
+                  learning for the community. We're dedicated to providing free
                   access to information, resources, and educational
                   opportunities for everyone.
                 </p>
@@ -260,20 +331,20 @@ useEffect(() => {
 
                   <div className="space-y-3 text-sm sm:text-base text-gray-600">
                     <div className="flex justify-between">
-                      <span>Monday - Friday</span>
+                      <span>{libraryInfo?.weekdaysHours?.split(':')[0] || 'Monday - Friday'}</span>
                       <span className="font-semibold text-[#101828]">
-                        9:00 AM - 8:00 PM
+                        {libraryInfo?.weekdaysHours?.split(':').slice(1).join(':').trim() || '9:00 AM - 8:00 PM'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Saturday - Sunday</span>
+                      <span>{libraryInfo?.weekendHours?.split(':')[0] || 'Saturday - Sunday'}</span>
                       <span className="font-semibold text-[#101828]">
-                        10:00 AM - 6:00 PM
+                        {libraryInfo?.weekendHours?.split(':').slice(1).join(':').trim() || '10:00 AM - 6:00 PM'}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Public Holidays</span>
-                      <span className="text-red-600">Closed</span>
+                      <span className="text-red-600">{libraryInfo?.holidaysInfo || 'Closed'}</span>
                     </div>
                   </div>
                 </div>
@@ -291,7 +362,7 @@ useEffect(() => {
                     </h3>
 
                     <p className="text-gray-600 text-sm sm:text-base">
-                      123 Library Street City Center, State - 600001 India
+                      {libraryInfo?.address || '123 Library Street City Center, State - 600001 India'}
                     </p>
 
                     <button className="mt-4 px-4 py-2 border cursor-pointer flex gap-2 border-[#0000001A] rounded-lg text-sm w-fit hover:bg-gray-50 transition">
@@ -340,6 +411,9 @@ useEffect(() => {
                 type="text"
                 placeholder="Search by book name, author, category, or ISBN..."
                 className="w-full bg-transparent text-sm sm:text-base outline-none"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
             </div>
 
@@ -362,6 +436,7 @@ useEffect(() => {
             </div>
 
             <button
+              onClick={handleSearch}
               className="w-full mt-6 py-2.5 sm:py-3 cursor-pointer rounded-lg text-white flex items-center justify-center gap-2 text-sm sm:text-base hover:opacity-90 transition"
               style={{
                 background: `linear-gradient(90deg, ${COLORS.home.color.h1} 0%, ${COLORS.home.color.h2} 100%)`,
@@ -411,7 +486,7 @@ useEffect(() => {
                         Latest additions to our collection
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        250+ books
+                        {collectionStats?.newArrivals || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -435,7 +510,7 @@ useEffect(() => {
                         Most borrowed books this month
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        180+ books
+                        {collectionStats?.bestSellers || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -459,7 +534,7 @@ useEffect(() => {
                         Academic and research materials
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        1,000+ books
+                        {collectionStats?.reference || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -483,7 +558,7 @@ useEffect(() => {
                         Engaging stories for young readers
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        1,200+ books
+                        {collectionStats?.children || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -507,7 +582,7 @@ useEffect(() => {
                         Educational resources
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        2,500+ books
+                        {collectionStats?.academic || 0}+ books
                       </span>
                     </div>
                   </div>
@@ -531,7 +606,7 @@ useEffect(() => {
                         Digital library resources
                       </p>
                       <span className="inline-block mt-2 px-2.5 py-1 text-xs border border-gray-200 rounded-full">
-                        500+ titles
+                        {collectionStats?.ebooks || 0}+ titles
                       </span>
                     </div>
                   </div>
@@ -761,7 +836,7 @@ useEffect(() => {
                 </div>
 
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => setShowRegister(true)}
                   className=" cursor-pointer mt-6 sm:mt-8 px-6 py-2.5 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition flex items-center gap-2 text-sm sm:text-base"
                 >
                   <img
@@ -827,14 +902,14 @@ useEffect(() => {
                   className={` bg-linear-to-r from-[#4F39F6] to-[#9810FA] bg-clip-text text-transparent ${FONTSIZE[14]} leading-5 `}
                   style={{ ...FONTWEIGHT[700] }}
                 >
-                  Events & News
+                  Our Programs
                 </span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-4">
-                Upcoming <span className="text-[#4F39F6]">Events</span>
+                Featured <span className="text-[#4F39F6]">Programs</span>
               </h2>
               <p className="text-gray-500 mt-2 text-sm sm:text-base">
-                Join us for exciting events, workshops, and community programs
+                Join our community workshops, storytelling sessions, and reading programs.
               </p>
             </div>
 
@@ -842,20 +917,20 @@ useEffect(() => {
               <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
                   <img
-                    src="src/assets/events/Container (1).png"
-                    alt="Book Fair"
+                    src="src/assets/ourservices/Container (1).png"
+                    alt="Research"
                     className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="text-left">
                   <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">
-                    Book Fair 2025
+                    Research & Reference
                   </h3>
                   <p className="text-blue-600 text-xs sm:text-sm mt-1">
-                    February 15-20, 2025
+                    Expert Guidance
                   </p>
                   <p className="text-gray-500 text-xs sm:text-sm mt-2">
-                    Annual book fair featuring publishers and authors
+                    Get one-on-one assistance from our expert librarians for your academic or personal research projects.
                   </p>
                 </div>
               </div>
@@ -863,20 +938,20 @@ useEffect(() => {
               <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
                   <img
-                    src="src/assets/events/Container (2).png"
-                    alt="Author Meet"
+                    src="src/assets/ourservices/Container (2).png"
+                    alt="Multimedia"
                     className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="text-left">
                   <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">
-                    Author Meet &amp; Greet
+                    Multimedia Center
                   </h3>
                   <p className="text-blue-600 text-xs sm:text-sm mt-1">
-                    March 5, 2025
+                    Digital Lab Access
                   </p>
                   <p className="text-gray-500 text-xs sm:text-sm mt-2">
-                    Interactive session with bestselling authors
+                    Access high-speed internet, premium software, and advanced digital scanning and printing facilities.
                   </p>
                 </div>
               </div>
@@ -884,33 +959,25 @@ useEffect(() => {
               <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md transition md:col-span-2 lg:col-span-1">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
                   <img
-                    src="src/assets/events/Container (3).png"
-                    alt="Workshop"
+                    src="src/assets/ourservices/Container (3).png"
+                    alt="Archives"
                     className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="text-left">
                   <h3 className="font-semibold text-sm sm:text-base lg:text-lg text-gray-900">
-                    Reading Workshop
+                    Archives & Journals
                   </h3>
                   <p className="text-blue-600 text-xs sm:text-sm mt-1">
-                    Every Saturday
+                    Rare Collections
                   </p>
                   <p className="text-gray-500 text-xs sm:text-sm mt-2">
-                    Workshops for children and young readers
+                    Explore our vast collection of academic journals, national newspapers, and historical regional archives.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div
-              onClick={() => navigate("/event")}
-              className="text-center mt-8 sm:mt-10 "
-            >
-              <button className="px-6 py-2.5 bg-white border cursor-pointer border-[#C6D2FF] text-[#4F39F6] rounded-lg inline-flex items-center gap-2 text-sm sm:text-base hover:bg-purple-50 transition">
-                View All Events <img src={rightarrIcon} />
-              </button>
-            </div>
           </div>
         </div>
 
@@ -928,129 +995,77 @@ useEffect(() => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition">
-                <div className="text-yellow-400 text-sm sm:text-base">
-                  ⭐⭐⭐⭐⭐
+            <div className="relative group overflow-hidden">
+              {reviewsLoading ? (
+                <div className="flex justify-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
                 </div>
-                <p className="text-gray-600 mt-4 text-sm sm:text-base">
-                  "The online book reservation system is fantastic! I can easily
-                  request books and collect them at my convenience."
-                </p>
-                <div className="flex items-center gap-3 sm:gap-4 mt-6">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
-                    <img
-                      src="src/assets/testiminols/Container (1).png"
-                      alt=""
-                      className="w-full h-full rounded-full object-cover"
-                    />
+              ) : reviews.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+                    {reviews.slice(currentIndex, currentIndex + 3).map((item) => (
+                      <div
+                        key={item._id}
+                        className={`border border-purple-100 rounded-3xl p-8 bg-white shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col h-full min-h-[350px]`}
+                      >
+                        <div className="flex gap-1 mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={18}
+                              fill={i < item.rating ? "#FFD700" : "none"}
+                              color={i < item.rating ? "#FFD700" : "#E2E8F0"}
+                            />
+                          ))}
+                        </div>
+                        <h4 className="font-bold text-gray-900 mb-2 line-clamp-1">{item.reviewTitle}</h4>
+                        <div className="flex-grow">
+                          <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 italic line-clamp-6">
+                            "{item.review}"
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-4 mt-auto pt-6 border-t border-gray-50">
+                          <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600 font-bold text-lg shrink-0">
+                            {item.memberName?.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-gray-900 truncate">{item.memberName}</p>
+                            <p className="text-xs text-purple-600 font-medium truncate">
+                              on {item.bookTitle}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      Priya Sharma
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-500">Student</p>
-                  </div>
+                  
+                  {reviews.length > 3 && (
+                    <div className="flex justify-center mt-12 gap-4">
+                      <button 
+                        onClick={handlePrev}
+                        className="p-3 rounded-full bg-white border border-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white transition-all shadow-sm active:scale-95"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      <button 
+                        onClick={handleNext}
+                        className="p-3 rounded-full bg-white border border-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white transition-all shadow-sm active:scale-95"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                  <p className="text-gray-500 font-medium">No reviews found.</p>
                 </div>
-              </div>
-
-              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition">
-                <div className="text-yellow-400 text-sm sm:text-base">
-                  ⭐⭐⭐⭐⭐
-                </div>
-                <p className="text-gray-600 mt-4 text-sm sm:text-base">
-                  "Excellent collection of reference materials and a perfect
-                  quiet environment for research work."
-                </p>
-                <div className="flex items-center gap-3 sm:gap-4 mt-6">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
-                    <img
-                      src="src/assets/testiminols/Container (2).png"
-                      alt=""
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      Rajesh Kumar
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-500">
-                      Researcher
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border border-blue-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition md:col-span-2 lg:col-span-1">
-                <div className="text-yellow-400 text-sm sm:text-base">
-                  ⭐⭐⭐⭐⭐
-                </div>
-                <p className="text-gray-600 mt-4 text-sm sm:text-base">
-                  "The children's section is wonderful! My students love the
-                  reading programs offered here."
-                </p>
-                <div className="flex items-center gap-3 sm:gap-4 mt-6">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0">
-                    <img
-                      src="src/assets/testiminols/Container (3).png"
-                      alt=""
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      Anita Desai
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-500">Teacher</p>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="w-full">
-          <div
-            className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 flex justify-center items-center"
-            style={{
-              background:
-                "linear-gradient(90deg, #6D28D9 30%, #9333EA 60%, #DB2777 100%)",
-            }}
-          >
-            <div className="max-w-3xl w-full text-center text-white">
-              <img
-                src="src/assets/updated/Container (1).png"
-                alt=""
-                className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-4 sm:mb-6"
-              />
 
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-                Stay Updated
-              </h2>
-
-              <p className="text-white/80 mt-2 text-sm sm:text-base px-4">
-                Subscribe to our newsletter for the latest book arrivals,
-                events, and library news
-              </p>
-
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto px-4">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-2.5 sm:py-3 rounded-lg border border-white/30 outline-none bg-white/10 text-white placeholder-white/60 text-sm sm:text-base"
-                />
-                <button className="bg-white text-purple-600 cursor-pointer px-6 sm:px-7 py-2.5 sm:py-2 rounded-lg inline-flex items-center justify-center gap-2 font-medium shadow hover:bg-gray-100 transition text-sm sm:text-base whitespace-nowrap">
-                  <img
-                    src="src/assets/updated/Icon (1).png"
-                    alt=""
-                    className="h-3 w-3 sm:h-4 sm:w-4"
-                  />
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <Footer />
