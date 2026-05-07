@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
 import searchicon from "../../assets/navbar/search icon.png";
-
 import icon1 from "../../assets/home/Icon (1).png";
 import icon2 from "../../assets/home/Icon (2).png";
 import icon3 from "../../assets/home/Icon (3).png";
@@ -10,7 +9,6 @@ import Footer from "../../layout/footer/Footer";
 import hoursIcon from "../../assets/aboutus/Hours Icon.png";
 import locatioIcon from "../../assets/aboutus/Location Icon.png";
 import DarklocationIcon from "../../assets/aboutus/location icon black.png";
-import rightarrIcon from "../../assets/events/Right Arrow Icon.png";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import Register from "../../models/registerpopup/registerForm";
@@ -998,7 +996,15 @@ const HomeAboutPage: React.FC = () => {
             <div className="relative group overflow-hidden">
               {reviewsLoading ? (
                 <div className="flex justify-center py-20">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+                  <div className="relative h-12 w-12">
+
+                    <div className="absolute inset-0 animate-spin rounded-full border-t-2 border-b-2 border-purple-600"></div>
+
+                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-purple-600">
+                      Loading...
+                    </div>
+
+                  </div>
                 </div>
               ) : reviews.length > 0 ? (
                 <>
