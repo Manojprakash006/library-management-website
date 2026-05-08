@@ -65,7 +65,7 @@ const Membership = () => {
     },
     {
       q: 'Is there a late fee?',
-      a: 'Yes, a minimal fine of ₹5 per day applies for overdue books to encourage timely returns.',
+      a: 'Yes, a minimal fine of ₹10 per day applies for overdue books to encourage timely returns.',
     },
     {
       q: 'Can I transfer my membership?',
@@ -467,13 +467,6 @@ const Membership = () => {
                 style={{ background: COLORS.membership.cta.buttonPrimary, color: COLORS.membership.cta.buttonPrimaryText }}
               >
                 Register Now <FiArrowRight size={15} />
-              </button>
-              <button
-                onClick={() => navigate("/")}
-                className="px-8 py-3 rounded-full text-sm font-bold hover:opacity-80 transition"
-                style={{ background: COLORS.membership.cta.buttonSecondaryBg, color: COLORS.membership.cta.buttonSecondaryText, border: '1px solid rgba(255,255,255,0.3)' }}
-              >
-                Learn More
               </button>
             </div>
           </div>

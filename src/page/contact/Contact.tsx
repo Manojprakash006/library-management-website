@@ -14,6 +14,8 @@ import { getLibraryInfoApi, sendContactMessageApi } from '../../Features/service
 import toast from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { sendContactMessageThunk } from '../../Features/Contact/ContactThunk';
+import mapBg from "../../assets/home/googleMapIcon.jpg";
+import dayjs from 'dayjs';
 
 const Contact = () => {
   const c = COLORS.contact;
@@ -44,6 +46,16 @@ const Contact = () => {
       toast.error(err || "Failed to send message");
     }
   };
+
+  const getDirection = () => {
+    window.open("https://www.google.com/maps/dir//Central+Library+Indian+Institute+of+Technology+Madras,+Central+Library,+IITM,+Sharav+Rd,+Indian+Institute+Of+Technology,+Chennai,+Tamil+Nadu+600036/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x3a5267806c098085:0x8d45adbf896fd849?sa=X&ved=1t:57443&ictx=111");
+  }
+
+  const formatDisplayTime = (time?: string) => {
+      if (!time) return "N/A";
+  
+      return dayjs(`2024-01-01 ${time}`).format("h:mm A");
+    };
 
   return (
     <div className="min-h-screen" style={{ fontFamily: FONT.f1, backgroundColor: c.section.bg }}>
@@ -130,9 +142,27 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Opening Hours</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    {libraryInfo?.weekdaysHours || 'Monday - Friday: 9:00 AM - 8:00 PM'}<br />
-                    {libraryInfo?.weekendHours || 'Saturday - Sunday: 10:00 AM - 6:00 PM'}<br />
-                    {libraryInfo?.holidaysInfo || 'Closed on public holidays'}
+                    <div className="flex gap-3 items-center">
+                      <span>{libraryInfo?.weekdaysLabel?.split(':')[0] || 'Monday - Friday'}</span>
+                      <p className="text-sm ">
+                        {formatDisplayTime(libraryInfo?.weekdaysOpen)} -{" "}
+                        {formatDisplayTime(libraryInfo?.weekdaysClose)}
+                      </p>
+                    </div>
+                    <div className='flex gap-2 items-center mt-1 '>
+                      <span className="text-red-600 mt-1">{libraryInfo?.holidaysInfo || 'Closed'}</span>
+                      {libraryInfo?.holidaysInfo === "Closed on public holidays" ? " " : (
+                        <p className="text-sm text-red-600 font-medium mt-1">
+                          ({dayjs(
+                            libraryInfo?.holidayFromDate
+                          ).format("DD MMM")}{" "}
+                          —{" "}
+                          {dayjs(
+                            libraryInfo?.holidayToDate
+                          ).format("DD MMM YYYY")})
+                        </p>
+                      )}
+                </div>
                   </p>
                 </div>
               </div>
@@ -246,19 +276,45 @@ const Contact = () => {
         </div>
 
         <div
-          className="mt-12 rounded-2xl px-4 sm:px-6 py-12 sm:py-16 flex flex-col items-center justify-center text-center min-h-48 mb-10"
+          onClick={getDirection}
+          className="relative overflow-hidden mt-12 rounded-2xl px-4 sm:px-6 py-12 sm:py-16 flex flex-col items-center justify-center text-center min-h-48 mb-10 cursor-pointer group"
           style={{ backgroundColor: c.map.bg }}
         >
-          <FiMapPin size={40} color={c.map.icon} className="mb-4" />
-          <h3 className="m-0 mb-2 text-sm font-semibold" style={{ color: c.map.text }}>
-            Location Map
-          </h3>
-          <p className="m-0 text-xs" style={{ color: c.map.text }}>
-            {libraryInfo?.address || '123 Library Street, City Center, State - 600001'}
-          </p>
-          <p className="mt-1 m-0 text-xs" style={{ color: c.map.text }}>
-            (In production, Google Maps would be embedded here)
-          </p>
+
+          <img
+            src={mapBg}
+            alt="map background"
+            className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-700"
+          />
+
+          <div className="absolute inset-0 bg-black/10" />
+
+          <div className="relative z-10 flex flex-col items-center">
+
+            <FiMapPin
+              size={40}
+              className="mb-4 drop-shadow-lg"
+            />
+
+            <h3
+              className="m-0 mb-2 text-sm font-semibold"
+            >
+              Location Map
+            </h3>
+
+            <p
+              className="m-0 text-xs max-w-md"
+            >
+              {libraryInfo?.address ||
+                "123 Library Street, City Center, State - 600001"}
+            </p>
+
+            <p
+              className="mt-2 text-[11px]"
+            >
+              Tap to get directions
+            </p>
+          </div>
         </div>
       </div>
 
