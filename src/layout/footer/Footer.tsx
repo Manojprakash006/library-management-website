@@ -10,6 +10,7 @@ import { Link } from 'react-router'
 import { useAppSelector } from '../../store/hooks'
 import { useState } from 'react'
 import PolicyModal from '../../components/shared/PolicyModal'
+import dayjs from 'dayjs'
 
 const Footer = () => {
   const { libraryInfo } = useAppSelector((state) => state.contact);
@@ -106,7 +107,20 @@ const Footer = () => {
         </p>
       </div>
 
-      <p className="text-xs text-gray-400">{libraryInfo?.holidaysInfo || 'Closed on Public Holidays'}</p>
+      <div className='bg-white/10 p-3 rounded-lg'>
+        <span className="">{libraryInfo?.holidaysInfo || 'Closed'}</span>
+        {libraryInfo?.holidaysInfo === "Closed on public holidays" ? " " : (
+          <p className="text-sm  font-medium mt-1">
+            ({dayjs(
+              libraryInfo?.holidayFromDate
+            ).format("DD MMM")}{" "}
+            —{" "}
+            {dayjs(
+              libraryInfo?.holidayToDate
+            ).format("DD MMM YYYY")})
+          </p>
+        )}
+    </div>
     </div>
 
   </div>

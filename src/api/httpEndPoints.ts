@@ -19,4 +19,11 @@ export const API_END_POINTS = {
     sendMessage: "/library/members/contact/send",
     libraryInfo: "/library/members/contact/info",
   },
+  home: {
+    messages: "/library/members/contact/messages",
+    updateStatus: "/library/members/contact/status/:id",
+    getInfo: "/library/members/contact/info",
+    updateInfo: "/library/members/contact/info",
+    reply: "/library/members/contact/reply/:id",
+  }
 };

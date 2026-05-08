@@ -19,6 +19,8 @@ import { fetchBrowseBooksData, fetchTotalMembers, fetchCollectionStats } from ".
 import { getTopReviewsApi } from "../../Features/service/collection.Service";
 import { socketService } from "../../services/socketService";
 import { fetchLibraryInfoThunk } from "../../Features/Contact/ContactThunk";
+import dayjs from "dayjs";
+import holidayIcon from "../../assets/home/holidayIcon.png";
 
 const HomeAboutPage: React.FC = () => {
 
@@ -120,6 +122,16 @@ const HomeAboutPage: React.FC = () => {
       setShowLogin(true);
     }
   }, [location.search]);
+
+  const formatDisplayTime = (time?: string) => {
+    if (!time) return "N/A";
+
+    return dayjs(`2024-01-01 ${time}`).format("h:mm A");
+  };
+
+  const getDirection = () => {
+    window.open("https://www.google.com/maps/dir//Central+Library+Indian+Institute+of+Technology+Madras,+Central+Library,+IITM,+Sharav+Rd,+Indian+Institute+Of+Technology,+Chennai,+Tamil+Nadu+600036/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x3a5267806c098085:0x8d45adbf896fd849?sa=X&ved=1t:57443&ictx=111");
+  }
 
   return (
     <>
@@ -329,20 +341,75 @@ const HomeAboutPage: React.FC = () => {
 
                   <div className="space-y-3 text-sm sm:text-base text-gray-600">
                     <div className="flex justify-between">
-                      <span>{libraryInfo?.weekdaysHours?.split(':')[0] || 'Monday - Friday'}</span>
-                      <span className="font-semibold text-[#101828]">
-                        {libraryInfo?.weekdaysHours?.split(':').slice(1).join(':').trim() || '9:00 AM - 8:00 PM'}
-                      </span>
+                      <span>{libraryInfo?.weekdaysLabel?.split(':')[0] || 'Monday - Friday'}</span>
+                      <p className="text-xl font-bold text-gray-900">
+                        {formatDisplayTime(libraryInfo?.weekdaysOpen)} -{" "}
+                        {formatDisplayTime(libraryInfo?.weekdaysClose)}
+                      </p>
                     </div>
                     <div className="flex justify-between">
-                      <span>{libraryInfo?.weekendHours?.split(':')[0] || 'Saturday - Sunday'}</span>
-                      <span className="font-semibold text-[#101828]">
-                        {libraryInfo?.weekendHours?.split(':').slice(1).join(':').trim() || '10:00 AM - 6:00 PM'}
-                      </span>
+                      <span>{libraryInfo?.weekendLabel?.split(':')[0] || 'Saturday - Sunday'}</span>
+                      <p className="text-xl font-bold text-gray-900">
+                        {formatDisplayTime(libraryInfo?.weekendOpen)} -{" "}
+                        {formatDisplayTime(libraryInfo?.weekendClose)}
+                      </p>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Public Holidays</span>
-                      <span className="text-red-600">{libraryInfo?.holidaysInfo || 'Closed'}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+
+                      <div className="group relative w-full sm:max-w-85 overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 via-indigo-600 to-violet-600 p-px shadow-md transition-all duration-300">
+
+                        <div className="relative flex items-start gap-3 rounded-2xl bg-white/10 backdrop-blur-xl px-3 py-3 border border-white/10">
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+
+                              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] font-bold text-blue-100">
+                                Holiday Schedule
+                              </p>
+                            </div>
+
+                            {libraryInfo?.isHolidayActive ? (
+                              libraryInfo?.holidaysInfo ===
+                              "Closed on public holidays" ? (
+                                <h3 className="text-white font-semibold text-sm sm:text-base leading-snug">
+                                  {libraryInfo?.holidaysInfo}
+                                </h3>
+                              ) : (
+                                <div>
+                                  <h3 className="text-white font-semibold text-sm sm:text-base leading-snug">
+                                    {libraryInfo?.holidaysInfo}
+                                  </h3>
+
+                                  <p className="text-xs sm:text-sm text-blue-100 mt-1">
+                                    {dayjs(
+                                      libraryInfo?.holidayFromDate
+                                    ).format("DD MMM")}{" "}
+                                    —{" "}
+                                    {dayjs(
+                                      libraryInfo?.holidayToDate
+                                    ).format("DD MMM YYYY")}
+                                  </p>
+                                </div>
+                              )
+                            ) : (
+                              <div>
+                                <h3 className="text-white font-semibold text-sm sm:text-base">
+                                  No Active Leave
+                                </h3>
+
+                                <p className="text-xs sm:text-sm text-blue-100 mt-1">
+                                  Library operating normally
+                                </p>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="hidden lg:flex items-center justify-center px-2 py-1 rounded-full bg-white/10 border border-white/20 text-[9px] uppercase tracking-wider font-bold text-white">
+                            Active
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -363,7 +430,8 @@ const HomeAboutPage: React.FC = () => {
                       {libraryInfo?.address || '123 Library Street City Center, State - 600001 India'}
                     </p>
 
-                    <button className="mt-4 px-4 py-2 border cursor-pointer flex gap-2 border-[#0000001A] rounded-lg text-sm w-fit hover:bg-gray-50 transition">
+                    <button className="mt-4 px-4 py-2 border cursor-pointer flex gap-2 border-[#0000001A] rounded-lg text-sm w-fit hover:bg-gray-50 transition"
+                          onClick={getDirection}>
                       <img
                         src={DarklocationIcon}
                         alt="Location icon"
@@ -1012,7 +1080,7 @@ const HomeAboutPage: React.FC = () => {
                     {reviews.slice(currentIndex, currentIndex + 3).map((item) => (
                       <div
                         key={item._id}
-                        className={`border border-purple-100 rounded-3xl p-8 bg-white shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col h-full min-h-[350px]`}
+                        className={`border border-purple-100 rounded-3xl p-8 bg-white shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col h-full min-h-87.5`}
                       >
                         <div className="flex gap-1 mb-4">
                           {[...Array(5)].map((_, i) => (
@@ -1025,7 +1093,7 @@ const HomeAboutPage: React.FC = () => {
                           ))}
                         </div>
                         <h4 className="font-bold text-gray-900 mb-2 line-clamp-1">{item.reviewTitle}</h4>
-                        <div className="flex-grow">
+                        <div className="grow">
                           <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 italic line-clamp-6">
                             "{item.review}"
                           </p>
