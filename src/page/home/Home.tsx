@@ -396,8 +396,17 @@ const HomeAboutPage: React.FC = () => {
                                 </h3>
 
                                 <p className="text-sm text-blue-100 font-medium mt-1">
-                                  {dayjs(libraryInfo?.holidayFromDate).format("DD MMM")} —{" "}
-                                  {dayjs(libraryInfo?.holidayToDate).format("DD MMM YYYY")}
+                                  {dayjs(libraryInfo?.holidayFromDate).isSame(
+                                    dayjs(libraryInfo?.holidayToDate),
+                                    "day"
+                                  ) ? (
+                                    dayjs(libraryInfo?.holidayFromDate).format("DD MMM YYYY")
+                                  ) : (
+                                    <>
+                                      {dayjs(libraryInfo?.holidayFromDate).format("DD MMM")} —{" "}
+                                      {dayjs(libraryInfo?.holidayToDate).format("DD MMM YYYY")}
+                                    </>
+                                  )}
                                 </p>
                               </div>
                             )
