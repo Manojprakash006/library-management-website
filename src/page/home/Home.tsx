@@ -64,7 +64,6 @@ const HomeAboutPage: React.FC = () => {
     };
     fetchReviews();
 
-    // Real-time updates
     socketService.connect();
     socketService.on('REVIEW_CREATED', () => {
       fetchReviews();
@@ -84,7 +83,7 @@ const HomeAboutPage: React.FC = () => {
     if (reviews.length > 3) {
       const interval = setInterval(() => {
         handleNext();
-      }, 4000); // Auto-slide every 4 seconds
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [reviews.length, currentIndex]);
@@ -180,7 +179,7 @@ const HomeAboutPage: React.FC = () => {
 
           <p className="text-gray-600 mt-6 sm:mt-8 max-w-2xl px-4 text-sm sm:text-base md:text-lg">
             Your gateway to knowledge with over{" "}
-            <span className="text-[#4F39F6] font-semibold">{totalBooks}</span>,
+            <span className="text-[#4F39F6] font-semibold">{totalBooks} book{totalBooks === 1 ? "" : "s"}</span>,
             digital resources, and world-class facilities. Join our community
             today!
           </p>
@@ -356,60 +355,79 @@ const HomeAboutPage: React.FC = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
 
-                      <div className="group relative w-full sm:max-w-85 overflow-hidden rounded-2xl bg-linear-to-br from-blue-600 via-indigo-600 to-violet-600 p-px shadow-md transition-all duration-300">
+                      <div className="group relative overflow-hidden rounded-3xl bg-linear-to-br from-blue-600 via-indigo-600 to-violet-600 p-px shadow-xl shadow-blue-200 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-200">
 
-                        <div className="relative flex items-start gap-3 rounded-2xl bg-white/10 backdrop-blur-xl px-3 py-3 border border-white/10">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-white/10 blur-3xl" />
 
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+                      <div className="relative flex items-center gap-4 rounded-3xl bg-white/10 backdrop-blur-xl px-5 py-4 border border-white/10">
 
-                              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] font-bold text-blue-100">
-                                Holiday Schedule
+                        <div className="relative shrink-0">
+                          <div className="absolute inset-0 rounded-full bg-white/20 animate-ping" />
+
+                          <div className="relative w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20 shadow-inner">
+                            <img
+                              src={holidayIcon}
+                              alt="holidayIcon"
+                              className="w-7 h-7 object-contain"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+
+                            <p className="text-[11px] uppercase tracking-[0.2em] font-black text-blue-100">
+                              Holiday Schedule
+                            </p>
+                          </div>
+
+                          {libraryInfo?.isHolidayActive ? (
+
+                            libraryInfo?.holidaysInfo === "Closed on public holidays" ? (
+                              <h3 className="text-white font-bold text-lg leading-snug tracking-tight">
+                                {libraryInfo?.holidaysInfo}
+                              </h3>
+                            ) : (
+                              <div>
+                                <h3 className="text-white font-bold text-lg leading-snug tracking-tight">
+                                  {libraryInfo?.holidaysInfo}
+                                </h3>
+
+                                <p className="text-sm text-blue-100 font-medium mt-1">
+                                  {dayjs(libraryInfo?.holidayFromDate).format("DD MMM")} —{" "}
+                                  {dayjs(libraryInfo?.holidayToDate).format("DD MMM YYYY")}
+                                </p>
+                              </div>
+                            )
+
+                          ) : libraryInfo?.holidaysInfo === "Closed on public holidays" ? (
+
+                            <h3 className="text-white font-bold text-lg leading-snug tracking-tight">
+                              Closed on public holidays
+                            </h3>
+
+                          ) : (
+
+                            <div>
+                              <h3 className="text-white font-bold text-lg">
+                                No Active Leave
+                              </h3>
+
+                              <p className="text-sm text-blue-100 mt-1">
+                                Library operating normally
                               </p>
                             </div>
 
-                            {libraryInfo?.isHolidayActive ? (
-                              libraryInfo?.holidaysInfo ===
-                              "Closed on public holidays" ? (
-                                <h3 className="text-white font-semibold text-sm sm:text-base leading-snug">
-                                  {libraryInfo?.holidaysInfo}
-                                </h3>
-                              ) : (
-                                <div>
-                                  <h3 className="text-white font-semibold text-sm sm:text-base leading-snug">
-                                    {libraryInfo?.holidaysInfo}
-                                  </h3>
+                          )}
+                        </div>
 
-                                  <p className="text-xs sm:text-sm text-blue-100 mt-1">
-                                    {dayjs(
-                                      libraryInfo?.holidayFromDate
-                                    ).format("DD MMM")}{" "}
-                                    —{" "}
-                                    {dayjs(
-                                      libraryInfo?.holidayToDate
-                                    ).format("DD MMM YYYY")}
-                                  </p>
-                                </div>
-                              )
-                            ) : (
-                              <div>
-                                <h3 className="text-white font-semibold text-sm sm:text-base">
-                                  No Active Leave
-                                </h3>
-
-                                <p className="text-xs sm:text-sm text-blue-100 mt-1">
-                                  Library operating normally
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="hidden lg:flex items-center justify-center px-2 py-1 rounded-full bg-white/10 border border-white/20 text-[9px] uppercase tracking-wider font-bold text-white">
-                            Active
-                          </div>
+                        <div className="hidden md:flex items-center justify-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] uppercase tracking-wider font-black text-white backdrop-blur-md">
+                          Active
                         </div>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>
