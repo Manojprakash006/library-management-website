@@ -26,10 +26,10 @@ class SocketService {
     this.socket.on('connect', () => {
     });
 
-    this.socket.on('connected', (data) => {
+    this.socket.on('connected', (_data) => {
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', (_error) => {
     });
   }
 

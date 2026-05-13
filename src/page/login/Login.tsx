@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { useNavigate } from 'react-router';
 
@@ -31,7 +31,11 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
     }
 
   const HandleClose = () => {
-    navigate(-1);
+    if (onClose) {
+      onClose();
+    } else {
+      navigate(-1);
+    }
   }
 
   const HandleSubmit = () => {
@@ -132,7 +136,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
               Password
             </label>
             <input
-              type= {showPassword? "text" : "password"}
+              type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

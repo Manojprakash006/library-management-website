@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getBrowseBooksApi, getCollectionStatsApi } from "../service/collection.Service";
 import { getTotalMembersApi, getVisitorStatsApi } from "../service/member.Service";
-import type { Book } from "../../DataTypes/Type";
+
 
 export const fetchBrowseBooksData = createAsyncThunk<any, { page: number; limit: number; search?: string; category?: string } | undefined>(
   "browseBooks/fetchBrowseBooksData",

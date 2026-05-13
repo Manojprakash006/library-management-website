@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FONT, COLORS, FONTWEIGHT, FONTSIZE } from "../../constant/Constant";
+import { FONT, COLORS, FONTWEIGHT } from "../../constant/Constant";
 import Footer from '../../layout/footer/Footer';
 import {
   FiBook,

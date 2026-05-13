@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FONT, COLORS, FONTSIZE, FONTWEIGHT } from "../../constant/Constant";
 

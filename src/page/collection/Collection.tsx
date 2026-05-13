@@ -3,8 +3,6 @@ import { FONT, COLORS, FONTSIZE, FONTWEIGHT } from "../../constant/Constant";
 import Footer from '../../layout/footer/Footer';
 import {
   FiSearch,
-  FiChevronLeft,
-  FiChevronRight,
   FiBookOpen,
   FiFeather,
   FiTool,
@@ -12,10 +10,10 @@ import {
   FiUsers,
   FiDisc,
 } from 'react-icons/fi';
-import { BsInfoCircleFill } from 'react-icons/bs';
+
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
 import loginIcon from "../../assets/collection/Login icon.png";
-import { useNavigate, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import Login from '../../models/loginmodal/loginpopup';
 
 import { useEffect, useMemo } from "react";
@@ -78,7 +76,7 @@ const Collection = () => {
   };
 
   const [hoveredCat, setHovCat] = useState<number | null>(null);
-  const navigate = useNavigate();
+
   const [showLogin, setShowLogin] = useState(false);
 
   const categories = useMemo(() => {

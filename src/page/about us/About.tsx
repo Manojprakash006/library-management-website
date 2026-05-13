@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FONT, COLORS, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import container6 from "../../assets/aboutus/Container (6).png"
