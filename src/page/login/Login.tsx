@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { useNavigate } from 'react-router';
 
-const Login = ({ onClose }: { onClose?: () => void }) => {
+const Login = ({ }: { onClose?: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
@@ -132,7 +132,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
               Password
             </label>
             <input
-              type= {showPassword? "text" : "password"}
+              type= {password? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
