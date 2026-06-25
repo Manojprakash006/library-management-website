@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { useNavigate } from 'react-router';
 
-const Login = ({ onClose }: { onClose?: () => void }) => {
+const Login = ({ }: { onClose?: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
@@ -11,8 +11,8 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
   const [error, setError] = useState<formError>({});
   
     type formError = {
-      email?: string,
-      password?: string,
+      email?: String,
+      password?: String,
     }
   
     const Validate = () => { 
