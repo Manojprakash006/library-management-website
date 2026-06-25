@@ -19,6 +19,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState<formError>({});
+  const [redirecting, setRedirecting] = useState(false);
 
   const dispatch = useAppDispatch();
   // const navigate = useNavigate();
@@ -59,8 +60,6 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
     try {
       const resultAction = await dispatch(loginMemberThunk(payload));
 
-      console.log("LOGIN RESULT:", resultAction); 
-
       if (loginMemberThunk.fulfilled.match(resultAction)) {
         toast.success('Login successful! Welcome back.', {
           duration: 3000,
@@ -77,10 +76,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
           },
         });
 
-        console.log("LOGIN SUCCESS");
-
         const token = resultAction.payload.data?.token
-        console.log("LOGIN-TOKEN :", token);
 
         if (!token) {
           console.log("TOKEN MISSING");
@@ -88,12 +84,13 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
         }
         localStorage.setItem("authToken", token);
 
-        console.log("STORED:", localStorage.getItem("authToken"));
-
         onClose?.();
 
-       
-        window.location.href = `${APP_CONFIG.MEMBER_URL}?token=${token}`;
+        setRedirecting(true);
+
+        setTimeout(() => {
+          window.location.href = `${APP_CONFIG.MEMBER_URL}?token=${token}`;
+        }, 1200);
 
       } else {
         toast.error(resultAction.payload as string || "Login failed");
@@ -104,9 +101,10 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
     }
 };
 
+  
+
   return (
     <>
-      {/* Overlay */}
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
         style={{ backgroundColor: COLORS.loginModal.overlay }}
@@ -143,9 +141,7 @@ const Login = ({ onClose }: { onClose?: () => void }) => {
             </svg>
           </button>
 
-          {/* Header */}
           <div className="flex items-center gap-3 mb-1">
-            {/* Icon */}
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: COLORS.loginModal.header.iconBg }}

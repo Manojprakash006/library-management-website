@@ -8,11 +8,7 @@ import type { RootState, AppDispatch } from '../../store/store';
 const Register = ({ onClose }: { onClose?: () => void }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const {
-    loading,
-    
-    error: apiError,
-  } = useSelector((state: RootState) => state.auth);
+  const { loading, error: apiError } = useSelector((state: RootState) => state.auth);
 
   const navigate = useNavigate();
 
@@ -116,15 +112,16 @@ const Register = ({ onClose }: { onClose?: () => void }) => {
   return (
     <>
       <div
-        className="fixed inset-0 flex items-center justify-center z-50 px-4"
+        className="fixed inset-0 flex items-center justify-center z-50 px-3 sm:px-4"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
       >
         <div
-          className="relative bg-white rounded-2xl w-full mx-auto overflow-hidden"
+          className="relative bg-white rounded-2xl w-full mx-auto overflow-hidden flex flex-col"
           style={{
             boxShadow: "0px 20px 50px rgba(0,0,0,0.15)",
             border: "1px solid #E5E7EB",
             maxWidth: "560px",
+            maxHeight: "90vh",
           }}
         >
           <button
@@ -144,7 +141,7 @@ const Register = ({ onClose }: { onClose?: () => void }) => {
 
           {apiError && <p className="text-red-500 text-sm mb-2">{apiError}</p>}
 
-          <form onSubmit={handleSubmit} className="px-6 pt-5 pb-5">
+          <form onSubmit={handleSubmit} className="px-6 pt-5 pb-5 overflow-y-auto" style={{maxHeight: "90vh"}}>
             <div className="flex items-start gap-3 mb-1 pr-6">
               <div
                 className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center mt-0.5"
@@ -424,10 +421,10 @@ const Register = ({ onClose }: { onClose?: () => void }) => {
               </ul>
             </div>
 
-            <div className="flex items-center justify-end gap-3 mt-3">
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 mt-3">
               <button
                 onClick={handleCancel}
-                className="px-5 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-gray-200"
+                className="w-full sm:w-auto px-5 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-gray-200"
                 style={{
                   backgroundColor: "#F3F4F6",
                   color:
@@ -441,7 +438,7 @@ const Register = ({ onClose }: { onClose?: () => void }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-sm font-mdium transition-colors"
                 style={{
                   backgroundColor: "#16A34A",
                   color: "#FFFFFF",

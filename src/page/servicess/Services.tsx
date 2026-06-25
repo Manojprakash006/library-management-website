@@ -1,4 +1,4 @@
-import React from "react";
+
 import { FONT, COLORS, FONTSIZE } from "../../constant/Constant";
 import Footer from "../../layout/footer/Footer";
 import {

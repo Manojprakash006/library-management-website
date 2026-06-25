@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FONT, COLORS, FONTSIZE, FONTWEIGHT } from "../../constant/Constant";
 
@@ -8,10 +8,10 @@ import registerIcon from "../../assets/navbar/Icon (2).png";
 import searchicon from "../../assets/navbar/search icon.png";
 import Register from "../../models/registerpopup/registerForm";
 import Login from "../../models/loginmodal/loginpopup";
-
-
+import { useAppSelector } from "../../store/hooks";
 
 const Navbar: React.FC = () => {
+  const { libraryInfo } = useAppSelector((state) => state.contact);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     { label: "About Us", path: "/about" },
     { label: "Collections", path: "/collection" },
     { label: "Services", path: "/services" },
-    { label: "Events", path: "/event" },
+    // { label: "Events", path: "/event" },
     { label: "Membership", path: "/membership" },
     { label: "Contact", path: "/contact" },
   ];
@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
         >
           <img src={logo} alt="logo" className="h-10 w-10 object-contain" />
           <span className={`font-semibold whitespace-nowrap ${FONTSIZE[16]} leading-7 bg-linear-to-r from-[#4F39F6] to-[#9810FA] bg-clip-text text-transparent`} style={{...FONTWEIGHT[700]}}>
-            City Central Library
+            {libraryInfo?.libraryName || 'City Central Library'}
           </span>
         </div>
 

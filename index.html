@@ -4,9 +4,64 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>library-management-website-panel</title>
+    <title>Library Management System</title>
+
+    <style>
+
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(to bottom right, #020617, #111827);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+      }
+
+      .loader-container {
+        text-align: center;
+        color: white;
+        font-family: sans-serif;
+      }
+
+      .spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid rgba(255,255,255,0.2);
+        border-top-color: #3B82F6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: auto;
+      }
+
+      .loader-container h2 {
+        margin-top: 24px;
+        font-size: 24px;
+      }
+
+      .loader-container p {
+        margin-top: 10px;
+        color: #CBD5E1;
+        font-size: 14px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+    </style>
+    
   </head>
-  <body>
+  <body style="margin:0;">
+    <div id="initial-loader">
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <h2>Loading Library Website</h2>
+        <p>Please wait a moment...</p>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -3,8 +3,6 @@ import { FONT, COLORS, FONTSIZE, FONTWEIGHT } from "../../constant/Constant";
 import Footer from '../../layout/footer/Footer';
 import {
   FiSearch,
-  // FiChevronLeft,
-  // FiChevronRight,   
   FiBookOpen,
   FiFeather,
   FiTool,
@@ -12,10 +10,10 @@ import {
   FiUsers,
   FiDisc,
 } from 'react-icons/fi';
-// import { BsInfoCircleFill } from 'react-icons/bs';
+
 import { MdOutlineBook, MdOutlineNewspaper } from 'react-icons/md';
 import loginIcon from "../../assets/collection/Login icon.png";
-// import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import Login from '../../models/loginmodal/loginpopup';
 
 import { useEffect, useMemo } from "react";
@@ -45,8 +43,18 @@ const Collection = () => {
 
   const { books, loading, error, page: currentPage, totalPages, total } = useAppSelector((state) => state.collection);
 
-  const [search, setSearch] = useState('');
+  const location = useLocation();
+  const initialSearch = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('search') || '';
+  }, [location.search]);
+
+  const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
 
   useEffect(() => {
     dispatch(fetchBrowseBooksData({ 
@@ -68,7 +76,6 @@ const Collection = () => {
   };
 
   const [hoveredCat, setHovCat] = useState<number | null>(null);
-  // const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
 
   const categories = useMemo(() => {
@@ -246,7 +253,7 @@ const Collection = () => {
                 borderColor:
                   selectedCategory === cat.label 
                     ? '#9A10F9'
-                    : hoveredCat === cat.id
+                    : hoveredCat === cat.id 
                       ? C.categoryCard.hoverBorder
                       : C.categoryCard.border,
                 boxShadow: selectedCategory === cat.label ? '0 4px 12px rgba(154, 16, 249, 0.1)' : C.categoryCard.shadow,
@@ -343,7 +350,7 @@ const Collection = () => {
                 borderColor: C.bookCard.border,
                 boxShadow: C.bookCard.shadow,
               }}
-            >
+            > 
               <p
                 className={`${FONTSIZE[14]} leading-5`}
                 style={{ color: C.section.subtitle, ...FONTWEIGHT[700] }}

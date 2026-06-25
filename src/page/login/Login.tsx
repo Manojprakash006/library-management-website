@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FONT, COLORS } from "../../constant/Constant";
 import { useNavigate } from 'react-router';
 
-const Login = ({ }: { onClose?: () => void }) => {
+const Login = ({ onClose }: { onClose?: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
@@ -11,8 +11,8 @@ const Login = ({ }: { onClose?: () => void }) => {
   const [error, setError] = useState<formError>({});
   
     type formError = {
-      email?: String,
-      password?: String,
+      email?: string,
+      password?: string,
     }
   
     const Validate = () => { 
@@ -31,7 +31,11 @@ const Login = ({ }: { onClose?: () => void }) => {
     }
 
   const HandleClose = () => {
-    navigate(-1);
+    if (onclose) {
+      onclose();
+    } else {
+      navigate(-1);
+    }
   }
 
   const HandleSubmit = () => {
@@ -132,7 +136,7 @@ const Login = ({ }: { onClose?: () => void }) => {
               Password
             </label>
             <input
-              type= {password? "text" : "password"}
+              type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

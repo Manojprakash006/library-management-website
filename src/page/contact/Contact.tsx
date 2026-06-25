@@ -6,11 +6,20 @@ import {
   FiPhone,
   FiMail,
   FiClock,
-  FiSend
+  FiSend,
+  FiLoader
 } from 'react-icons/fi';
-        
+
+import toast from 'react-hot-toast';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { sendContactMessageThunk } from '../../Features/Contact/ContactThunk';
+import mapBg from "../../assets/home/googleMapIcon.jpg";
+import dayjs from 'dayjs';
+
 const Contact = () => {
   const c = COLORS.contact;
+  const dispatch = useAppDispatch();
+  const { libraryInfo, isSubmitting } = useAppSelector((state) => state.contact);
 
   const [form, setForm] = useState({
     name: '',
@@ -20,22 +29,32 @@ const Contact = () => {
     message: ''
   });
 
+  // Data is now fetched globally in AppRoutes.tsx
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const newForm = {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      subject: form.subject,
-      message: form.message,
-    };
-    newForm[e.target.name as keyof typeof newForm] = e.target.value;
-    setForm(newForm);
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    try {
+      await dispatch(sendContactMessageThunk(form)).unwrap();
+      toast.success("Message sent successfully!");
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+    } catch (err: any) {
+      toast.error(err || "Failed to send message");
+    }
   };
+
+  const getDirection = () => {
+    window.open("https://www.google.com/maps/dir//Central+Library+Indian+Institute+of+Technology+Madras,+Central+Library,+IITM,+Sharav+Rd,+Indian+Institute+Of+Technology,+Chennai,+Tamil+Nadu+600036/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x3a5267806c098085:0x8d45adbf896fd849?sa=X&ved=1t:57443&ictx=111");
+  }
+
+  const formatDisplayTime = (time?: string) => {
+      if (!time) return "N/A";
+  
+      return dayjs(`2024-01-01 ${time}`).format("h:mm A");
+    };
 
   return (
     <div className="min-h-screen" style={{ fontFamily: FONT.f1, backgroundColor: c.section.bg }}>
@@ -72,9 +91,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Visit Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    City Central Library<br />
-                    123 Library Street, City Center<br />
-                    State - 600001, India
+                    {libraryInfo?.libraryName || 'City Central Library'}<br />
+                    {libraryInfo?.address || '123 Library Street, City Center, State - 600001, India'}
                   </p>
                 </div>
               </div>
@@ -89,8 +107,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Call Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    Main: +91-44-1234-5678<br />
-                    Reference Desk: +91-44-1234-5679<br />
+                    Main: {libraryInfo?.phone || '+91-44-1234-5678'}<br />
+                    Reference Desk: {libraryInfo?.referencePhone || '+91-44-1234-5679'}<br />
                     Available during library hours
                   </p>
                 </div>
@@ -106,8 +124,8 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Email Us</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    General: info@citycentrallibrary.org<br />
-                    Membership: membership@citycentrallibrary.org<br />
+                    General: {libraryInfo?.email || 'info@citycentrallibrary.org'}<br />
+                    Membership: {libraryInfo?.membershipEmail || 'membership@citycentrallibrary.org'}<br />
                     We respond within 24 hours
                   </p>
                 </div>
@@ -123,9 +141,27 @@ const Contact = () => {
                 <div>
                   <h3 className="m-0 mb-1.5 text-sm font-semibold" style={{ color: c.card.title }}>Opening Hours</h3>
                   <p className="m-0 text-xs leading-relaxed" style={{ color: c.card.text }}>
-                    Monday - Friday: 9:00 AM - 8:00 PM<br />
-                    Saturday - Sunday: 10:00 AM - 6:00 PM<br />
-                    Closed on public holidays
+                    <div className="flex gap-3 items-center">
+                      <span>{libraryInfo?.weekdaysLabel?.split(':')[0] || 'Monday - Friday'}</span>
+                      <p className="text-sm ">
+                        {formatDisplayTime(libraryInfo?.weekdaysOpen)} -{" "}
+                        {formatDisplayTime(libraryInfo?.weekdaysClose)}
+                      </p>
+                    </div>
+                    <div className='flex gap-2 items-center mt-1 '>
+                      <span className="text-red-600 mt-1">{libraryInfo?.holidaysInfo || 'Closed'}</span>
+                      {libraryInfo?.holidaysInfo === "Closed on public holidays" ? " " : (
+                        <p className="text-sm text-red-600 font-medium mt-1">
+                          ({dayjs(
+                            libraryInfo?.holidayFromDate
+                          ).format("DD MMM")}{" "}
+                          —{" "}
+                          {dayjs(
+                            libraryInfo?.holidayToDate
+                          ).format("DD MMM YYYY")})
+                        </p>
+                      )}
+                </div>
                   </p>
                 </div>
               </div>
@@ -224,13 +260,14 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold cursor-pointer border-none transition-colors duration-200"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold cursor-pointer border-none transition-colors duration-200 disabled:opacity-50"
                 style={{ backgroundColor: c.button.bg, color: c.button.text, font: FONT.f1 }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = c.button.hover)}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = c.button.bg)}
+                onMouseEnter={e => !isSubmitting && (e.currentTarget.style.backgroundColor = c.button.hover)}
+                onMouseLeave={e => !isSubmitting && (e.currentTarget.style.backgroundColor = c.button.bg)}
               >
-                <FiSend size={16} />
-                Send Message
+                {isSubmitting ? <FiLoader className="animate-spin" size={16} /> : <FiSend size={16} />}
+                {isSubmitting ? "Sending Message..." : "Send Message"}
               </button>
 
             </form>
@@ -238,19 +275,45 @@ const Contact = () => {
         </div>
 
         <div
-          className="mt-12 rounded-2xl px-4 sm:px-6 py-12 sm:py-16 flex flex-col items-center justify-center text-center min-h-48 mb-10"
+          onClick={getDirection}
+          className="relative overflow-hidden mt-12 rounded-2xl px-4 sm:px-6 py-12 sm:py-16 flex flex-col items-center justify-center text-center min-h-48 mb-10 cursor-pointer group"
           style={{ backgroundColor: c.map.bg }}
         >
-          <FiMapPin size={40} color={c.map.icon} className="mb-4" />
-          <h3 className="m-0 mb-2 text-sm font-semibold" style={{ color: c.map.text }}>
-            Location Map
-          </h3>
-          <p className="m-0 text-xs" style={{ color: c.map.text }}>
-            123 Library Street, City Center, State - 600001
-          </p>
-          <p className="mt-1 m-0 text-xs" style={{ color: c.map.text }}>
-            (In production, Google Maps would be embedded here)
-          </p>
+
+          <img
+            src={mapBg}
+            alt="map background"
+            className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-700"
+          />
+
+          <div className="absolute inset-0 bg-black/10" />
+
+          <div className="relative z-10 flex flex-col items-center">
+
+            <FiMapPin
+              size={40}
+              className="mb-4 drop-shadow-lg"
+            />
+
+            <h3
+              className="m-0 mb-2 text-sm font-semibold"
+            >
+              Location Map
+            </h3>
+
+            <p
+              className="m-0 text-xs max-w-md"
+            >
+              {libraryInfo?.address ||
+                "123 Library Street, City Center, State - 600001"}
+            </p>
+
+            <p
+              className="mt-2 text-[11px]"
+            >
+              Tap to get directions
+            </p>
+          </div>
         </div>
       </div>
 
